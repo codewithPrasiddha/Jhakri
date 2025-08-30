@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jhākri — AI Defense UI</title>
-  <meta name="description" content="Jhākri – Upload text, code, or images to generate protected output. UI-only preview." />
+  <title>Jhākri — Images MVP</title>
+  <meta name="description" content="Jhākri – Upload images to generate protected output. Images-only MVP UI." />
   <meta name="theme-color" content="#b80d1c" />
   <style>
     :root {
@@ -62,21 +62,12 @@
 
     .card { background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-1); padding:22px; }
 
-    /* Tabs */
-    .tabs { display:flex; gap:10px; margin-bottom:18px; }
-    .tab { appearance:none; border:1px solid var(--border); background: var(--surface-alt); color: var(--text); border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer; }
-    .tab:hover { filter: brightness(1.02); }
-    .tab.active { background: linear-gradient(145deg, var(--accent-800), var(--accent-700)); border-color: transparent; color:#fff; box-shadow: var(--shadow-2); }
-
     /* Two-column IO grid with consistent heights */
     .io-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
     @media (max-width: 980px){ .io-grid { grid-template-columns: 1fr; } }
 
     label { font-weight: 700; color: var(--text); display:block; margin-bottom:8px; }
     .hint { color: var(--muted); font-size: 12px; margin-top: 4px; font-weight: 500; }
-
-    textarea { width:100%; min-height: 280px; border-radius: var(--radius-lg); background: var(--surface); color: var(--text); border:1px solid var(--border); padding:14px; resize: vertical; font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-    textarea::placeholder { color: var(--muted); }
 
     .file-btn { display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; border:1px solid var(--border); background: var(--surface-alt); cursor:pointer; font-weight:700; }
     input[type="file"] { display:none; }
@@ -87,7 +78,12 @@
     .dropzone.dragover { background: rgba(184,13,28,.12); }
 
     .output-card { background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); padding:14px; min-height: 280px; display:flex; align-items:flex-start; }
-    pre.output { margin:0; color: var(--text); font-family: 'Fira Code', ui-monospace, Menlo, Consolas, monospace; font-size:14px; white-space: pre-wrap; word-break: break-word; flex:1; }
+
+    /* Grids for previews */
+    .grid-preview { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; width:100%; }
+    .thumb { border:1px solid var(--border); border-radius:10px; overflow:hidden; background: var(--surface); }
+    .thumb img { width:100%; height:140px; object-fit:cover; display:block; }
+    .thumb figcaption { padding:6px 8px; font-size:12px; color:var(--muted); border-top:1px solid var(--border); }
 
     .toolbar { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; align-items:center; }
     .btn { border:0; cursor:pointer; font-weight:800; padding:12px 16px; border-radius:12px; transition:.2s; }
@@ -109,93 +105,38 @@
 
   <main class="container">
     <section class="hero">
-      <h2>Harden your content against AI replication</h2>
-      <p>Upload <strong>text</strong>, <strong>code</strong>, or <strong>images</strong>. Jhākri will return a protected version. (UI prototype — hook up your processing later.)</p>
+      <h2>Harden your images against AI replication</h2>
+      <p>Upload images and Jhākri will return a protected version. (MVP — images only)</p>
     </section>
 
     <section class="card" aria-labelledby="modeLabel">
-      <div class="tabs" role="tablist" aria-label="Input type">
-        <button class="tab active" role="tab" aria-selected="true" data-tab="text">Text</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="code">Code</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="image">Images</button>
-      </div>
+      <div class="io-grid">
+        <!-- Left: Input -->
+        <div>
+          <label>Upload images</label>
+          <div id="img-drop" class="dropzone" tabindex="0" aria-label="Drop images here or choose files">
+            <p style="margin:4px 0 8px">Drag & drop images here</p>
+            <label class="file-btn" for="image-file">🖼️ Choose images</label>
+            <input id="image-file" type="file" accept="image/*" multiple />
+          </div>
+          <div class="file-list" id="image-files"></div>
+          <div class="grid-preview" id="image-preview" aria-live="polite"></div>
+        </div>
 
-      <!-- Panels -->
-      <div id="panel-text" class="panel" style="display:block;">
-        <div class="io-grid">
-          <div>
-            <label for="text-input">Paste text</label>
-            <textarea id="text-input" placeholder="Paste or type your text here..."></textarea>
-            <p class="hint">Or upload a .txt/.md file</p>
-            <label class="file-btn" for="text-file">📄 Choose text file</label>
-            <input id="text-file" type="file" accept=".txt,.md,.markdown,.rtf,.csv,.json" />
-            <div class="file-list" id="text-files"></div>
+        <!-- Right: Output -->
+        <div>
+          <label for="output-images">Output</label>
+          <div class="output-card" id="output-card-images">
+            <div id="output-images" class="grid-preview"></div>
           </div>
-          <div>
-            <label for="output">Output</label>
-            <div class="output-card"><pre id="output" class="output">Your processed result will appear here.</pre></div>
-            <div class="toolbar">
-              <button class="btn primary" id="processBtn">Generate Anti‑AI Output</button>
-              <button class="btn secondary" id="copyBtn">Copy</button>
-              <button class="btn secondary" id="downloadBtn">Download</button>
-              <button class="btn ghost" id="clearBtn">Clear</button>
-            </div>
-            <div class="status" id="status" aria-live="polite"></div>
+          <div class="toolbar">
+            <button class="btn primary" id="processBtnImg">Generate Anti‑AI Output</button>
+            <button class="btn secondary" id="downloadBtnImg">Download</button>
+            <button class="btn ghost" id="clearBtnImg">Clear</button>
           </div>
+          <div class="status" id="status-img" aria-live="polite"></div>
         </div>
       </div>
-
-      <div id="panel-code" class="panel" style="display:none;">
-        <div class="io-grid">
-          <div>
-            <label for="code-input">Paste code</label>
-            <textarea id="code-input" placeholder="Paste your code here..."></textarea>
-            <p class="hint">Or upload source files (.js, .ts, .py, .java, .c, .cpp, .rb, .go, .rs, .php, .cs, .kt, .swift)</p>
-            <label class="file-btn" for="code-file">📦 Choose code file(s)</label>
-            <input id="code-file" type="file" multiple accept=".js,.ts,.tsx,.jsx,.py,.java,.c,.cpp,.h,.hpp,.rb,.go,.rs,.php,.cs,.kt,.swift,.sh,.sql,.html,.css,.json,.yml,.yaml,.toml" />
-            <div class="file-list" id="code-files"></div>
-          </div>
-          <div>
-            <label for="output-code">Output</label>
-            <div class="output-card"><pre id="output-code" class="output">Your processed result will appear here.</pre></div>
-            <div class="toolbar">
-              <button class="btn primary" id="processBtnCode">Generate Anti‑AI Output</button>
-              <button class="btn secondary" id="copyBtnCode">Copy</button>
-              <button class="btn secondary" id="downloadBtnCode">Download</button>
-              <button class="btn ghost" id="clearBtnCode">Clear</button>
-            </div>
-            <div class="status" id="status-code" aria-live="polite"></div>
-          </div>
-        </div>
-      </div>
-
-      <div id="panel-image" class="panel" style="display:none;">
-        <div class="io-grid">
-          <div>
-            <label>Upload images</label>
-            <div id="img-drop" class="dropzone" tabindex="0" aria-label="Drop images here or choose files">
-              <p style="margin:4px 0 8px">Drag & drop images here</p>
-              <label class="file-btn" for="image-file">🖼️ Choose images</label>
-              <input id="image-file" type="file" accept="image/*" multiple />
-            </div>
-            <div class="file-list" id="image-files"></div>
-            <div class="img-preview" id="image-preview" aria-live="polite" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px;"></div>
-          </div>
-          <div>
-            <label for="output-images">Output</label>
-            <div class="output-card" id="output-card-images">
-              <div id="output-images" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;width:100%;"></div>
-            </div>
-            <div class="toolbar">
-              <button class="btn primary" id="processBtnImg">Generate Anti‑AI Output</button>
-              <button class="btn secondary" id="downloadBtnImg">Download</button>
-              <button class="btn ghost" id="clearBtnImg">Clear</button>
-            </div>
-            <div class="status" id="status-img" aria-live="polite"></div>
-          </div>
-        </div>
-      </div>
-
     </section>
   </main>
 
@@ -205,7 +146,6 @@
 
   <script>
     const $ = (sel, ctx=document) => ctx.querySelector(sel);
-    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
 
     // Theme toggle
     const themeBtn = $('#themeToggle');
@@ -216,55 +156,101 @@
       themeBtn.textContent = dark ? 'Dark mode' : 'Light mode';
     });
 
-    // Tabs
-    const tabs = $$('.tab');
-    const panels = {
-      text: $('#panel-text'),
-      code: $('#panel-code'),
-      image: $('#panel-image')
-    };
-    tabs.forEach(btn => btn.addEventListener('click', () => {
-      const key = btn.dataset.tab;
-      tabs.forEach(b => { b.classList.toggle('active', b===btn); b.setAttribute('aria-selected', b===btn ? 'true':'false'); });
-      Object.entries(panels).forEach(([k, el]) => el.style.display = (k===key ? 'block' : 'none'));
-    }));
-
-    // Helpers
-    function updateChips(sel, files){ const wrap = $(sel); wrap.innerHTML=''; files.forEach(f=>{ const s=document.createElement('span'); s.className='chip'; s.textContent=`${f.name} • ${(f.size/1024).toFixed(1)} KB`; wrap.appendChild(s); }); }
-    function renderImagePreview(sel, files){ const wrap=$(sel); wrap.innerHTML=''; files.forEach(file=>{ const fig=document.createElement('figure'); fig.style.margin=0; fig.style.border='1px solid var(--border)'; fig.style.borderRadius='10px'; fig.style.overflow='hidden'; fig.style.background='var(--surface)'; const img=document.createElement('img'); img.style.width='100%'; img.style.height='120px'; img.style.objectFit='cover'; const cap=document.createElement('figcaption'); cap.textContent=file.name; cap.style.padding='6px 8px'; cap.style.fontSize='12px'; cap.style.color='var(--muted)'; cap.style.borderTop='1px solid var(--border)'; const fr=new FileReader(); fr.onload=e=>img.src=e.target.result; fr.readAsDataURL(file); fig.appendChild(img); fig.appendChild(cap); wrap.appendChild(fig); }); }
-
-    // TEXT panel
-    $('#text-file').addEventListener('change', async (e)=>{ const files=Array.from(e.target.files||[]); updateChips('#text-files', files); if(files[0]){ $('#text-input').value = await files[0].text(); }});
-
-    // CODE panel
-    $('#code-file').addEventListener('change', async (e)=>{ const files=Array.from(e.target.files||[]); updateChips('#code-files', files); if(files.length){ let merged=''; for(const f of files){ merged += `\n/* ===== ${f.name} ===== */\n` + await f.text() + '\n'; } $('#code-input').value = merged.trim(); }});
-
-    // IMAGE panel
+    // IMAGE panel logic
     let imageFiles = [];
-    $('#image-file').addEventListener('change', (e)=>{ const files=Array.from(e.target.files||[]); imageFiles = imageFiles.concat(files); updateChips('#image-files', imageFiles); renderImagePreview('#image-preview', imageFiles); });
+    const imageList = $('#image-files');
+    const imagePreview = $('#image-preview');
+    const outputImgsWrap = $('#output-images');
+    const statusImg = $('#status-img');
+
+    function addChips(files){
+      imageList.innerHTML='';
+      files.forEach(f=>{
+        const s=document.createElement('span');
+        s.className='chip';
+        s.textContent=`${f.name} • ${(f.size/1024).toFixed(1)} KB`;
+        imageList.appendChild(s);
+      });
+    }
+
+    function renderPreview(container, files){
+      container.innerHTML='';
+      files.forEach(file=>{
+        const fig=document.createElement('figure');
+        fig.className='thumb';
+        const img=document.createElement('img');
+        const cap=document.createElement('figcaption');
+        cap.textContent=file.name;
+        const fr=new FileReader();
+        fr.onload=e=> img.src=e.target.result;
+        fr.readAsDataURL(file);
+        fig.appendChild(img);
+        fig.appendChild(cap);
+        container.appendChild(fig);
+      });
+    }
+
+    // File input
+    $('#image-file').addEventListener('change', (e)=>{
+      const files=Array.from(e.target.files||[]);
+      imageFiles = imageFiles.concat(files);
+      addChips(imageFiles);
+      renderPreview(imagePreview, imageFiles);
+    });
+
+    // Drag & drop
     const drop = $('#img-drop');
     ['dragenter','dragover'].forEach(evt=> drop.addEventListener(evt, (e)=>{ e.preventDefault(); e.stopPropagation(); drop.classList.add('dragover'); }));
     ;['dragleave','drop'].forEach(evt=> drop.addEventListener(evt, (e)=>{ e.preventDefault(); e.stopPropagation(); drop.classList.remove('dragover'); }));
-    drop.addEventListener('drop', (e)=>{ const files=Array.from(e.dataTransfer.files||[]).filter(f=>f.type.startsWith('image/')); imageFiles = imageFiles.concat(files); updateChips('#image-files', imageFiles); renderImagePreview('#image-preview', imageFiles); });
+    drop.addEventListener('drop', (e)=>{
+      const files=Array.from(e.dataTransfer.files||[]).filter(f=>f.type.startsWith('image/'));
+      imageFiles = imageFiles.concat(files);
+      addChips(imageFiles);
+      renderPreview(imagePreview, imageFiles);
+    });
 
-    // PROCESS (UI only: echo back)
-    const outputText = $('#output');
-    const outputCode = $('#output-code');
-    const outputImgsWrap = $('#output-images');
+    // PROCESS (placeholder: currently just mirrors input to output)
+    $('#processBtnImg').addEventListener('click', async ()=>{
+      statusImg.textContent = 'Processing…';
+      await new Promise(r=>setTimeout(r,300));
+      outputImgsWrap.innerHTML='';
+      if(!imageFiles.length){ outputImgsWrap.textContent='[No images provided]'; statusImg.textContent=''; return; }
+      imageFiles.forEach(file=>{
+        const fr=new FileReader();
+        fr.onload=e=>{
+          const img=new Image();
+          img.src=e.target.result;
+          img.style.width='100%';
+          img.style.height='140px';
+          img.style.objectFit='cover';
+          const cell=document.createElement('figure');
+          cell.className='thumb';
+          cell.appendChild(img);
+          outputImgsWrap.appendChild(cell);
+        };
+        fr.readAsDataURL(file);
+      });
+      statusImg.textContent = 'Done.';
+    });
 
-    $('#processBtn').addEventListener('click', async ()=>{ await new Promise(r=>setTimeout(r,400)); outputText.textContent = $('#text-input').value.trim() || '[No text provided]'; });
-    $('#copyBtn').addEventListener('click', async ()=>{ const t=outputText.textContent||''; if(!t.trim()) return; try{ await navigator.clipboard.writeText(t);}catch{} });
-    $('#downloadBtn').addEventListener('click', ()=>{ const t=outputText.textContent||''; if(!t.trim()) return; const blob=new Blob([t],{type:'text/plain;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='jhakri-output.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href), 800); });
-    $('#clearBtn').addEventListener('click', ()=>{ $('#text-input').value=''; outputText.textContent='Your processed result will appear here.'; $('#text-files').innerHTML=''; });
+    // DOWNLOAD original (placeholder — later replace with processed download URLs from backend)
+    $('#downloadBtnImg').addEventListener('click', ()=>{
+      if(!imageFiles.length) return;
+      imageFiles.forEach((file,i)=>{
+        const url=URL.createObjectURL(file);
+        const a=document.createElement('a');
+        a.href=url; a.download=file.name||`jhakri-image-${i+1}`;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url), 800);
+      });
+    });
 
-    $('#processBtnCode').addEventListener('click', async ()=>{ await new Promise(r=>setTimeout(r,400)); outputCode.textContent = $('#code-input').value.trim() || '[No code provided]'; });
-    $('#copyBtnCode').addEventListener('click', async ()=>{ const t=outputCode.textContent||''; if(!t.trim()) return; try{ await navigator.clipboard.writeText(t);}catch{} });
-    $('#downloadBtnCode').addEventListener('click', ()=>{ const t=outputCode.textContent||''; if(!t.trim()) return; const blob=new Blob([t],{type:'text/plain;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='jhakri-code-output.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href), 800); });
-    $('#clearBtnCode').addEventListener('click', ()=>{ $('#code-input').value=''; outputCode.textContent='Your processed result will appear here.'; $('#code-files').innerHTML=''; });
-
-    $('#processBtnImg').addEventListener('click', async ()=>{ await new Promise(r=>setTimeout(r,400)); outputImgsWrap.innerHTML=''; if(!imageFiles.length){ outputImgsWrap.textContent='[No images provided]'; return; } imageFiles.forEach(file=>{ const fr=new FileReader(); fr.onload=e=>{ const img=new Image(); img.src=e.target.result; img.style.width='100%'; img.style.height='120px'; img.style.objectFit='cover'; const cell=document.createElement('div'); cell.style.border='1px solid var(--border)'; cell.style.borderRadius='10px'; cell.style.overflow='hidden'; cell.appendChild(img); outputImgsWrap.appendChild(cell); }; fr.readAsDataURL(file); }); });
-    $('#downloadBtnImg').addEventListener('click', ()=>{ if(!imageFiles.length) return; imageFiles.forEach((file,i)=>{ const url=URL.createObjectURL(file); const a=document.createElement('a'); a.href=url; a.download=file.name||`jhakri-image-${i+1}`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 800); }); });
-    $('#clearBtnImg').addEventListener('click', ()=>{ imageFiles=[]; $('#image-files').innerHTML=''; $('#image-preview').innerHTML=''; $('#output-images').innerHTML=''; });
+    // CLEAR
+    $('#clearBtnImg').addEventListener('click', ()=>{
+      imageFiles=[]; imageList.innerHTML=''; imagePreview.innerHTML=''; outputImgsWrap.innerHTML=''; statusImg.textContent='';
+      const input = document.getElementById('image-file');
+      if (input) input.value = '';
+    });
   </script>
 </body>
 </html>
