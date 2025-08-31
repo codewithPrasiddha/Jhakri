@@ -324,6 +324,8 @@
 
     // Single image handling
     let currentImageFile = null;
+    let hasOutputImage = false; // ✅ state flag fixes 1st-try download
+
     const imagePreview = $('#image-preview');
     const outputPreview = $('#output-preview');
     const statusImg = $('#status-img');
@@ -346,12 +348,11 @@
       const hasImage = currentImageFile !== null;
       processBtn.disabled = !hasImage;
       clearBtn.disabled = !hasImage;
-      
-      // Download button enabled only after processing (check if output has an image)
-      const hasOutput = outputPreview.querySelector('img') !== null;
-      downloadBtn.disabled = !hasOutput;
-      
-      console.log('Buttons updated - hasImage:', hasImage, 'hasOutput:', hasOutput);
+
+      // Use deterministic state instead of DOM timing
+      downloadBtn.disabled = !hasOutputImage;
+
+      console.log('Buttons updated - hasImage:', hasImage, 'hasOutput:', hasOutputImage);
     }
 
     function displayImage(file, container) {
@@ -378,6 +379,7 @@
 
     function clearAll() {
       currentImageFile = null;
+      hasOutputImage = false; // ✅ reset output state
       imagePreview.innerHTML = '<div class="placeholder">No image selected</div>';
       outputPreview.innerHTML = '<div class="placeholder">Generated image will appear here</div>';
       document.getElementById('image-file').value = '';
@@ -389,13 +391,9 @@
     const fileInput = document.getElementById('image-file');
     const chooseBtn = document.getElementById('choose-btn');
     
-    console.log('File input:', fileInput);
-    console.log('Choose button:', chooseBtn);
-    
     // Make choose button work
     if (chooseBtn && fileInput) {
       chooseBtn.addEventListener('click', (e) => {
-        console.log('Choose button clicked!');
         e.preventDefault();
         e.stopPropagation();
         fileInput.click();
@@ -404,11 +402,10 @@
     
     if (fileInput) {
       fileInput.addEventListener('change', async (e) => {
-        console.log('File input changed:', e.target.files);
         const file = e.target.files[0];
         if (file && file.type.startsWith('image/')) {
-          console.log('Valid image file:', file.name);
           currentImageFile = file;
+          hasOutputImage = false; // ✅ new input invalidates prior output
           await displayImage(file, imagePreview);
           outputPreview.innerHTML = '<div class="placeholder">Generated image will appear here</div>';
           updateButtons();
@@ -440,6 +437,7 @@
       
       if (imageFile) {
         currentImageFile = imageFile;
+        hasOutputImage = false; // ✅ new input invalidates prior output
         await displayImage(imageFile, imagePreview);
         outputPreview.innerHTML = '<div class="placeholder">Generated image will appear here</div>';
         updateButtons();
@@ -468,11 +466,12 @@
       // Display "processed" image and wait for it to load
       await displayImage(currentImageFile, outputPreview);
       
+      // ✅ Mark output ready BEFORE updating buttons to avoid first-try race
+      hasOutputImage = true;
+      
       showStatus('Anti-AI protection applied successfully!', 'success');
       processBtn.disabled = false;
-      
-      // Ensure download button is enabled after image is fully loaded
-      downloadBtn.disabled = false;
+
       updateButtons();
       
       console.log('Processing complete, download should be enabled');
