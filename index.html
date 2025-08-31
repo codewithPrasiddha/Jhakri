@@ -355,19 +355,25 @@
     }
 
     function displayImage(file, container) {
-      const img = document.createElement('img');
-      const info = document.createElement('div');
-      info.className = 'image-info';
-      info.textContent = `${file.name} • ${(file.size/1024/1024).toFixed(2)} MB`;
-      
-      const reader = new FileReader();
-      reader.onload = e => {
-        img.src = e.target.result;
-        container.innerHTML = '';
-        container.appendChild(img);
-        container.appendChild(info);
-      };
-      reader.readAsDataURL(file);
+      return new Promise((resolve) => {
+        const img = document.createElement('img');
+        const info = document.createElement('div');
+        info.className = 'image-info';
+        info.textContent = `${file.name} • ${(file.size/1024/1024).toFixed(2)} MB`;
+        
+        const reader = new FileReader();
+        reader.onload = e => {
+          img.src = e.target.result;
+          img.onload = () => {
+            container.innerHTML = '';
+            container.appendChild(img);
+            container.appendChild(info);
+            console.log('Image displayed in container:', container.id);
+            resolve();
+          };
+        };
+        reader.readAsDataURL(file);
+      });
     }
 
     function clearAll() {
@@ -397,13 +403,13 @@
     }
     
     if (fileInput) {
-      fileInput.addEventListener('change', (e) => {
+      fileInput.addEventListener('change', async (e) => {
         console.log('File input changed:', e.target.files);
         const file = e.target.files[0];
         if (file && file.type.startsWith('image/')) {
           console.log('Valid image file:', file.name);
           currentImageFile = file;
-          displayImage(file, imagePreview);
+          await displayImage(file, imagePreview);
           outputPreview.innerHTML = '<div class="placeholder">Generated image will appear here</div>';
           updateButtons();
           hideStatus();
@@ -428,13 +434,13 @@
       });
     });
 
-    dropzone.addEventListener('drop', (e) => {
+    dropzone.addEventListener('drop', async (e) => {
       const files = Array.from(e.dataTransfer.files);
       const imageFile = files.find(file => file.type.startsWith('image/'));
       
       if (imageFile) {
         currentImageFile = imageFile;
-        displayImage(imageFile, imagePreview);
+        await displayImage(imageFile, imagePreview);
         outputPreview.innerHTML = '<div class="placeholder">Generated image will appear here</div>';
         updateButtons();
         hideStatus();
@@ -459,15 +465,17 @@
       dropzone.classList.remove('processing');
       processingOverlay.classList.remove('active');
 
-      // Display "processed" image (currently just mirrors the input)
-      displayImage(currentImageFile, outputPreview);
+      // Display "processed" image and wait for it to load
+      await displayImage(currentImageFile, outputPreview);
       
       showStatus('Anti-AI protection applied successfully!', 'success');
       processBtn.disabled = false;
       
-      // Ensure download button is enabled after processing
+      // Ensure download button is enabled after image is fully loaded
       downloadBtn.disabled = false;
       updateButtons();
+      
+      console.log('Processing complete, download should be enabled');
 
       // Hide success message after 3 seconds
       setTimeout(() => hideStatus(), 3000);
