@@ -347,9 +347,11 @@
       processBtn.disabled = !hasImage;
       clearBtn.disabled = !hasImage;
       
-      // Download button enabled only after processing
+      // Download button enabled only after processing (check if output has an image)
       const hasOutput = outputPreview.querySelector('img') !== null;
       downloadBtn.disabled = !hasOutput;
+      
+      console.log('Buttons updated - hasImage:', hasImage, 'hasOutput:', hasOutput);
     }
 
     function displayImage(file, container) {
@@ -448,6 +450,7 @@
       processingOverlay.classList.add('active');
       showStatus('Generating anti-AI protection...', 'processing');
       processBtn.disabled = true;
+      downloadBtn.disabled = true; // Disable download during processing
 
       // Simulate processing time
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -461,6 +464,9 @@
       
       showStatus('Anti-AI protection applied successfully!', 'success');
       processBtn.disabled = false;
+      
+      // Ensure download button is enabled after processing
+      downloadBtn.disabled = false;
       updateButtons();
 
       // Hide success message after 3 seconds
