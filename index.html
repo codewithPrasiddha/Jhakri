@@ -69,7 +69,7 @@
     label { font-weight: 700; color: var(--text); display:block; margin-bottom:12px; font-size: 18px; }
     .hint { color: var(--muted); font-size: 13px; margin-top: 8px; font-weight: 500; line-height: 1.4; }
 
-    .file-btn { display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:12px; border:1px solid var(--border); background: var(--surface-alt); cursor:pointer; font-weight:700; transition: all 0.2s ease; }
+    .file-btn { display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:12px; border:1px solid var(--border); background: var(--surface-alt); cursor:pointer; font-weight:700; transition: all 0.2s ease; position: relative; z-index: 10; pointer-events: auto; }
     .file-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-1); }
     input[type="file"] { display:none; }
 
@@ -269,7 +269,7 @@
             <button class="file-btn" id="choose-btn" type="button">
               🖼️ Choose Image
             </button>
-            <input id="image-file" type="file" accept="image/*" />
+            <input id="image-file" type="file" accept="image/*" style="display: none;" />
             <p class="hint">Supports JPG, PNG, GIF, WebP formats • Max 10MB</p>
           </div>
           
@@ -378,25 +378,36 @@
     }
 
     // File input handler
-    const fileInput = $('#image-file');
-    const chooseBtn = $('#choose-btn');
+    const fileInput = document.getElementById('image-file');
+    const chooseBtn = document.getElementById('choose-btn');
+    
+    console.log('File input:', fileInput);
+    console.log('Choose button:', chooseBtn);
     
     // Make choose button work
-    chooseBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      fileInput.click();
-    });
+    if (chooseBtn && fileInput) {
+      chooseBtn.addEventListener('click', (e) => {
+        console.log('Choose button clicked!');
+        e.preventDefault();
+        e.stopPropagation();
+        fileInput.click();
+      });
+    }
     
-    fileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file && file.type.startsWith('image/')) {
-        currentImageFile = file;
-        displayImage(file, imagePreview);
-        outputPreview.innerHTML = '<div class="placeholder">Generated image will appear here</div>';
-        updateButtons();
-        hideStatus();
-      }
-    });
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        console.log('File input changed:', e.target.files);
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+          console.log('Valid image file:', file.name);
+          currentImageFile = file;
+          displayImage(file, imagePreview);
+          outputPreview.innerHTML = '<div class="placeholder">Generated image will appear here</div>';
+          updateButtons();
+          hideStatus();
+        }
+      });
+    }
 
     // Drag & drop handlers
     ['dragenter', 'dragover'].forEach(eventName => {
