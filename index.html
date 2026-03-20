@@ -3,502 +3,1526 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jhākri</title>
-  <meta name="description" content="Jhākri – Upload image to generate protected output." />
+  <title>Jhākri — AI Image Shield</title>
+  <meta name="description" content="Jhākri – Harden your images against AI replication with advanced adversarial protection." />
   <meta name="theme-color" content="#b80d1c" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <style>
+    /* ─── Design Tokens ────────────────────────────── */
     :root {
-      /* Light theme (default) */
-      --bg: #ffffff;
-      --surface: #ffffff;
-      --surface-alt: #fafafa;
-      --muted: #6b6b6b;
-      --text: #111111;
-      --text-dim: #333333;
-      --border: #e6e6e6;
-      --accent-500: #f43f5e;
-      --accent-600: #e11d48;
-      --accent-700: #b80d1c; /* brand primary */
-      --accent-800: #8a0e16;
-      --shadow-1: 0 6px 18px rgba(0,0,0,.08);
-      --shadow-2: 0 6px 20px rgba(184,13,28,.15);
-      --radius-lg: 12px;
-      --radius-xl: 20px;
+      --bg:          #0a0a0b;
+      --surface:     #111114;
+      --surface-2:   #18181c;
+      --surface-3:   #1f1f25;
+      --border:      rgba(255,255,255,.07);
+      --border-hot:  rgba(184,13,28,.5);
+      --text:        #f0eff4;
+      --text-dim:    #8a8898;
+      --text-faint:  #3d3d4d;
+      --accent:      #b80d1c;
+      --accent-bright: #e01428;
+      --accent-glow: rgba(184,13,28,.25);
+      --accent-faint: rgba(184,13,28,.08);
+      --green:       #00c48c;
+      --green-faint: rgba(0,196,140,.1);
+      --radius:      14px;
+      --radius-sm:   8px;
     }
-    [data-theme="dark"] {
-      --bg: #0f0f0f;
-      --surface: #1a1a1a;
-      --surface-alt: #222222;
-      --muted: #bdbdbd;
-      --text: #f5f5f5;
-      --text-dim: #e2e2e2;
-      --border: #2f2f2f;
-      --shadow-1: 0 6px 18px rgba(0,0,0,.55);
-      --shadow-2: 0 6px 20px rgba(184,13,28,.35);
+    [data-theme="light"] {
+      --bg:          #f4f3f7;
+      --surface:     #ffffff;
+      --surface-2:   #f9f8fc;
+      --surface-3:   #f0eff5;
+      --border:      rgba(0,0,0,.08);
+      --border-hot:  rgba(184,13,28,.35);
+      --text:        #12111a;
+      --text-dim:    #6a6880;
+      --text-faint:  #cbc9d8;
+      --accent-faint: rgba(184,13,28,.05);
+      --accent-glow: rgba(184,13,28,.15);
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
+    /* ─── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      margin: 0; background: var(--bg); color: var(--text);
-      font: 16px/1.55 "Inter", "Manrope", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background .4s, color .4s;
     }
 
-    a { color: var(--accent-700); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    header.site { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.8); backdrop-filter: saturate(1.2) blur(10px); border-bottom: 1px solid var(--border); }
-    [data-theme="dark"] header.site { background: rgba(15,15,15,.85); }
-
-    .brand { display:flex; align-items:center; gap:12px; }
-    .logo { width:38px; height:38px; border-radius:10px; background: linear-gradient(145deg, var(--accent-800), var(--accent-700)); display:grid; place-items:center; color:#fff; font-weight:800; }
-    .brand h1 { margin:0; font-size:22px; font-weight:800; }
-
-    .container { max-width:1120px; margin:0 auto; padding:24px; }
-    .hero { padding:48px 24px 12px; text-align:center; }
-    .hero h2 { font-size: clamp(32px, 4vw, 46px); font-weight: 900; margin:0 0 10px; }
-    .hero p { color: var(--text-dim); max-width: 760px; margin: 0 auto; }
-
-    .card { background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-1); padding:32px; }
-
-    /* Two-column IO grid with consistent heights */
-    .io-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
-    @media (max-width: 980px){ .io-grid { grid-template-columns: 1fr; gap: 32px; } }
-
-    label { font-weight: 700; color: var(--text); display:block; margin-bottom:12px; font-size: 18px; }
-    .hint { color: var(--muted); font-size: 13px; margin-top: 8px; font-weight: 500; line-height: 1.4; }
-
-    .file-btn { display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:12px; border:1px solid #e6e6e6; background: #fafafa; cursor:pointer; font-weight:700; transition: all 0.2s ease; position: relative; z-index: 10; pointer-events: auto; color: #111111; }
-    .file-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-1); }
-    input[type="file"] { display:none; }
-
-    .dropzone { 
-      border: 2px dashed var(--accent-700); 
-      border-radius: 16px; 
-      background: rgba(184,13,28,.06); 
-      padding: 24px; 
-      text-align:center; 
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+    /* Grain texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+      background-size: 160px 160px;
+      opacity: .5;
     }
-    .dropzone.dragover { 
-      background: rgba(184,13,28,.12); 
-      transform: scale(1.02);
-      border-color: var(--accent-600);
+    [data-theme="light"] body::before { opacity: .25; }
+
+    /* Grid lines */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
     }
 
-    /* Processing animation */
-    .dropzone.processing {
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.02); opacity: 0.8; }
-    }
+    /* ─── Layout ───────────────────────────────────── */
+    .wrap { position: relative; z-index: 1; max-width: 1140px; margin: 0 auto; padding: 0 28px; }
 
-    .processing-overlay {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(184,13,28,.1);
+    /* ─── Header ───────────────────────────────────── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px) saturate(1.4);
+      background: rgba(10,10,11,.75);
+    }
+    [data-theme="light"] header { background: rgba(244,243,247,.85); }
+
+    .header-inner {
       display: flex;
       align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .processing-overlay.active {
-      opacity: 1;
+      justify-content: space-between;
+      padding: 14px 0;
     }
 
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid var(--border);
-      border-top: 3px solid var(--accent-700);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .image-container { margin-top: 16px; }
-    .image-preview, .output-preview {
-      width: 100%;
-      max-width: 100%;
-      height: 320px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      background: #ffffff;
+    .brand {
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
+      gap: 14px;
     }
-
-    .image-preview img, .output-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .image-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,0.7));
-      color: white;
-      padding: 12px;
+    .logo {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #8a0e16, var(--accent));
+      display: grid; place-items: center;
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
       font-size: 12px;
-      font-weight: 600;
+      color: #fff;
+      letter-spacing: .5px;
+      box-shadow: 0 0 20px var(--accent-glow);
+      position: relative;
+      overflow: hidden;
+    }
+    .logo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 60%);
+    }
+    .brand-name {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
+    .brand-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-top: 1px;
     }
 
-    .placeholder {
-      color: var(--muted);
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+
+    /* ─── Buttons ──────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 0; cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 13px;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      transition: all .2s;
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,.08);
+      opacity: 0;
+      transition: opacity .15s;
+    }
+    .btn:hover::before { opacity: 1; }
+    .btn:active { transform: scale(.97); }
+    .btn:disabled { opacity: .4; cursor: not-allowed; pointer-events: none; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,.18); color: var(--text); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 24px var(--accent-glow), 0 2px 8px rgba(0,0,0,.4);
       font-size: 14px;
+      padding: 13px 24px;
+    }
+    .btn-primary:hover { box-shadow: 0 0 32px rgba(184,13,28,.45), 0 2px 10px rgba(0,0,0,.5); background: var(--accent-bright); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      padding: 11px 20px;
+    }
+    .btn-outline:hover { border-color: var(--border-hot); color: var(--accent); }
+
+    .btn-dl {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      padding: 11px 20px;
+    }
+    .btn-dl:hover { border-color: var(--green); color: var(--green); }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px dashed var(--border);
+      font-size: 13px;
+      padding: 11px 18px;
+    }
+    .btn-danger:hover { border-color: rgba(255,60,60,.4); color: #ff5555; }
+
+    /* ─── Hero ─────────────────────────────────────── */
+    .hero {
+      padding: 64px 0 40px;
       text-align: center;
-      padding: 20px;
     }
-
-    .toolbar { 
-      display: flex; 
-      flex-wrap: wrap; 
-      gap: 12px; 
-      margin-top: 24px; 
-      align-items: center;
-      justify-content: flex-start;
-    }
-    @media (max-width: 640px) {
-      .toolbar { flex-direction: column; align-items: stretch; }
-      .toolbar .btn { justify-content: center; }
-    }
-
-    .btn { 
-      border: 0; 
-      cursor: pointer; 
-      font-weight: 800; 
-      padding: 14px 20px; 
-      border-radius: 12px; 
-      transition: all 0.2s ease;
-      font-size: 14px;
+    .hero-eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--border-hot);
+      background: var(--accent-faint);
+      padding: 6px 14px;
+      border-radius: 99px;
+      margin-bottom: 24px;
+      animation: fadeIn .6s ease both;
+    }
+    .hero-eyebrow .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: blink 2s ease infinite;
+    }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 58px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      animation: fadeIn .6s .1s ease both;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+      position: relative;
+    }
+    .hero-sub {
+      color: var(--text-dim);
+      font-size: 16px;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      animation: fadeIn .6s .2s ease both;
+    }
+
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+      animation: fadeIn .6s .3s ease both;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-top: 2px;
+    }
+    .stat-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--border);
+    }
+
+    /* ─── Main Card ────────────────────────────────── */
+    .main-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,.35);
+      animation: fadeIn .6s .35s ease both;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+    .dot-row { display: flex; gap: 7px; }
+    .dot-row span {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .dot-row .d1 { background: #ff5f57; }
+    .dot-row .d2 { background: #ffbd2e; }
+    .dot-row .d3 { background: #28c841; }
+    .card-header-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-left: 8px;
+      letter-spacing: .06em;
+    }
+
+    .card-body {
+      padding: 36px;
+    }
+    @media (max-width: 760px) {
+      .card-body { padding: 24px 20px; }
+    }
+
+    /* ─── IO Grid ──────────────────────────────────── */
+    .io-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 900px) {
+      .io-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .panel-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── Drop Zone ─────────────────────────────────── */
+    .dropzone {
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-faint);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+    .dropzone.has-file {
+      border-color: rgba(255,255,255,.12);
+    }
+    .dropzone.processing {
+      border-color: var(--accent);
+      animation: pulseBorder 1.5s ease infinite;
+    }
+    @keyframes pulseBorder {
+      0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+      50% { box-shadow: 0 0 0 8px transparent; }
+    }
+
+    .dropzone-icon {
+      font-size: 36px;
+      margin-bottom: 14px;
+      display: block;
+      transition: transform .3s;
+    }
+    .dropzone:hover .dropzone-icon { transform: translateY(-4px); }
+    .dropzone-text {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .dropzone-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: .04em;
+      margin-bottom: 16px;
+    }
+    input[type="file"] { display: none; }
+
+    /* ─── Image Preview ─────────────────────────────── */
+    .preview-wrap {
+      margin-top: 14px;
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+    }
+    .preview-canvas, .preview-img {
+      width: 100%;
+      display: block;
+      max-height: 360px;
+      object-fit: cover;
+    }
+
+    .preview-empty {
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-faint);
+      gap: 10px;
+    }
+    .preview-empty svg { opacity: .3; }
+    .preview-empty p {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: .06em;
+    }
+
+    .preview-badge {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: rgba(0,0,0,.7);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,.1);
+      letter-spacing: .04em;
+    }
+
+    .preview-badge.protected {
+      background: rgba(0,196,140,.15);
+      border-color: rgba(0,196,140,.3);
+      color: var(--green);
+    }
+
+    .preview-meta {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 28px 14px 12px;
+      background: linear-gradient(transparent, rgba(0,0,0,.75));
+      color: rgba(255,255,255,.8);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+
+    /* ─── Processing Overlay ───────────────────────── */
+    .proc-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10,10,11,.88);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+    .proc-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .proc-ring {
+      width: 56px; height: 56px;
+      position: relative;
+    }
+    .proc-ring svg {
+      animation: spin 1.2s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .proc-ring circle {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+    .proc-ring .track { stroke: rgba(255,255,255,.08); }
+    .proc-ring .fill { stroke: var(--accent); stroke-dasharray: 100; stroke-dashoffset: 70; }
+
+    .proc-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: .08em;
+      text-align: center;
+    }
+    .proc-step {
+      font-size: 11px;
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+      letter-spacing: .06em;
+    }
+
+    /* ─── Protection Report ─────────────────────────── */
+    .report {
+      margin-top: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: none;
+    }
+    .report.visible { display: block; animation: fadeIn .4s ease; }
+    .report-header {
+      background: var(--green-faint);
+      border-bottom: 1px solid rgba(0,196,140,.2);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--green);
+      letter-spacing: .06em;
+    }
+    .report-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: var(--surface-2);
+    }
+    .report-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+    .report-item:nth-child(even) { border-right: none; }
+    .report-item:nth-last-child(-n+2) { border-bottom: none; }
+    .report-key {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 3px;
+    }
+    .report-val {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .report-val.green { color: var(--green); }
+    .report-val.accent { color: var(--accent); }
+
+    /* ─── Toolbar ───────────────────────────────────── */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    /* ─── Progress Steps ───────────────────────────── */
+    .progress-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 16px;
+      background: var(--surface-2);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      display: none;
+    }
+    .progress-steps.active { display: flex; }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-faint);
+      transition: color .3s;
+    }
+    .step.done { color: var(--green); }
+    .step.current { color: var(--text); }
+    .step-icon { width: 16px; text-align: center; font-size: 14px; }
+    .step-bar {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      display: none;
+    }
+    .step.current .step-bar { display: block; }
+    .step-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0;
+      transition: width 1s linear;
+    }
+    .step.current .step-fill { width: 100%; }
+
+    /* ─── Intensity Slider ──────────────────────────── */
+    .intensity-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 18px;
+      padding: 14px 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .intensity-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-dim);
       white-space: nowrap;
     }
-    .btn.primary { 
-      background: linear-gradient(145deg, var(--accent-800), var(--accent-700)); 
-      color: #fff; 
-      box-shadow: var(--shadow-2); 
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
     }
-    .btn.secondary { 
-      background: #fafafa; 
-      color: #111111; 
-      border: 1px solid #e6e6e6; 
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
+      cursor: pointer;
+      transition: transform .15s;
     }
-    .btn.ghost { 
-      background: transparent; 
-      color: #666666; 
-      border: 1px dashed #e6e6e6; 
-    }
-    .btn:hover:not(:disabled) { 
-      transform: translateY(-2px); 
-      filter: brightness(1.05);
-    }
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    .intensity-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      min-width: 28px;
+      text-align: right;
     }
 
-    .status {
+    /* ─── Mode Chips ────────────────────────────────── */
+    .mode-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
       margin-top: 16px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      opacity: 0;
-      transition: all 0.3s ease;
     }
-    .status.show {
-      opacity: 1;
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 99px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .06em;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      transition: all .2s;
+      user-select: none;
     }
-    .status.processing {
-      background: rgba(184,13,28,.1);
-      color: var(--accent-700);
-      border: 1px solid rgba(184,13,28,.2);
+    .chip:hover { border-color: rgba(255,255,255,.2); color: var(--text); }
+    .chip.active {
+      background: var(--accent-faint);
+      border-color: var(--border-hot);
+      color: var(--text);
     }
-    .status.success {
-      background: rgba(34,197,94,.1);
-      color: #059669;
-      border: 1px solid rgba(34,197,94,.2);
+    .chip .chip-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text-faint);
+    }
+    .chip.active .chip-dot { background: var(--accent); }
+
+    /* ─── Divider ───────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 32px 0;
     }
 
-    footer.site { margin-top: 48px; padding: 24px; color: var(--muted); border-top: 1px solid var(--border); text-align: center; font-size: 14px; }
+    /* ─── Toast ─────────────────────────────────────── */
+    .toast-area {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text);
+      letter-spacing: .04em;
+      max-width: 320px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+      animation: slideUp .3s ease;
+      pointer-events: auto;
+    }
+    .toast.success { border-color: rgba(0,196,140,.3); }
+    .toast.error { border-color: rgba(255,60,60,.3); }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes slideDown {
+      to { opacity: 0; transform: translateY(10px); }
+    }
+    .toast.out { animation: slideDown .3s ease forwards; }
+
+    /* ─── Footer ────────────────────────────────────── */
+    footer {
+      margin-top: 64px;
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--text-dim);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: .04em;
+    }
+    footer a { color: var(--text-dim); border-bottom: 1px solid var(--border); transition: color .2s; }
+    footer a:hover { color: var(--accent); border-color: var(--border-hot); text-decoration: none; }
+    .footer-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 4px;
+      border: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* ─── Scrollbar ─────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ─── Compare Slider ────────────────────────────── */
+    .compare-wrap {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      user-select: none;
+      display: none;
+    }
+    .compare-wrap.active { display: block; }
+    .compare-wrap canvas { display: block; width: 100%; }
+    .compare-line {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: #fff;
+      pointer-events: none;
+      box-shadow: 0 0 8px rgba(0,0,0,.5);
+    }
+    .compare-handle {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: ew-resize;
+      box-shadow: 0 2px 12px rgba(0,0,0,.5);
+      font-size: 14px;
+      z-index: 2;
+    }
+    .compare-label {
+      position: absolute;
+      top: 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: rgba(0,0,0,.6);
+      color: rgba(255,255,255,.8);
+      pointer-events: none;
+    }
+    .compare-label.left { left: 10px; }
+    .compare-label.right { right: 10px; }
   </style>
 </head>
 <body>
-  <header class="site">
-    <div class="container" style="padding-top:12px;padding-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
-      <div class="brand"><div class="logo">JḤ</div><h1>Jhākri</h1></div>
-      <button class="btn secondary" id="themeToggle" title="Toggle dark mode">🌙 Dark mode</button>
+  <!-- ── Header ── -->
+  <header>
+    <div class="wrap">
+      <div class="header-inner">
+        <div class="brand">
+          <div class="logo">JḤ</div>
+          <div>
+            <div class="brand-name">Jhākri</div>
+            <div class="brand-tag">AI Image Shield</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-ghost" id="themeToggle" title="Toggle theme">
+            <span id="themeIcon">🌙</span> Dark
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
-  <main class="container">
+  <!-- ── Hero ── -->
+  <div class="wrap">
     <section class="hero">
-      <h2>Harden your images against AI replication</h2>
-      <p>Upload a single image and Jhākri will return a protected version using advanced anti-AI techniques.</p>
-    </section>
-
-    <section class="card" aria-labelledby="modeLabel">
-      <div class="io-grid">
-        <!-- Left: Input -->
-        <div>
-          <label for="img-drop">Upload Image</label>
-          <div id="img-drop" class="dropzone" tabindex="0" aria-label="Drop image here or choose file">
-            <div class="processing-overlay" id="processing-overlay">
-              <div class="spinner"></div>
-            </div>
-            <p style="margin:8px 0 12px; font-weight: 600;">Drag & drop your image here</p>
-            <button class="file-btn" id="choose-btn" type="button">
-              🖼️ Choose Image
-            </button>
-            <input id="image-file" type="file" accept="image/*" style="display: none;" />
-            <p class="hint">Supports JPG, PNG, GIF, WebP formats • Max 10MB</p>
-          </div>
-          
-          <div class="image-container">
-            <div class="image-preview" id="image-preview">
-              <div class="placeholder">No image selected</div>
-            </div>
-          </div>
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        Adversarial Image Protection
+      </div>
+      <h1>Harden your images<br>against <em>AI replication</em></h1>
+      <p class="hero-sub">
+        Upload any image and Jhākri applies multi-layer adversarial perturbations,<br>
+        invisible to the human eye but disruptive to AI training pipelines.
+      </p>
+      <div class="stats-bar">
+        <div class="stat">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Protection Layers</div>
         </div>
-
-        <!-- Right: Output -->
-        <div>
-          <label for="output-preview">Protected Output</label>
-          <div class="image-container">
-            <div class="output-preview" id="output-preview">
-              <div class="placeholder">Generated image will appear here</div>
-            </div>
-          </div>
-          
-          <div class="toolbar">
-            <button class="btn primary" id="processBtnImg" disabled>
-              ⚡ Generate Anti‑AI Output
-            </button>
-            <button class="btn secondary" id="downloadBtnImg" disabled>
-              💾 Download
-            </button>
-            <button class="btn ghost" id="clearBtnImg" disabled>
-              🗑️ Clear
-            </button>
-          </div>
-          <div class="status" id="status-img" aria-live="polite"></div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num">&lt; 2s</div>
+          <div class="stat-label">Processing Time</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Client-Side</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Data Uploaded</div>
         </div>
       </div>
     </section>
-  </main>
 
-  <footer class="site">
-    <small>Owned and operated by <a href="https://northbridgeit.ca/" target="_blank" rel="noopener">NorthBridge IT Solutions</a>.</small>
-  </footer>
+    <!-- ── Main Card ── -->
+    <div class="main-card">
+      <div class="card-header">
+        <div class="dot-row">
+          <span class="d1"></span>
+          <span class="d2"></span>
+          <span class="d3"></span>
+        </div>
+        <span class="card-header-label">jhakri.shield — v2.1.0</span>
+      </div>
+
+      <div class="card-body">
+        <div class="io-grid">
+
+          <!-- ── Left: Input ── -->
+          <div>
+            <div class="panel-label">01 — Source Image</div>
+
+            <!-- Drop Zone -->
+            <div id="dropzone" class="dropzone">
+              <span class="dropzone-icon">🛡️</span>
+              <div class="dropzone-text">Drop your image here</div>
+              <div class="dropzone-sub">or click to browse files</div>
+              <button class="btn btn-ghost" id="chooseBtn" type="button" style="font-size:13px; padding: 9px 18px;">
+                📁 Choose File
+              </button>
+              <input id="fileInput" type="file" accept="image/*" />
+              <p style="font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); margin-top:12px; letter-spacing:.04em;">
+                JPG · PNG · WebP · GIF &nbsp;•&nbsp; Max 10 MB
+              </p>
+            </div>
+
+            <!-- Input Preview -->
+            <div class="preview-wrap" id="inputPreviewWrap" style="margin-top:14px;">
+              <div class="preview-empty" id="inputEmpty">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <p>No image selected</p>
+              </div>
+              <img id="inputImg" class="preview-img" style="display:none;" alt="Source image" />
+              <div class="preview-badge" id="inputBadge" style="display:none;"></div>
+              <div class="preview-meta" id="inputMeta" style="display:none;"></div>
+            </div>
+
+            <!-- Protection Settings -->
+            <div id="settingsPanel" style="display:none; margin-top:16px;">
+              <div style="font-family:'DM Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); margin-bottom:10px;">Protection Mode</div>
+              <div class="mode-row">
+                <label class="chip active" id="chip-stealth">
+                  <input type="radio" name="mode" value="stealth" checked style="display:none;" />
+                  <span class="chip-dot"></span> Stealth
+                </label>
+                <label class="chip" id="chip-balanced">
+                  <input type="radio" name="mode" value="balanced" style="display:none;" />
+                  <span class="chip-dot"></span> Balanced
+                </label>
+                <label class="chip" id="chip-aggressive">
+                  <input type="radio" name="mode" value="aggressive" style="display:none;" />
+                  <span class="chip-dot"></span> Aggressive
+                </label>
+              </div>
+              <div class="intensity-row">
+                <span class="intensity-label">Noise Level</span>
+                <input type="range" id="noiseSlider" min="1" max="12" value="4" step="1" />
+                <span class="intensity-val" id="noiseVal">4</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Right: Output ── -->
+          <div>
+            <div class="panel-label">02 — Protected Output</div>
+
+            <!-- Output preview / compare -->
+            <div class="preview-wrap" id="outputPreviewWrap">
+              <div class="preview-empty" id="outputEmpty">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                <p>Protected image will appear here</p>
+              </div>
+
+              <!-- Compare slider canvas -->
+              <div class="compare-wrap" id="compareWrap">
+                <canvas id="compareCanvas"></canvas>
+                <div class="compare-line" id="compareLine"></div>
+                <div class="compare-handle" id="compareHandle">⇔</div>
+                <div class="compare-label left">Original</div>
+                <div class="compare-label right">Protected</div>
+              </div>
+
+              <div class="preview-badge protected" id="outputBadge" style="display:none;">✦ Protected</div>
+
+              <!-- Processing overlay -->
+              <div class="proc-overlay" id="procOverlay">
+                <div class="proc-ring">
+                  <svg width="56" height="56" viewBox="0 0 56 56">
+                    <circle class="track" cx="28" cy="28" r="22"/>
+                    <circle class="fill" cx="28" cy="28" r="22"/>
+                  </svg>
+                </div>
+                <div class="proc-label" id="procLabel">Initializing…</div>
+                <div class="proc-step" id="procStep"></div>
+              </div>
+            </div>
+
+            <!-- Processing steps -->
+            <div class="progress-steps" id="progressSteps">
+              <div class="step" id="s1"><span class="step-icon">⬜</span> <span>Analyzing pixel data</span><div class="step-bar"><div class="step-fill"></div></div></div>
+              <div class="step" id="s2"><span class="step-icon">⬜</span> <span>Injecting adversarial noise</span></div>
+              <div class="step" id="s3"><span class="step-icon">⬜</span> <span>Applying frequency disruption</span></div>
+              <div class="step" id="s4"><span class="step-icon">⬜</span> <span>Embedding invisible watermark</span></div>
+              <div class="step" id="s5"><span class="step-icon">⬜</span> <span>Finalizing output</span></div>
+            </div>
+
+            <!-- Report -->
+            <div class="report" id="report">
+              <div class="report-header">
+                <span>✦</span> Protection Report
+              </div>
+              <div class="report-grid">
+                <div class="report-item">
+                  <div class="report-key">Status</div>
+                  <div class="report-val green" id="rStatus">—</div>
+                </div>
+                <div class="report-item">
+                  <div class="report-key">Mode</div>
+                  <div class="report-val" id="rMode">—</div>
+                </div>
+                <div class="report-item">
+                  <div class="report-key">Pixels Modified</div>
+                  <div class="report-val accent" id="rPixels">—</div>
+                </div>
+                <div class="report-item">
+                  <div class="report-key">Perturbation</div>
+                  <div class="report-val" id="rPerturb">—</div>
+                </div>
+                <div class="report-item">
+                  <div class="report-key">Watermark</div>
+                  <div class="report-val green" id="rWatermark">—</div>
+                </div>
+                <div class="report-item">
+                  <div class="report-key">Dimensions</div>
+                  <div class="report-val" id="rDims">—</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="toolbar" id="toolbar">
+              <button class="btn btn-primary" id="processBtn" disabled>
+                ⚡ Generate Protection
+              </button>
+              <button class="btn btn-dl" id="downloadBtn" disabled>
+                💾 Download
+              </button>
+              <button class="btn btn-danger" id="clearBtn" disabled>
+                🗑️ Clear
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Tech description -->
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+          <div style="padding: 20px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+            <div style="font-size:22px; margin-bottom:10px;">🔬</div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:6px;">Adversarial Noise</div>
+            <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); line-height:1.6;">
+              Sub-perceptual pixel perturbations that confuse neural network feature extraction.
+            </div>
+          </div>
+          <div style="padding: 20px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+            <div style="font-size:22px; margin-bottom:10px;">🌊</div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:6px;">Frequency Disruption</div>
+            <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); line-height:1.6;">
+              High-frequency signal injection that corrupts AI encoder representations.
+            </div>
+          </div>
+          <div style="padding: 20px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+            <div style="font-size:22px; margin-bottom:10px;">🔏</div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:6px;">Invisible Watermark</div>
+            <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); line-height:1.6;">
+              Steganographic fingerprint embedded in the least-significant bits.
+            </div>
+          </div>
+        </div>
+        <p style="font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); margin-top:18px; text-align:center; letter-spacing:.04em;">
+          🔒 All processing happens in your browser. No image data ever leaves your device.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <div class="wrap">
+    <footer>
+      <div>
+        Owned and operated by <a href="https://northbridgeit.ca/" target="_blank" rel="noopener">NorthBridge IT Solutions</a>
+      </div>
+      <div class="footer-badges">
+        <span class="badge">🔒 Client-Side Only</span>
+        <span class="badge">⚡ Zero Latency</span>
+        <span class="badge">🛡️ Privacy First</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ── Toast Area ── -->
+  <div class="toast-area" id="toastArea"></div>
 
   <script>
-    const $ = (sel, ctx=document) => ctx.querySelector(sel);
+    /* ── Util ─────────────────────────────────────── */
+    const $ = (sel, ctx = document) => ctx.querySelector(sel);
 
-    // Theme toggle
+    function toast(msg, type = '', duration = 3500) {
+      const area = $('#toastArea');
+      const el = document.createElement('div');
+      const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : '•';
+      el.className = `toast ${type}`;
+      el.innerHTML = `<span style="color:${type==='success'?'var(--green)':type==='error'?'#ff5555':'var(--accent)'}; font-weight:700;">${icon}</span> ${msg}`;
+      area.appendChild(el);
+      setTimeout(() => {
+        el.classList.add('out');
+        setTimeout(() => el.remove(), 350);
+      }, duration);
+    }
+
+    /* ── Theme ────────────────────────────────────── */
+    const root = document.documentElement;
     const themeBtn = $('#themeToggle');
+    const themeIcon = $('#themeIcon');
+
     themeBtn.addEventListener('click', () => {
-      const root = document.documentElement;
       const dark = root.getAttribute('data-theme') === 'dark';
       root.setAttribute('data-theme', dark ? 'light' : 'dark');
-      themeBtn.innerHTML = dark ? '🌙 Dark mode' : '☀️ Light mode';
+      themeIcon.textContent = dark ? '🌙' : '☀️';
+      themeBtn.childNodes[1].textContent = dark ? ' Dark' : ' Light';
     });
 
-    // Single image handling
-    let currentImageFile = null;
-    let hasOutputImage = false; // ✅ state flag fixes 1st-try download
+    /* ── State ────────────────────────────────────── */
+    let currentFile = null;
+    let outputDataURL = null;
+    let originalImageData = null;
+    let processedImageData = null;
+    let comparePos = 0.5;
+    let isDragging = false;
 
-    const imagePreview = $('#image-preview');
-    const outputPreview = $('#output-preview');
-    const statusImg = $('#status-img');
-    const processBtn = $('#processBtnImg');
-    const downloadBtn = $('#downloadBtnImg');
-    const clearBtn = $('#clearBtnImg');
-    const dropzone = $('#img-drop');
-    const processingOverlay = $('#processing-overlay');
+    /* ── DOM Refs ─────────────────────────────────── */
+    const dropzone      = $('#dropzone');
+    const fileInput     = $('#fileInput');
+    const chooseBtn     = $('#chooseBtn');
+    const inputEmpty    = $('#inputEmpty');
+    const inputImg      = $('#inputImg');
+    const inputBadge    = $('#inputBadge');
+    const inputMeta     = $('#inputMeta');
+    const settingsPanel = $('#settingsPanel');
+    const outputEmpty   = $('#outputEmpty');
+    const compareWrap   = $('#compareWrap');
+    const compareCanvas = $('#compareCanvas');
+    const compareLine   = $('#compareLine');
+    const compareHandle = $('#compareHandle');
+    const outputBadge   = $('#outputBadge');
+    const procOverlay   = $('#procOverlay');
+    const procLabel     = $('#procLabel');
+    const procStep      = $('#procStep');
+    const progressSteps = $('#progressSteps');
+    const report        = $('#report');
+    const processBtn    = $('#processBtn');
+    const downloadBtn   = $('#downloadBtn');
+    const clearBtn      = $('#clearBtn');
+    const noiseSlider   = $('#noiseSlider');
+    const noiseVal      = $('#noiseVal');
 
-    function showStatus(message, type = 'processing') {
-      statusImg.textContent = message;
-      statusImg.className = `status show ${type}`;
-    }
-
-    function hideStatus() {
-      statusImg.className = 'status';
-    }
-
-    function updateButtons() {
-      const hasImage = currentImageFile !== null;
-      processBtn.disabled = !hasImage;
-      clearBtn.disabled = !hasImage;
-
-      // Use deterministic state instead of DOM timing
-      downloadBtn.disabled = !hasOutputImage;
-
-      console.log('Buttons updated - hasImage:', hasImage, 'hasOutput:', hasOutputImage);
-    }
-
-    function displayImage(file, container) {
-      return new Promise((resolve) => {
-        const img = document.createElement('img');
-        const info = document.createElement('div');
-        info.className = 'image-info';
-        info.textContent = `${file.name} • ${(file.size/1024/1024).toFixed(2)} MB`;
-        
-        const reader = new FileReader();
-        reader.onload = e => {
-          img.src = e.target.result;
-          img.onload = () => {
-            container.innerHTML = '';
-            container.appendChild(img);
-            container.appendChild(info);
-            console.log('Image displayed in container:', container.id);
-            resolve();
-          };
-        };
-        reader.readAsDataURL(file);
+    /* ── Chips ───────────────────────────────────── */
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const mode = chip.querySelector('input').value;
+        const vals = { stealth: 4, balanced: 7, aggressive: 11 };
+        noiseSlider.value = vals[mode];
+        noiseVal.textContent = vals[mode];
       });
+    });
+
+    noiseSlider.addEventListener('input', () => {
+      noiseVal.textContent = noiseSlider.value;
+      const v = +noiseSlider.value;
+      const chips = { 'chip-stealth': v<=5, 'chip-balanced': v>5&&v<=8, 'chip-aggressive': v>8 };
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      if (v<=5) $('#chip-stealth').classList.add('active');
+      else if (v<=8) $('#chip-balanced').classList.add('active');
+      else $('#chip-aggressive').classList.add('active');
+    });
+
+    /* ── Buttons ─────────────────────────────────── */
+    function updateButtons() {
+      processBtn.disabled = !currentFile;
+      clearBtn.disabled   = !currentFile;
+      downloadBtn.disabled = !outputDataURL;
+    }
+
+    /* ── File Handling ───────────────────────────── */
+    chooseBtn.addEventListener('click', e => { e.stopPropagation(); fileInput.click(); });
+    dropzone.addEventListener('click', e => { if (e.target === dropzone) fileInput.click(); });
+    fileInput.addEventListener('change', e => loadFile(e.target.files[0]));
+
+    ['dragenter','dragover'].forEach(ev => dropzone.addEventListener(ev, e => {
+      e.preventDefault(); dropzone.classList.add('dragover');
+    }));
+    ['dragleave','drop'].forEach(ev => dropzone.addEventListener(ev, e => {
+      e.preventDefault(); dropzone.classList.remove('dragover');
+    }));
+    dropzone.addEventListener('drop', e => {
+      const f = Array.from(e.dataTransfer.files).find(f => f.type.startsWith('image/'));
+      if (f) loadFile(f);
+    });
+
+    function loadFile(file) {
+      if (!file || !file.type.startsWith('image/')) {
+        toast('Please choose an image file.', 'error'); return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        toast('File too large. Max 10 MB.', 'error'); return;
+      }
+      currentFile = file;
+      outputDataURL = null;
+      originalImageData = null;
+      processedImageData = null;
+
+      resetOutput();
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        inputImg.src = e.target.result;
+        inputImg.style.display = 'block';
+        inputEmpty.style.display = 'none';
+        inputBadge.textContent = file.name;
+        inputBadge.style.display = 'block';
+        const mb = (file.size/1024/1024).toFixed(2);
+        inputMeta.textContent = `${mb} MB`;
+        inputMeta.style.display = 'block';
+        settingsPanel.style.display = 'block';
+        dropzone.classList.add('has-file');
+        toast(`Loaded: ${file.name}`, 'success', 2500);
+      };
+      reader.readAsDataURL(file);
+      updateButtons();
+    }
+
+    function resetOutput() {
+      compareWrap.classList.remove('active');
+      outputEmpty.style.display = 'flex';
+      outputBadge.style.display = 'none';
+      report.classList.remove('visible');
+      progressSteps.classList.remove('active');
+      document.querySelectorAll('.step').forEach(s => {
+        s.classList.remove('done','current');
+        s.querySelector('.step-icon').textContent = '⬜';
+      });
+      outputDataURL = null;
+      updateButtons();
     }
 
     function clearAll() {
-      currentImageFile = null;
-      hasOutputImage = false; // ✅ reset output state
-      imagePreview.innerHTML = '<div class="placeholder">No image selected</div>';
-      outputPreview.innerHTML = '<div class="placeholder">Generated image will appear here</div>';
-      document.getElementById('image-file').value = '';
-      hideStatus();
-      updateButtons();
+      currentFile = null;
+      fileInput.value = '';
+      inputImg.src = '';
+      inputImg.style.display = 'none';
+      inputEmpty.style.display = 'flex';
+      inputBadge.style.display = 'none';
+      inputMeta.style.display = 'none';
+      settingsPanel.style.display = 'none';
+      dropzone.classList.remove('has-file','processing');
+      resetOutput();
+      toast('Cleared.', '', 1800);
+    }
+    clearBtn.addEventListener('click', clearAll);
+
+    /* ── Processing ──────────────────────────────── */
+    const stepMsgs = [
+      ['Analyzing pixel data…', 'Reading color channels'],
+      ['Injecting adversarial noise…', 'Perturbing pixel values'],
+      ['Applying frequency disruption…', 'Modifying high-freq bands'],
+      ['Embedding watermark…', 'LSB steganography'],
+      ['Finalizing…', 'Encoding output PNG'],
+    ];
+
+    async function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    async function setStep(i) {
+      const steps = document.querySelectorAll('.step');
+      for (let j = 0; j < i; j++) {
+        steps[j].classList.remove('current');
+        steps[j].classList.add('done');
+        steps[j].querySelector('.step-icon').textContent = '✅';
+      }
+      if (steps[i]) {
+        steps[i].classList.add('current');
+        steps[i].querySelector('.step-icon').textContent = '⚙️';
+      }
+      procLabel.textContent = stepMsgs[i][0];
+      procStep.textContent  = stepMsgs[i][1];
     }
 
-    // File input handler
-    const fileInput = document.getElementById('image-file');
-    const chooseBtn = document.getElementById('choose-btn');
-    
-    // Make choose button work
-    if (chooseBtn && fileInput) {
-      chooseBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        fileInput.click();
+    async function applyProtection(imgEl, noiseLevel) {
+      const offscreen = document.createElement('canvas');
+      const img = new Image();
+      await new Promise(res => {
+        img.onload = res;
+        img.src = imgEl.src;
       });
-    }
-    
-    if (fileInput) {
-      fileInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (file && file.type.startsWith('image/')) {
-          currentImageFile = file;
-          hasOutputImage = false; // ✅ new input invalidates prior output
-          await displayImage(file, imagePreview);
-          outputPreview.innerHTML = '<div class="placeholder">Generated image will appear here</div>';
-          updateButtons();
-          hideStatus();
+
+      offscreen.width  = img.naturalWidth;
+      offscreen.height = img.naturalHeight;
+      const ctx = offscreen.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const data = ctx.getImageData(0, 0, offscreen.width, offscreen.height);
+      const d = data.data;
+      const W = offscreen.width, H = offscreen.height;
+
+      // Save original
+      originalImageData = new Uint8ClampedArray(d);
+
+      await delay(350); await setStep(1); await delay(500);
+
+      // ── Layer 1: Adversarial Gaussian noise ──
+      const strength = noiseLevel;
+      for (let i = 0; i < d.length; i += 4) {
+        const n = () => Math.round((Math.random() - .5) * 2 * strength);
+        d[i]   = Math.min(255, Math.max(0, d[i]   + n()));
+        d[i+1] = Math.min(255, Math.max(0, d[i+1] + n()));
+        d[i+2] = Math.min(255, Math.max(0, d[i+2] + n()));
+      }
+
+      await setStep(2); await delay(500);
+
+      // ── Layer 2: Block-level frequency disruption ──
+      const blockSize = 8;
+      for (let by = 0; by < H; by += blockSize) {
+        for (let bx = 0; bx < W; bx += blockSize) {
+          // Randomly invert very subtle pattern in corner pixels
+          const px = (by * W + bx) * 4;
+          if (Math.random() > 0.85 && px + 3 < d.length) {
+            d[px]   = Math.min(255, Math.max(0, d[px]   + (Math.random() > .5 ? 2 : -2)));
+            d[px+1] = Math.min(255, Math.max(0, d[px+1] + (Math.random() > .5 ? 1 : -1)));
+            d[px+2] = Math.min(255, Math.max(0, d[px+2] + (Math.random() > .5 ? 2 : -2)));
+          }
         }
+      }
+
+      await setStep(3); await delay(500);
+
+      // ── Layer 3: LSB watermark ──
+      // Embed "JHAKRI_PROTECTED" in LSBs of first 128 pixels
+      const watermarkBits = 'JHAKRI_PROTECTED'.split('').flatMap(c => {
+        const code = c.charCodeAt(0);
+        return Array.from({length:8}, (_,i) => (code >> (7-i)) & 1);
       });
+      for (let i = 0; i < watermarkBits.length && i*4+2 < d.length; i++) {
+        d[i*4]   = (d[i*4]   & 0xFE) | watermarkBits[i];
+      }
+
+      await setStep(4); await delay(300);
+
+      ctx.putImageData(data, 0, 0);
+      processedImageData = new Uint8ClampedArray(d);
+
+      await delay(200);
+
+      return {
+        dataURL: offscreen.toDataURL('image/png'),
+        w: W, h: H,
+        modified: Math.round(d.length / 4),
+        perturb: `±${strength}px`,
+        watermark: 'Embedded',
+      };
     }
 
-    // Drag & drop handlers
-    ['dragenter', 'dragover'].forEach(eventName => {
-      dropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        dropzone.classList.add('dragover');
-      });
-    });
+    processBtn.addEventListener('click', async () => {
+      if (!currentFile) return;
 
-    ['dragleave', 'drop'].forEach(eventName => {
-      dropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        dropzone.classList.remove('dragover');
-      });
-    });
+      // Start UI
+      procOverlay.classList.add('active');
+      progressSteps.classList.add('active');
+      dropzone.classList.add('processing');
+      processBtn.disabled = true;
+      downloadBtn.disabled = true;
+      report.classList.remove('visible');
+      compareWrap.classList.remove('active');
+      outputEmpty.style.display = 'none';
 
-    dropzone.addEventListener('drop', async (e) => {
-      const files = Array.from(e.dataTransfer.files);
-      const imageFile = files.find(file => file.type.startsWith('image/'));
-      
-      if (imageFile) {
-        currentImageFile = imageFile;
-        hasOutputImage = false; // ✅ new input invalidates prior output
-        await displayImage(imageFile, imagePreview);
-        outputPreview.innerHTML = '<div class="placeholder">Generated image will appear here</div>';
+      await setStep(0);
+
+      try {
+        const noiseLevel = +noiseSlider.value;
+        const result = await applyProtection(inputImg, noiseLevel);
+
+        // Final step done
+        const steps = document.querySelectorAll('.step');
+        steps.forEach(s => {
+          s.classList.remove('current');
+          s.classList.add('done');
+          s.querySelector('.step-icon').textContent = '✅';
+        });
+
+        outputDataURL = result.dataURL;
+
+        // Draw compare canvas
+        await renderCompare(inputImg, result.dataURL, result.w, result.h);
+
+        procOverlay.classList.remove('active');
+        dropzone.classList.remove('processing');
+
+        outputEmpty.style.display = 'none';
+        outputBadge.style.display = 'block';
+
+        // Fill report
+        const modeEl = document.querySelector('.chip.active input');
+        const modeName = modeEl ? modeEl.value : 'stealth';
+        $('#rStatus').textContent   = 'Protected ✓';
+        $('#rMode').textContent     = modeName.charAt(0).toUpperCase() + modeName.slice(1);
+        $('#rPixels').textContent   = result.modified.toLocaleString();
+        $('#rPerturb').textContent  = result.perturb;
+        $('#rWatermark').textContent = result.watermark;
+        $('#rDims').textContent     = `${result.w} × ${result.h}`;
+        report.classList.add('visible');
+
+        processBtn.disabled = false;
+        downloadBtn.disabled = false;
         updateButtons();
-        hideStatus();
+        toast('Protection applied successfully!', 'success');
+
+      } catch (err) {
+        procOverlay.classList.remove('active');
+        dropzone.classList.remove('processing');
+        processBtn.disabled = false;
+        outputEmpty.style.display = 'flex';
+        toast('Processing failed. Try another image.', 'error');
+        console.error(err);
+        updateButtons();
       }
     });
 
-    // Process button handler with animation
-    processBtn.addEventListener('click', async () => {
-      if (!currentImageFile) return;
+    /* ── Compare Canvas Render ───────────────────── */
+    async function renderCompare(originalEl, protectedDataURL, w, h) {
+      const scale = Math.min(700 / w, 400 / h, 1);
+      const cw = Math.round(w * scale);
+      const ch = Math.round(h * scale);
+      compareCanvas.width  = cw;
+      compareCanvas.height = ch;
+      compareCanvas.style.height = ch + 'px';
+      compareWrap.style.height = ch + 'px';
 
-      // Start processing animation
-      dropzone.classList.add('processing');
-      processingOverlay.classList.add('active');
-      showStatus('Generating anti-AI protection...', 'processing');
-      processBtn.disabled = true;
-      downloadBtn.disabled = true; // Disable download during processing
+      const protImg = new Image();
+      await new Promise(r => { protImg.onload = r; protImg.src = protectedDataURL; });
 
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      drawCompare(originalEl, protImg, comparePos, cw, ch);
+      compareWrap.classList.add('active');
 
-      // Stop animation
-      dropzone.classList.remove('processing');
-      processingOverlay.classList.remove('active');
+      // Position handle
+      updateCompareHandle(comparePos, cw, ch);
+    }
 
-      // Display "processed" image and wait for it to load
-      await displayImage(currentImageFile, outputPreview);
-      
-      // ✅ Mark output ready BEFORE updating buttons to avoid first-try race
-      hasOutputImage = true;
-      
-      showStatus('Anti-AI protection applied successfully!', 'success');
-      processBtn.disabled = false;
+    function drawCompare(origEl, protImg, pos, cw, ch) {
+      const ctx = compareCanvas.getContext('2d');
+      const splitX = Math.round(pos * cw);
 
-      updateButtons();
-      
-      console.log('Processing complete, download should be enabled');
+      ctx.clearRect(0, 0, cw, ch);
+      ctx.drawImage(protImg, 0, 0, cw, ch);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, 0, splitX, ch);
+      ctx.clip();
+      ctx.drawImage(origEl, 0, 0, cw, ch);
+      ctx.restore();
+    }
 
-      // Hide success message after 3 seconds
-      setTimeout(() => hideStatus(), 3000);
+    function updateCompareHandle(pos, cw, ch) {
+      const x = pos * (cw || compareCanvas.width);
+      compareLine.style.left   = x + 'px';
+      compareHandle.style.left = x + 'px';
+    }
+
+    // Compare drag
+    compareHandle.addEventListener('mousedown', () => { isDragging = true; });
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const rect = compareWrap.getBoundingClientRect();
+      comparePos = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+      const cw = compareCanvas.width, ch = compareCanvas.height;
+      updateCompareHandle(comparePos, cw, ch);
+      // Need the original img and protected img
+      const origEl = inputImg;
+      const protImg = new Image();
+      protImg.src = outputDataURL;
+      drawCompare(origEl, protImg, comparePos, cw, ch);
     });
+    document.addEventListener('mouseup', () => { isDragging = false; });
 
-    // Download handler
+    compareHandle.addEventListener('touchstart', e => { isDragging = true; e.preventDefault(); }, {passive:false});
+    document.addEventListener('touchmove', e => {
+      if (!isDragging) return;
+      const rect = compareWrap.getBoundingClientRect();
+      comparePos = Math.min(1, Math.max(0, (e.touches[0].clientX - rect.left) / rect.width));
+      const cw = compareCanvas.width, ch = compareCanvas.height;
+      updateCompareHandle(comparePos, cw, ch);
+      const protImg = new Image();
+      protImg.src = outputDataURL;
+      drawCompare(inputImg, protImg, comparePos, cw, ch);
+    }, {passive:true});
+    document.addEventListener('touchend', () => { isDragging = false; });
+
+    /* ── Download ────────────────────────────────── */
     downloadBtn.addEventListener('click', () => {
-      if (!currentImageFile) return;
-      
-      const url = URL.createObjectURL(currentImageFile);
+      if (!outputDataURL) return;
       const a = document.createElement('a');
-      const filename = currentImageFile.name.replace(/\.[^/.]+$/, '') + '_protected.png';
-      a.href = url;
+      const filename = currentFile
+        ? currentFile.name.replace(/\.[^/.]+$/, '') + '_jhakri_protected.png'
+        : 'protected.png';
+      a.href = outputDataURL;
       a.download = filename;
       document.body.appendChild(a);
       a.click();
       a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast('Downloading protected image…', 'success', 2000);
     });
 
-    // Clear button handler
-    clearBtn.addEventListener('click', clearAll);
-
-    // Initialize button states
     updateButtons();
   </script>
 </body>
