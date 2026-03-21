@@ -1398,43 +1398,25 @@
   }
 
   // ── Ollama API Call ──────────────────────────────────────
-  async function callOllama(messages, onChunk) {
-    const res = await fetch(`${API_BASE}/chat`, {
+ async function callOllama(messages, onChunk) {
+    const res = await fetch(`${API_BASE}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: MODEL, messages, stream: true }),
+      body: JSON.stringify({ model: MODEL, messages }),
     });
 
     if (res.status === 429) {
       const data = await res.json();
-      const pos  = data.queue_position || '?';
+      const pos  = data.detail?.queue_position || '?';
       showQueueBanner(`Queue position: ${pos} — please wait...`);
       throw new Error(`position ${pos} in queue`);
     }
     if (!res.ok) throw new Error(`Server error ${res.status}`);
 
-    // Stream the response
-    const reader  = res.body.getReader();
-    const decoder = new TextDecoder();
-    let fullText  = '';
-    let streamStarted = false;
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const lines = decoder.decode(value).split('\n').filter(Boolean);
-      for (const line of lines) {
-        try {
-          const data = JSON.parse(line);
-          if (data.message?.content) {
-            if (!streamStarted) { removeTypingIndicator(); addStreamingMessage(); streamStarted = true; }
-            fullText += data.message.content;
-            onChunk(fullText);
-          }
-        } catch {}
-      }
-    }
-    return fullText;
+    const data = await res.json();
+    const text = data.message?.content || '';
+    onChunk(text);
+    return text;
   }
 
   // ── Render Messages ──────────────────────────────────────
