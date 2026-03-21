@@ -49,8 +49,6 @@
     .hero-sub { font-size: 18px; font-weight: 300; color: var(--ink-soft); max-width: 480px; line-height: 1.7; margin-bottom: 44px; opacity: 0; animation: fadeUp 0.6s 0.3s forwards; }
     .hero-cta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s 0.4s forwards; }
     .hero-note { font-size: 12px; color: var(--ink-mute); display: flex; align-items: center; gap: 6px; }
-
-    /* ── Hero Visual ── */
     .hero-visual { position: absolute; right: 0; top: 64px; width: 42%; height: calc(100vh - 64px); pointer-events: none; overflow: hidden; opacity: 0; animation: fadeIn 1s 0.5s forwards; }
     .hero-visual-inner { position: absolute; inset: 48px; background: var(--white); border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column; }
     .hv-bar { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
@@ -100,8 +98,12 @@
     #chat-page { height: 100vh; overflow: hidden; }
     .chat-layout { display: grid; grid-template-columns: 260px 1fr; height: 100vh; }
 
+    /* ── Mobile overlay ── */
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 49; }
+    .sidebar-overlay.visible { display: block; }
+
     /* ── Sidebar ── */
-    .sidebar { background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+    .sidebar { background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; transition: transform var(--transition); }
     .sidebar-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
     .sidebar-logo { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 6px; cursor: pointer; }
     .new-chat-btn { width: 32px; height: 32px; background: var(--ink); border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background var(--transition); flex-shrink: 0; }
@@ -114,9 +116,11 @@
     .chat-history { flex: 1; overflow-y: auto; padding: 4px 8px 16px; }
     .chat-history::-webkit-scrollbar { width: 4px; }
     .chat-history::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-    .history-item { padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: background var(--transition); display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .history-item { padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: background var(--transition); display: flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 13px; }
     .history-item:hover { background: var(--cream); color: var(--ink); }
     .history-item.active { background: var(--accent-light); color: var(--accent-dark); }
+    .history-item-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .history-item-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; flex-shrink: 0; animation: pulse 1s infinite; }
     .sidebar-footer { padding: 12px 8px; border-top: 1px solid var(--border); flex-shrink: 0; }
     .model-badge { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--cream); border-radius: 8px; font-size: 12px; color: var(--ink-soft); }
     .model-dot { width: 7px; height: 7px; background: #22C55E; border-radius: 50%; animation: pulse 2s infinite; }
@@ -125,10 +129,11 @@
     /* ── Chat Main ── */
     .chat-main { display: flex; flex-direction: column; background: var(--cream); height: 100vh; overflow: hidden; }
     .chat-topbar { padding: 0 24px; height: 56px; background: var(--white); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-    .chat-topbar-title { font-size: 14px; font-weight: 500; }
-    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+    .chat-topbar-title { font-size: 14px; font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
     .icon-btn { width: 32px; height: 32px; background: transparent; border: 1px solid var(--border); border-radius: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); transition: all var(--transition); }
     .icon-btn:hover { background: var(--cream); color: var(--ink); border-color: var(--ink); }
+    .hamburger { display: none; }
 
     /* ── Queue Banner ── */
     .queue-banner { display: none; align-items: center; gap: 10px; padding: 10px 24px; background: var(--accent-light); border-bottom: 1px solid rgba(200,135,58,0.2); font-size: 13px; color: var(--accent-dark); flex-shrink: 0; }
@@ -150,10 +155,10 @@
     .suggestion-chip { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: left; cursor: pointer; transition: all var(--transition); font-size: 13px; color: var(--ink-soft); line-height: 1.5; font-family: var(--font-body); }
     .suggestion-chip:hover { border-color: var(--accent); color: var(--ink); background: var(--accent-light); transform: translateY(-1px); }
     .chip-icon { font-size: 18px; margin-bottom: 6px; display: block; }
-    .chip-text { display: block; }
 
     /* ── Message Bubbles ── */
-    .message { display: flex; gap: 14px; align-items: flex-start; animation: msgIn 0.3s ease both; }
+    .message { display: flex; gap: 14px; align-items: flex-start; animation: msgIn 0.3s ease both; position: relative; }
+    .message:hover .copy-btn { opacity: 1; }
     .msg-avatar { width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; margin-top: 2px; }
     .msg-avatar.user-av { background: var(--ink); color: var(--white); font-family: var(--font-display); font-style: italic; }
     .msg-avatar.ai-av { background: var(--accent-light); color: var(--accent-dark); font-family: var(--font-display); font-style: italic; }
@@ -165,18 +170,22 @@
     .msg-text code { font-family: var(--font-mono); font-size: 13px; background: var(--border); padding: 2px 6px; border-radius: 4px; }
     .msg-text pre { background: var(--ink); color: rgba(255,255,255,0.85); border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; margin: 12px 0; }
     .msg-text pre code { background: none; padding: 0; color: inherit; }
+    .msg-text.streaming::after { content: '▋'; animation: blink 0.8s infinite; color: var(--accent); font-size: 13px; }
     .message.user-message { flex-direction: row-reverse; }
     .user-message .msg-text { background: var(--ink); color: rgba(255,255,255,0.9); padding: 12px 16px; border-radius: 12px 4px 12px 12px; font-weight: 400; }
     .user-message .msg-name { text-align: right; }
+    .msg-error { color: #C0392B !important; font-style: italic; }
+
+    /* ── Copy button ── */
+    .copy-btn { position: absolute; top: 0; right: 0; width: 28px; height: 28px; background: var(--white); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: all var(--transition); color: var(--ink-mute); }
+    .copy-btn:hover { color: var(--ink); border-color: var(--ink); }
+    .user-message .copy-btn { left: 0; right: auto; }
 
     /* ── Typing ── */
     .typing-indicator { display: flex; gap: 5px; align-items: center; padding: 4px 0; }
     .typing-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: typingBounce 1.2s infinite; }
     .typing-dot:nth-child(2) { animation-delay: 0.2s; }
     .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-    /* ── Error message ── */
-    .msg-error { color: #C0392B !important; font-style: italic; }
 
     /* ── Input ── */
     .chat-input-area { padding: 16px 24px 20px; flex-shrink: 0; background: var(--cream); }
@@ -186,29 +195,39 @@
     .chat-textarea::placeholder { color: var(--ink-mute); }
     .input-footer { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 12px; }
     .input-hint { font-size: 11px; color: var(--ink-mute); }
-    .send-btn { width: 36px; height: 36px; background: var(--ink); border: none; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); flex-shrink: 0; }
+    .send-btn { width: 36px; height: 36px; border: none; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); flex-shrink: 0; background: var(--ink); }
     .send-btn:hover:not(:disabled) { background: var(--accent); transform: scale(1.05); }
-    .send-btn:disabled { background: var(--border); cursor: not-allowed; }
+    .send-btn:disabled { background: var(--border); cursor: not-allowed; transform: none; }
+    .send-btn.stop { background: #C0392B; }
+    .send-btn.stop:hover { background: #922B21; transform: scale(1.05); }
     .input-disclaimer { text-align: center; font-size: 11px; color: var(--ink-mute); margin-top: 10px; max-width: 720px; margin-left: auto; margin-right: auto; }
 
     /* ── Animations ── */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes typingBounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
     /* ── Responsive ── */
     @media (max-width: 1024px) { .hero-visual { display: none; } .features-grid { grid-template-columns: 1fr 1fr; } .privacy-strip { grid-template-columns: 1fr; gap: 32px; } }
-    @media (max-width: 768px) { .land-nav { padding: 0 20px; } .nav-links { display: none; } .hero { padding: 100px 20px 60px; } .section { padding: 60px 20px; } .features-grid { grid-template-columns: 1fr; } .privacy-strip { margin: 0 20px; padding: 40px 28px; } .cta-section { padding: 60px 20px; } footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; } .chat-layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
+    @media (max-width: 768px) {
+      .land-nav { padding: 0 20px; } .nav-links { display: none; }
+      .hero { padding: 100px 20px 60px; } .section { padding: 60px 20px; }
+      .features-grid { grid-template-columns: 1fr; } .privacy-strip { margin: 0 20px; padding: 40px 28px; }
+      .cta-section { padding: 60px 20px; } footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
+      .chat-layout { grid-template-columns: 1fr; }
+      .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 280px; z-index: 50; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
+      .hamburger { display: flex; }
+    }
   </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════
-     LANDING PAGE
-════════════════════════════════════════════ -->
+<!-- LANDING PAGE -->
 <div id="landing-page" class="page active">
   <nav class="land-nav">
     <a class="nav-logo" href="#">Jhakri <span class="nav-logo-dot"></span></a>
@@ -296,19 +315,18 @@
 </div>
 
 
-<!-- ════════════════════════════════════════════
-     CHAT PAGE
-════════════════════════════════════════════ -->
+<!-- CHAT PAGE -->
 <div id="chat-page" class="page">
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
   <div class="chat-layout">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo" onclick="showLanding()">Jhakri <span class="nav-logo-dot" style="width:6px;height:6px;"></span></div>
         <button class="new-chat-btn" onclick="newChat()" title="New chat">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
       </div>
-      <div class="sidebar-search"><input type="text" id="search-input" placeholder="Search conversations..." oninput="filterHistory(this.value)" /></div>
+      <div class="sidebar-search"><input type="text" placeholder="Search conversations..." oninput="filterHistory(this.value)" /></div>
       <p class="sidebar-label">Recent</p>
       <div class="chat-history" id="chat-history"></div>
       <div class="sidebar-footer">
@@ -322,6 +340,9 @@
 
     <main class="chat-main">
       <div class="chat-topbar">
+        <button class="icon-btn hamburger" onclick="openSidebar()" title="Menu">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
         <span class="chat-topbar-title" id="chat-title">New conversation</span>
         <div class="topbar-actions">
           <button class="icon-btn" onclick="newChat()" title="New chat">
@@ -347,8 +368,8 @@
           <textarea class="chat-textarea" id="chat-input" placeholder="Message Jhakri..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
           <div class="input-footer">
             <span class="input-hint">Enter to send · Shift+Enter for new line</span>
-            <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Send">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <button class="send-btn" id="send-btn" onclick="handleSendStop()" title="Send">
+              <svg id="send-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </div>
         </div>
@@ -361,14 +382,36 @@
 
 <script>
   // ── Config ────────────────────────────────────────────────
-  const API_BASE = 'https://api.prasiddha.info.np';
-  const MODEL    = 'llama3.1:8b';
-  const SYSTEM_PROMPT = 'You are Jhakri, a private AI assistant. You run locally on secure private servers. Be helpful, direct, and concise. Never claim to be GPT, Claude, BERT, Gemini, or any other model — you are Jhakri. If asked what you are, say you are Jhakri, a private AI assistant.';
+  const API_BASE     = 'https://api.prasiddha.info.np';
+  const MODEL        = 'llama3.1:8b';
+  const STORAGE_KEY  = 'jhakri_conversations';
+  const MAX_STORED   = 50; // max conversations to keep in localStorage
 
   // ── State ─────────────────────────────────────────────────
-  let conversations  = [];   // all conversations
-  let currentConvId  = null; // which conv is visible
-  let activeRequests = {};   // convId -> AbortController, tracks in-flight requests
+  let conversations  = loadFromStorage();
+  let currentConvId  = null;
+  let activeRequests = {}; // convId -> AbortController
+
+  // ── localStorage ─────────────────────────────────────────
+  function loadFromStorage() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  }
+
+  function saveToStorage() {
+    try {
+      // Only save last MAX_STORED conversations, trim messages to last 50 each
+      const toSave = conversations.slice(0, MAX_STORED).map(c => ({
+        ...c,
+        messages: c.messages.slice(-50)
+      }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+    } catch (e) {
+      console.warn('localStorage save failed:', e);
+    }
+  }
 
   // ── Page Navigation ───────────────────────────────────────
   function showChat() {
@@ -380,7 +423,12 @@
       chat.classList.add('active');
       setTimeout(() => chat.classList.add('visible'), 10);
     }, 300);
-    if (!currentConvId) newChat();
+    // Load most recent conv or create new
+    if (conversations.length > 0 && !currentConvId) {
+      switchToConv(conversations[0].id);
+    } else if (!currentConvId) {
+      newChat();
+    }
   }
 
   function showLanding() {
@@ -392,14 +440,27 @@
       landing.classList.add('active');
       setTimeout(() => landing.classList.add('visible'), 10);
     }, 300);
+    closeSidebar();
+  }
+
+  // ── Mobile Sidebar ────────────────────────────────────────
+  function openSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebar-overlay').classList.add('visible');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('visible');
   }
 
   // ── Conversations ─────────────────────────────────────────
   function newChat() {
     const id = 'conv_' + Date.now();
     conversations.unshift({ id, title: 'New conversation', messages: [] });
+    saveToStorage();
     switchToConv(id);
     document.getElementById('chat-input').focus();
+    closeSidebar();
   }
 
   function switchToConv(id) {
@@ -408,36 +469,39 @@
     if (!conv) return;
     document.getElementById('chat-title').textContent = conv.title;
     renderHistory();
-    // Show messages or empty state
     if (conv.messages.length === 0) {
       showEmptyState();
     } else {
       rebuildMessages(conv.messages);
     }
-    // If there's an active request for this conv, show the banner
+    // Restore banner if request still active
     if (activeRequests[id]) {
       showQueueBanner('Jhakri is thinking...');
+      setSendStop(true);
     } else {
       hideQueueBanner();
+      setSendStop(false);
     }
   }
 
   function loadConv(id) {
     switchToConv(id);
+    closeSidebar();
   }
 
   function clearCurrentChat() {
     const conv = getConv();
     if (!conv) return;
-    // Cancel any in-flight request for this conv
     if (activeRequests[conv.id]) {
       activeRequests[conv.id].abort();
       delete activeRequests[conv.id];
     }
     conv.messages = [];
+    saveToStorage();
     showEmptyState();
     hideQueueBanner();
-    updateSendBtn();
+    setSendStop(false);
+    renderHistory();
   }
 
   function getConv(id) {
@@ -450,7 +514,6 @@
     const list = filter
       ? conversations.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()))
       : conversations;
-
     if (!list.length) {
       el.innerHTML = '<p style="font-size:12px;color:var(--ink-mute);padding:12px 16px;">No conversations yet</p>';
       return;
@@ -458,14 +521,12 @@
     el.innerHTML = list.map(c => `
       <div class="history-item ${c.id === currentConvId ? 'active' : ''}" onclick="loadConv('${c.id}')">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span style="overflow:hidden;text-overflow:ellipsis;">${escHtml(c.title)}</span>
-        ${activeRequests[c.id] ? '<span style="width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0;animation:pulse 1s infinite;"></span>' : ''}
+        <span class="history-item-title">${escHtml(c.title)}</span>
+        ${activeRequests[c.id] ? '<span class="history-item-dot"></span>' : ''}
       </div>`).join('');
   }
 
-  function filterHistory(val) {
-    renderHistory(val);
-  }
+  function filterHistory(val) { renderHistory(val); }
 
   // ── Empty State ───────────────────────────────────────────
   function showEmptyState() {
@@ -475,32 +536,27 @@
         <p class="empty-sub">Private AI. What's on your mind?</p>
         <div class="suggestions-grid">
           <button class="suggestion-chip" onclick="useSuggestion('Help me write a professional email to my team')">
-            <span class="chip-icon">✍️</span>
-            <span class="chip-text">Help me write a professional email to my team</span>
+            <span class="chip-icon">✍️</span>Help me write a professional email to my team
           </button>
           <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing in simple terms')">
-            <span class="chip-icon">💡</span>
-            <span class="chip-text">Explain quantum computing in simple terms</span>
+            <span class="chip-icon">💡</span>Explain quantum computing in simple terms
           </button>
           <button class="suggestion-chip" onclick="useSuggestion('Summarize the pros and cons of remote work')">
-            <span class="chip-icon">🔍</span>
-            <span class="chip-text">Summarize the pros and cons of remote work</span>
+            <span class="chip-icon">🔍</span>Summarize the pros and cons of remote work
           </button>
           <button class="suggestion-chip" onclick="useSuggestion('Help me debug my Python code')">
-            <span class="chip-icon">🛠️</span>
-            <span class="chip-text">Help me debug my Python code</span>
+            <span class="chip-icon">🛠️</span>Help me debug my Python code
           </button>
         </div>
       </div>`;
   }
 
-  // Text passed directly — no DOM parsing needed, fixes extraction bug
   function useSuggestion(text) {
     document.getElementById('chat-input').value = text;
     sendMessage();
   }
 
-  // ── Render messages ───────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────
   function rebuildMessages(messages) {
     const inner = document.getElementById('messages-inner');
     inner.innerHTML = messages.map(buildMsgHTML).join('');
@@ -508,11 +564,9 @@
   }
 
   function appendMessage(msg, convId) {
-    // CRITICAL: only render if still on the correct conversation
     if (convId !== currentConvId) return;
     const inner = document.getElementById('messages-inner');
-    const es = inner.querySelector('.empty-state');
-    if (es) es.remove();
+    inner.querySelector('.empty-state')?.remove();
     const wrapper = document.createElement('div');
     wrapper.innerHTML = buildMsgHTML(msg);
     inner.appendChild(wrapper.firstElementChild);
@@ -522,27 +576,73 @@
   function buildMsgHTML(msg) {
     const isUser  = msg.role === 'user';
     const isError = msg.role === 'error';
-    const role    = isUser ? 'user-message' : '';
-    const avCls   = isUser ? 'user-av' : 'ai-av';
-    const av      = isUser ? 'Y' : 'J';
-    const name    = isUser ? 'You' : 'Jhakri';
     const textCls = isError ? 'msg-text msg-error' : 'msg-text';
-    return `<div class="message ${role}">
-      <div class="msg-avatar ${avCls}">${av}</div>
+    const rawText = msg.content || '';
+    // Copy button (only for AI messages with content)
+    const copyBtn = (!isUser && rawText)
+      ? `<button class="copy-btn" onclick="copyMsg(this)" title="Copy" data-text="${escHtml(rawText)}">
+           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+         </button>`
+      : '';
+    return `<div class="message ${isUser ? 'user-message' : ''}">
+      <div class="msg-avatar ${isUser ? 'user-av' : 'ai-av'}">${isUser ? 'Y' : 'J'}</div>
       <div class="msg-content">
-        <div class="msg-name">${name}</div>
-        <div class="${textCls}">${formatMessage(msg.content)}</div>
+        <div class="msg-name">${isUser ? 'You' : 'Jhakri'}</div>
+        <div class="${textCls}">${formatMessage(rawText)}</div>
       </div>
+      ${copyBtn}
     </div>`;
+  }
+
+  // ── Streaming message element ─────────────────────────────
+  function createStreamingEl(convId) {
+    if (convId !== currentConvId) return null;
+    const inner = document.getElementById('messages-inner');
+    inner.querySelector('.empty-state')?.remove();
+    document.getElementById('typing-msg')?.remove();
+    const div = document.createElement('div');
+    div.id = 'streaming-msg';
+    div.className = 'message';
+    div.innerHTML = `
+      <div class="msg-avatar ai-av">J</div>
+      <div class="msg-content">
+        <div class="msg-name">Jhakri</div>
+        <div class="msg-text streaming" id="streaming-text"></div>
+      </div>`;
+    inner.appendChild(div);
+    scrollToBottom();
+    return document.getElementById('streaming-text');
+  }
+
+  function updateStreamingEl(el, text, convId) {
+    if (!el || convId !== currentConvId) return;
+    el.innerHTML = formatMessage(text);
+    scrollToBottom();
+  }
+
+  function finalizeStreamingEl(convId, rawText) {
+    const el = document.getElementById('streaming-msg');
+    if (!el || convId !== currentConvId) return;
+    // Remove streaming cursor class and add copy button
+    const textEl = document.getElementById('streaming-text');
+    if (textEl) textEl.classList.remove('streaming');
+    // Append copy button
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.title = 'Copy';
+    copyBtn.dataset.text = rawText;
+    copyBtn.onclick = function() { copyMsg(this); };
+    copyBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+    el.appendChild(copyBtn);
+    el.id = ''; // unset so it's just a normal message
   }
 
   // ── Typing indicator ──────────────────────────────────────
   function showTyping(convId) {
     if (convId !== currentConvId) return;
     const inner = document.getElementById('messages-inner');
-    const es = inner.querySelector('.empty-state');
-    if (es) es.remove();
-    if (document.getElementById('typing-msg')) return; // already showing
+    inner.querySelector('.empty-state')?.remove();
+    if (document.getElementById('typing-msg')) return;
     const div = document.createElement('div');
     div.id = 'typing-msg';
     div.className = 'message';
@@ -551,34 +651,58 @@
       <div class="msg-content">
         <div class="msg-name">Jhakri</div>
         <div class="typing-indicator">
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
+          <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
         </div>
       </div>`;
     inner.appendChild(div);
     scrollToBottom();
   }
 
-  function hideTyping(convId) {
-    // Only remove if we're on the right conv, or always clean up
-    if (convId === undefined || convId === currentConvId) {
-      document.getElementById('typing-msg')?.remove();
+  function hideTyping() {
+    document.getElementById('typing-msg')?.remove();
+  }
+
+  // ── Send/Stop button ──────────────────────────────────────
+  function setSendStop(isStop) {
+    const btn  = document.getElementById('send-btn');
+    const icon = document.getElementById('send-icon');
+    if (isStop) {
+      btn.classList.add('stop');
+      icon.innerHTML = '<rect x="4" y="4" width="16" height="16" rx="2" fill="white"/>';
+      btn.title = 'Stop generation';
+    } else {
+      btn.classList.remove('stop');
+      icon.innerHTML = '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>';
+      btn.title = 'Send';
+      btn.disabled = false;
     }
   }
 
-  // ── Send button state ─────────────────────────────────────
-  function updateSendBtn() {
-    // Disable send only if THIS conversation has an active request
-    const busy = !!(currentConvId && activeRequests[currentConvId]);
-    document.getElementById('send-btn').disabled = busy;
+  function handleSendStop() {
+    const conv = getConv();
+    if (conv && activeRequests[conv.id]) {
+      // Stop generation
+      activeRequests[conv.id].abort();
+    } else {
+      sendMessage();
+    }
+  }
+
+  // ── Copy ──────────────────────────────────────────────────
+  async function copyMsg(btn) {
+    const text = btn.dataset.text || '';
+    try {
+      await navigator.clipboard.writeText(text);
+      const orig = btn.innerHTML;
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`;
+      setTimeout(() => { btn.innerHTML = orig; }, 1500);
+    } catch {}
   }
 
   // ── Input handlers ────────────────────────────────────────
   function handleKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendStop(); }
   }
-
   function autoResize(el) {
     el.style.height = 'auto';
     el.style.height = Math.min(el.scrollHeight, 180) + 'px';
@@ -586,134 +710,136 @@
 
   // ── Send ──────────────────────────────────────────────────
   async function sendMessage() {
-    const input  = document.getElementById('chat-input');
-    const text   = input.value.trim();
+    const input = document.getElementById('chat-input');
+    const text  = input.value.trim();
     if (!text) return;
 
     const conv = getConv();
-    if (!conv) return;
+    if (!conv || activeRequests[conv.id]) return;
 
-    // Block if this specific conversation already has a request in flight
-    if (activeRequests[conv.id]) return;
-
-    // Snapshot the conv ID for this entire request lifecycle
     const convId = conv.id;
-
     input.value = '';
     input.style.height = 'auto';
 
     // Add user message
     const userMsg = { role: 'user', content: text };
     conv.messages.push(userMsg);
-
-    // Update title on first message
     if (conv.messages.length === 1) {
       conv.title = text.slice(0, 42) + (text.length > 42 ? '…' : '');
-      if (convId === currentConvId) {
-        document.getElementById('chat-title').textContent = conv.title;
-      }
+      if (convId === currentConvId) document.getElementById('chat-title').textContent = conv.title;
     }
-
+    saveToStorage();
     appendMessage(userMsg, convId);
     renderHistory();
 
-    // Register request
+    // Lock
     const controller = new AbortController();
     activeRequests[convId] = controller;
-    updateSendBtn();
+    setSendStop(true);
+    showQueueBanner('Jhakri is thinking...');
+    showTyping(convId);
 
-    if (convId === currentConvId) {
-      showQueueBanner('Jhakri is thinking...');
-      showTyping(convId);
-    }
+    let fullText = '';
+    let streamEl = null;
 
     try {
       const res = await fetch(`${API_BASE}/api/chat`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         signal:  controller.signal,
-        body: JSON.stringify({
-          model: MODEL,
-          messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
-            ...conv.messages.map(m => ({ role: m.role === 'error' ? 'assistant' : m.role, content: m.content }))
-          ],
-        }),
+        body: JSON.stringify({ model: MODEL, messages: conv.messages }),
       });
 
-      hideTyping(convId);
+      hideTyping();
 
       if (res.status === 429) {
         const d = await res.json().catch(() => ({}));
-        const pos = d.detail?.queue_position || '?';
-        if (convId === currentConvId) showQueueBanner(`Queue position: ${pos} — please wait...`);
-        throw new Error(`Server is busy (position ${pos} in queue)`);
+        if (convId === currentConvId) showQueueBanner(`Queue position: ${d.detail?.queue_position || '?'} — please wait...`);
+        throw new Error(`Server is busy — please try again in a moment`);
+      }
+      if (!res.ok) throw new Error(`Server error ${res.status} — please try again`);
+
+      // Stream reading
+      const reader  = res.body.getReader();
+      const decoder = new TextDecoder();
+      streamEl = createStreamingEl(convId);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const text = decoder.decode(value, { stream: true });
+        const lines = text.split('\n');
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') break;
+          try {
+            const chunk = JSON.parse(data);
+            if (chunk.content) {
+              fullText += chunk.content;
+              updateStreamingEl(streamEl, fullText, convId);
+            }
+          } catch {}
+        }
       }
 
-      if (!res.ok) throw new Error(`Server returned ${res.status} — please try again`);
-
-      const data  = await res.json();
-      const reply = data.message?.content;
-
-      if (!reply) throw new Error('Empty response from server — please try again');
-
-      const aiMsg = { role: 'assistant', content: reply };
-      conv.messages.push(aiMsg);
-      appendMessage(aiMsg, convId);
+      // Finalize
+      if (fullText) {
+        const aiMsg = { role: 'assistant', content: fullText };
+        conv.messages.push(aiMsg);
+        saveToStorage();
+        finalizeStreamingEl(convId, fullText);
+      } else {
+        throw new Error('Empty response — please try again');
+      }
 
     } catch (err) {
-      hideTyping(convId);
+      hideTyping();
+      document.getElementById('streaming-msg')?.remove();
 
-      // Don't show error if request was intentionally aborted (user cleared chat)
-      if (err.name === 'AbortError') return;
-
-      const errMsg = { role: 'error', content: err.message || 'Something went wrong. Please try again.' };
-      conv.messages.push(errMsg);
-      appendMessage(errMsg, convId);
-
+      if (err.name === 'AbortError') {
+        // User stopped — save what we got so far
+        if (fullText) {
+          const partial = { role: 'assistant', content: fullText + ' _(stopped)_' };
+          conv.messages.push(partial);
+          saveToStorage();
+          appendMessage(partial, convId);
+        }
+      } else {
+        const errMsg = { role: 'error', content: err.message };
+        conv.messages.push(errMsg);
+        saveToStorage();
+        appendMessage(errMsg, convId);
+      }
     } finally {
       delete activeRequests[convId];
       renderHistory();
       if (convId === currentConvId) {
         hideQueueBanner();
-        updateSendBtn();
+        setSendStop(false);
       }
     }
   }
 
   // ── Helpers ───────────────────────────────────────────────
-  function showQueueBanner(t) {
-    document.getElementById('queue-text').textContent = t;
-    document.getElementById('queue-banner').classList.add('visible');
-  }
-  function hideQueueBanner() {
-    document.getElementById('queue-banner').classList.remove('visible');
-  }
-  function scrollToBottom() {
-    const a = document.getElementById('messages-area');
-    requestAnimationFrame(() => { a.scrollTop = a.scrollHeight; });
-  }
-  function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+  function showQueueBanner(t) { document.getElementById('queue-text').textContent = t; document.getElementById('queue-banner').classList.add('visible'); }
+  function hideQueueBanner()  { document.getElementById('queue-banner').classList.remove('visible'); }
+  function scrollToBottom()   { requestAnimationFrame(() => { const a = document.getElementById('messages-area'); a.scrollTop = a.scrollHeight; }); }
+  function escHtml(s)         { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
   function formatMessage(text) {
     if (!text) return '';
-    // Code blocks first
-    text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, l, c) =>
-      `<pre><code>${escHtml(c.trim())}</code></pre>`);
-    // Inline code
+    text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, l, c) => `<pre><code>${escHtml(c.trim())}</code></pre>`);
     text = text.replace(/`([^`\n]+)`/g, '<code>$1</code>');
-    // Bold
-    text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    // Italic
+    text = text.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
     text = text.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
-    // Paragraphs
-    text = text.split('\n\n')
-      .map(p => p.trim())
-      .filter(p => p.length > 0)
-      .map(p => `<p>${p.replace(/\n/g,'<br/>')}</p>`)
-      .join('');
-    return text || escHtml(text);
+    const parts = text.split(/(```[\s\S]*?```|<pre>[\s\S]*?<\/pre>)/g);
+    return parts.map((part, i) => {
+      if (i % 2 === 1 || part.startsWith('<pre>')) return part;
+      return part.split('\n\n').map(p => p.trim()).filter(Boolean).map(p => `<p>${p.replace(/\n/g,'<br/>')}</p>`).join('');
+    }).join('');
   }
 
   // ── Hero Demo ─────────────────────────────────────────────
@@ -723,16 +849,12 @@
     { role: 'user',      text: 'So my conversations are private?' },
     { role: 'assistant', text: 'Completely. Each session is isolated and gone when you close the tab.' },
   ];
-
   function runHeroDemo() {
     const c = document.getElementById('hv-messages');
     if (!c) return;
     let i = 0;
     function next() {
-      if (i >= demoMsgs.length) {
-        setTimeout(() => { c.innerHTML = ''; i = 0; next(); }, 3000);
-        return;
-      }
+      if (i >= demoMsgs.length) { setTimeout(() => { c.innerHTML = ''; i = 0; next(); }, 3000); return; }
       const m = demoMsgs[i++];
       const d = document.createElement('div');
       d.className = `hv-msg ${m.role === 'user' ? 'user-msg' : ''}`;
@@ -750,6 +872,8 @@
   window.addEventListener('load', () => {
     document.getElementById('landing-page').classList.add('visible');
     runHeroDemo();
+    // Show chat count in console for debugging
+    console.log(`Jhakri: ${conversations.length} conversations loaded from storage`);
   });
 </script>
 </body>
