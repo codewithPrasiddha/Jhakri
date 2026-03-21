@@ -1372,11 +1372,8 @@
     showQueueBanner('Jhakri is thinking...');
     addTypingIndicator();
 
-    try {
-      const response = await callOllama(conv.messages, (chunk) => {
-        // Stream chunks into the last AI message
-        updateStreamingMessage(chunk);
-      });
+try {
+      const response = await callOllama(conv.messages, (chunk) => {});
 
       removeTypingIndicator();
       conv.messages.push({ role: 'assistant', content: response });
