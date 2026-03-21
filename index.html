@@ -25,6 +25,8 @@
     .page { min-height: 100vh; display: none; opacity: 0; transition: opacity 0.35s ease; }
     .page.active { display: flex; flex-direction: column; }
     .page.visible { opacity: 1; }
+
+    /* ── Nav ── */
     .land-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 64px; background: rgba(250,248,244,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
     .nav-logo { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; text-decoration: none; display: flex; align-items: center; gap: 8px; }
     .nav-logo-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; display: inline-block; }
@@ -37,6 +39,8 @@
     .btn-accent { background: var(--accent); color: var(--white); }
     .btn-accent:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,135,58,0.35); }
     .btn-lg { padding: 14px 32px; font-size: 15px; border-radius: 10px; }
+
+    /* ── Hero ── */
     .hero { padding: 160px 48px 100px; max-width: 1100px; margin: 0 auto; width: 100%; }
     .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--accent-light); color: var(--accent-dark); padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 28px; opacity: 0; animation: fadeUp 0.6s 0.1s forwards; }
     .hero-badge-dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
@@ -45,6 +49,8 @@
     .hero-sub { font-size: 18px; font-weight: 300; color: var(--ink-soft); max-width: 480px; line-height: 1.7; margin-bottom: 44px; opacity: 0; animation: fadeUp 0.6s 0.3s forwards; }
     .hero-cta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s 0.4s forwards; }
     .hero-note { font-size: 12px; color: var(--ink-mute); display: flex; align-items: center; gap: 6px; }
+
+    /* ── Hero Visual ── */
     .hero-visual { position: absolute; right: 0; top: 64px; width: 42%; height: calc(100vh - 64px); pointer-events: none; overflow: hidden; opacity: 0; animation: fadeIn 1s 0.5s forwards; }
     .hero-visual-inner { position: absolute; inset: 48px; background: var(--white); border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column; }
     .hv-bar { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
@@ -63,6 +69,8 @@
     .hv-input-area { padding: 14px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center; }
     .hv-input { flex: 1; background: var(--cream); border-radius: 8px; height: 36px; border: 1px solid var(--border); }
     .hv-send { width: 36px; height: 36px; background: var(--ink); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+
+    /* ── Sections ── */
     .section { padding: 100px 48px; max-width: 1100px; margin: 0 auto; width: 100%; }
     .section-label { font-size: 11px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
     .section-title { font-family: var(--font-display); font-size: clamp(32px,4vw,48px); font-weight: 600; line-height: 1.15; letter-spacing: -1px; max-width: 560px; margin-bottom: 60px; }
@@ -87,9 +95,12 @@
     .footer-logo { font-family: var(--font-display); font-size: 17px; font-weight: 700; }
     .footer-text { font-size: 13px; color: var(--ink-mute); }
     .divider { width: 100%; height: 1px; background: var(--border); }
-    /* CHAT */
+
+    /* ══ CHAT PAGE ══ */
     #chat-page { height: 100vh; overflow: hidden; }
     .chat-layout { display: grid; grid-template-columns: 260px 1fr; height: 100vh; }
+
+    /* ── Sidebar ── */
     .sidebar { background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
     .sidebar-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
     .sidebar-logo { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 6px; cursor: pointer; }
@@ -110,19 +121,27 @@
     .model-badge { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--cream); border-radius: 8px; font-size: 12px; color: var(--ink-soft); }
     .model-dot { width: 7px; height: 7px; background: #22C55E; border-radius: 50%; animation: pulse 2s infinite; }
     .model-name { font-family: var(--font-mono); font-size: 11px; }
+
+    /* ── Chat Main ── */
     .chat-main { display: flex; flex-direction: column; background: var(--cream); height: 100vh; overflow: hidden; }
     .chat-topbar { padding: 0 24px; height: 56px; background: var(--white); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
     .chat-topbar-title { font-size: 14px; font-weight: 500; }
     .topbar-actions { display: flex; align-items: center; gap: 8px; }
     .icon-btn { width: 32px; height: 32px; background: transparent; border: 1px solid var(--border); border-radius: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); transition: all var(--transition); }
     .icon-btn:hover { background: var(--cream); color: var(--ink); border-color: var(--ink); }
+
+    /* ── Queue Banner ── */
     .queue-banner { display: none; align-items: center; gap: 10px; padding: 10px 24px; background: var(--accent-light); border-bottom: 1px solid rgba(200,135,58,0.2); font-size: 13px; color: var(--accent-dark); flex-shrink: 0; }
     .queue-banner.visible { display: flex; }
     .queue-spinner { width: 14px; height: 14px; border: 2px solid var(--accent-light); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+    /* ── Messages ── */
     .messages-area { flex: 1; overflow-y: auto; padding: 32px 0; scroll-behavior: smooth; min-height: 0; }
     .messages-area::-webkit-scrollbar { width: 4px; }
     .messages-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
     .messages-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; display: flex; flex-direction: column; gap: 24px; }
+
+    /* ── Empty State ── */
     .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; padding: 40px; text-align: center; }
     .empty-logo { font-family: var(--font-display); font-size: 42px; font-weight: 700; margin-bottom: 8px; }
     .empty-logo span { color: var(--accent); }
@@ -131,6 +150,9 @@
     .suggestion-chip { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: left; cursor: pointer; transition: all var(--transition); font-size: 13px; color: var(--ink-soft); line-height: 1.5; font-family: var(--font-body); }
     .suggestion-chip:hover { border-color: var(--accent); color: var(--ink); background: var(--accent-light); transform: translateY(-1px); }
     .chip-icon { font-size: 18px; margin-bottom: 6px; display: block; }
+    .chip-text { display: block; }
+
+    /* ── Message Bubbles ── */
     .message { display: flex; gap: 14px; align-items: flex-start; animation: msgIn 0.3s ease both; }
     .msg-avatar { width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; margin-top: 2px; }
     .msg-avatar.user-av { background: var(--ink); color: var(--white); font-family: var(--font-display); font-style: italic; }
@@ -146,10 +168,17 @@
     .message.user-message { flex-direction: row-reverse; }
     .user-message .msg-text { background: var(--ink); color: rgba(255,255,255,0.9); padding: 12px 16px; border-radius: 12px 4px 12px 12px; font-weight: 400; }
     .user-message .msg-name { text-align: right; }
+
+    /* ── Typing ── */
     .typing-indicator { display: flex; gap: 5px; align-items: center; padding: 4px 0; }
     .typing-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: typingBounce 1.2s infinite; }
     .typing-dot:nth-child(2) { animation-delay: 0.2s; }
     .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    /* ── Error message ── */
+    .msg-error { color: #C0392B !important; font-style: italic; }
+
+    /* ── Input ── */
     .chat-input-area { padding: 16px 24px 20px; flex-shrink: 0; background: var(--cream); }
     .input-wrapper { max-width: 720px; margin: 0 auto; background: var(--white); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); transition: border-color var(--transition), box-shadow var(--transition); overflow: hidden; }
     .input-wrapper:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(200,135,58,0.1), var(--shadow); }
@@ -158,22 +187,28 @@
     .input-footer { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 12px; }
     .input-hint { font-size: 11px; color: var(--ink-mute); }
     .send-btn { width: 36px; height: 36px; background: var(--ink); border: none; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); flex-shrink: 0; }
-    .send-btn:hover { background: var(--accent); transform: scale(1.05); }
-    .send-btn:disabled { background: var(--border); cursor: not-allowed; transform: none; }
+    .send-btn:hover:not(:disabled) { background: var(--accent); transform: scale(1.05); }
+    .send-btn:disabled { background: var(--border); cursor: not-allowed; }
     .input-disclaimer { text-align: center; font-size: 11px; color: var(--ink-mute); margin-top: 10px; max-width: 720px; margin-left: auto; margin-right: auto; }
+
+    /* ── Animations ── */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes typingBounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* ── Responsive ── */
     @media (max-width: 1024px) { .hero-visual { display: none; } .features-grid { grid-template-columns: 1fr 1fr; } .privacy-strip { grid-template-columns: 1fr; gap: 32px; } }
     @media (max-width: 768px) { .land-nav { padding: 0 20px; } .nav-links { display: none; } .hero { padding: 100px 20px 60px; } .section { padding: 60px 20px; } .features-grid { grid-template-columns: 1fr; } .privacy-strip { margin: 0 20px; padding: 40px 28px; } .cta-section { padding: 60px 20px; } footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; } .chat-layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
   </style>
 </head>
 <body>
 
-<!-- LANDING PAGE -->
+<!-- ════════════════════════════════════════════
+     LANDING PAGE
+════════════════════════════════════════════ -->
 <div id="landing-page" class="page active">
   <nav class="land-nav">
     <a class="nav-logo" href="#">Jhakri <span class="nav-logo-dot"></span></a>
@@ -261,17 +296,19 @@
 </div>
 
 
-<!-- CHAT PAGE -->
+<!-- ════════════════════════════════════════════
+     CHAT PAGE
+════════════════════════════════════════════ -->
 <div id="chat-page" class="page">
   <div class="chat-layout">
     <aside class="sidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo" onclick="showLanding()">Jhakri <span class="nav-logo-dot" style="width:6px;height:6px;"></span></div>
-        <button class="new-chat-btn" onclick="newChat()">
+        <button class="new-chat-btn" onclick="newChat()" title="New chat">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
       </div>
-      <div class="sidebar-search"><input type="text" placeholder="Search conversations..." /></div>
+      <div class="sidebar-search"><input type="text" id="search-input" placeholder="Search conversations..." oninput="filterHistory(this.value)" /></div>
       <p class="sidebar-label">Recent</p>
       <div class="chat-history" id="chat-history"></div>
       <div class="sidebar-footer">
@@ -287,10 +324,10 @@
       <div class="chat-topbar">
         <span class="chat-topbar-title" id="chat-title">New conversation</span>
         <div class="topbar-actions">
-          <button class="icon-btn" onclick="newChat()">
+          <button class="icon-btn" onclick="newChat()" title="New chat">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
-          <button class="icon-btn" onclick="clearChat()">
+          <button class="icon-btn" onclick="clearCurrentChat()" title="Clear chat">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           </button>
         </div>
@@ -310,7 +347,7 @@
           <textarea class="chat-textarea" id="chat-input" placeholder="Message Jhakri..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
           <div class="input-footer">
             <span class="input-hint">Enter to send · Shift+Enter for new line</span>
-            <button class="send-btn" id="send-btn" onclick="sendMessage()">
+            <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Send">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </div>
@@ -323,14 +360,17 @@
 
 
 <script>
+  // ── Config ────────────────────────────────────────────────
   const API_BASE = 'https://recycling-beats-regards-code.trycloudflare.com';
   const MODEL    = 'llama3.1:8b';
+  const SYSTEM_PROMPT = 'You are Jhakri, a private AI assistant. You run locally on secure private servers. Be helpful, direct, and concise. Never claim to be GPT, Claude, BERT, Gemini, or any other model — you are Jhakri. If asked what you are, say you are Jhakri, a private AI assistant.';
 
-  let conversations = [];
-  let currentConvId = null;
-  let isProcessing  = false;
+  // ── State ─────────────────────────────────────────────────
+  let conversations  = [];   // all conversations
+  let currentConvId  = null; // which conv is visible
+  let activeRequests = {};   // convId -> AbortController, tracks in-flight requests
 
-  // ── Page Nav ──────────────────────────────────────────────
+  // ── Page Navigation ───────────────────────────────────────
   function showChat() {
     const landing = document.getElementById('landing-page');
     const chat    = document.getElementById('chat-page');
@@ -356,45 +396,75 @@
 
   // ── Conversations ─────────────────────────────────────────
   function newChat() {
-    const id   = 'conv_' + Date.now();
+    const id = 'conv_' + Date.now();
     conversations.unshift({ id, title: 'New conversation', messages: [] });
-    currentConvId = id;
-    document.getElementById('chat-title').textContent = 'New conversation';
-    renderHistory();
-    showEmptyState();
+    switchToConv(id);
     document.getElementById('chat-input').focus();
   }
 
-  function clearChat() {
-    const conv = getConv();
-    if (conv) conv.messages = [];
-    showEmptyState();
-  }
-
-  function loadConv(id) {
+  function switchToConv(id) {
     currentConvId = id;
-    const conv = getConv();
+    const conv = getConv(id);
     if (!conv) return;
     document.getElementById('chat-title').textContent = conv.title;
     renderHistory();
-    rebuildMessages(conv.messages);
+    // Show messages or empty state
+    if (conv.messages.length === 0) {
+      showEmptyState();
+    } else {
+      rebuildMessages(conv.messages);
+    }
+    // If there's an active request for this conv, show the banner
+    if (activeRequests[id]) {
+      showQueueBanner('Jhakri is thinking...');
+    } else {
+      hideQueueBanner();
+    }
   }
 
-  function getConv() {
-    return conversations.find(c => c.id === currentConvId);
+  function loadConv(id) {
+    switchToConv(id);
   }
 
-  function renderHistory() {
-    const el = document.getElementById('chat-history');
-    if (!conversations.length) {
+  function clearCurrentChat() {
+    const conv = getConv();
+    if (!conv) return;
+    // Cancel any in-flight request for this conv
+    if (activeRequests[conv.id]) {
+      activeRequests[conv.id].abort();
+      delete activeRequests[conv.id];
+    }
+    conv.messages = [];
+    showEmptyState();
+    hideQueueBanner();
+    updateSendBtn();
+  }
+
+  function getConv(id) {
+    return conversations.find(c => c.id === (id || currentConvId));
+  }
+
+  // ── History ───────────────────────────────────────────────
+  function renderHistory(filter) {
+    const el   = document.getElementById('chat-history');
+    const list = filter
+      ? conversations.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()))
+      : conversations;
+
+    if (!list.length) {
       el.innerHTML = '<p style="font-size:12px;color:var(--ink-mute);padding:12px 16px;">No conversations yet</p>';
       return;
     }
-    el.innerHTML = conversations.map(c => `
+    el.innerHTML = list.map(c => `
       <div class="history-item ${c.id === currentConvId ? 'active' : ''}" onclick="loadConv('${c.id}')">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        ${escHtml(c.title)}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span style="overflow:hidden;text-overflow:ellipsis;">${escHtml(c.title)}</span>
+        ${activeRequests[c.id] ? '<span style="width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0;animation:pulse 1s infinite;"></span>' : ''}
       </div>`).join('');
+  }
+
+  function filterHistory(val) {
+    renderHistory(val);
   }
 
   // ── Empty State ───────────────────────────────────────────
@@ -404,17 +474,28 @@
         <div class="empty-logo">Jhakri<span>.</span></div>
         <p class="empty-sub">Private AI. What's on your mind?</p>
         <div class="suggestions-grid">
-          <button class="suggestion-chip" onclick="useSuggestion(this)"><span class="chip-icon">✍️</span>Help me write a professional email to my team</button>
-          <button class="suggestion-chip" onclick="useSuggestion(this)"><span class="chip-icon">💡</span>Explain quantum computing simply</button>
-          <button class="suggestion-chip" onclick="useSuggestion(this)"><span class="chip-icon">🔍</span>Summarize the pros and cons of remote work</button>
-          <button class="suggestion-chip" onclick="useSuggestion(this)"><span class="chip-icon">🛠️</span>Debug this Python code for me</button>
+          <button class="suggestion-chip" onclick="useSuggestion('Help me write a professional email to my team')">
+            <span class="chip-icon">✍️</span>
+            <span class="chip-text">Help me write a professional email to my team</span>
+          </button>
+          <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing in simple terms')">
+            <span class="chip-icon">💡</span>
+            <span class="chip-text">Explain quantum computing in simple terms</span>
+          </button>
+          <button class="suggestion-chip" onclick="useSuggestion('Summarize the pros and cons of remote work')">
+            <span class="chip-icon">🔍</span>
+            <span class="chip-text">Summarize the pros and cons of remote work</span>
+          </button>
+          <button class="suggestion-chip" onclick="useSuggestion('Help me debug my Python code')">
+            <span class="chip-icon">🛠️</span>
+            <span class="chip-text">Help me debug my Python code</span>
+          </button>
         </div>
       </div>`;
   }
 
-  function useSuggestion(btn) {
-    // Get just the text line (skip the emoji span)
-    const text = btn.querySelector('.chip-icon').nextSibling.textContent.trim();
+  // Text passed directly — no DOM parsing needed, fixes extraction bug
+  function useSuggestion(text) {
     document.getElementById('chat-input').value = text;
     sendMessage();
   }
@@ -422,17 +503,16 @@
   // ── Render messages ───────────────────────────────────────
   function rebuildMessages(messages) {
     const inner = document.getElementById('messages-inner');
-    if (!messages.length) { showEmptyState(); return; }
     inner.innerHTML = messages.map(buildMsgHTML).join('');
     scrollToBottom();
   }
 
-  function appendMessage(msg) {
+  function appendMessage(msg, convId) {
+    // CRITICAL: only render if still on the correct conversation
+    if (convId !== currentConvId) return;
     const inner = document.getElementById('messages-inner');
-    // Clear empty state if present
     const es = inner.querySelector('.empty-state');
     if (es) es.remove();
-    // Append
     const wrapper = document.createElement('div');
     wrapper.innerHTML = buildMsgHTML(msg);
     inner.appendChild(wrapper.firstElementChild);
@@ -440,21 +520,29 @@
   }
 
   function buildMsgHTML(msg) {
-    const isUser = msg.role === 'user';
-    return `<div class="message ${isUser ? 'user-message' : ''}">
-      <div class="msg-avatar ${isUser ? 'user-av' : 'ai-av'}">${isUser ? 'Y' : 'J'}</div>
+    const isUser  = msg.role === 'user';
+    const isError = msg.role === 'error';
+    const role    = isUser ? 'user-message' : '';
+    const avCls   = isUser ? 'user-av' : 'ai-av';
+    const av      = isUser ? 'Y' : 'J';
+    const name    = isUser ? 'You' : 'Jhakri';
+    const textCls = isError ? 'msg-text msg-error' : 'msg-text';
+    return `<div class="message ${role}">
+      <div class="msg-avatar ${avCls}">${av}</div>
       <div class="msg-content">
-        <div class="msg-name">${isUser ? 'You' : 'Jhakri'}</div>
-        <div class="msg-text">${formatMessage(msg.content)}</div>
+        <div class="msg-name">${name}</div>
+        <div class="${textCls}">${formatMessage(msg.content)}</div>
       </div>
     </div>`;
   }
 
   // ── Typing indicator ──────────────────────────────────────
-  function showTyping() {
+  function showTyping(convId) {
+    if (convId !== currentConvId) return;
     const inner = document.getElementById('messages-inner');
     const es = inner.querySelector('.empty-state');
     if (es) es.remove();
+    if (document.getElementById('typing-msg')) return; // already showing
     const div = document.createElement('div');
     div.id = 'typing-msg';
     div.className = 'message';
@@ -472,11 +560,21 @@
     scrollToBottom();
   }
 
-  function hideTyping() {
-    document.getElementById('typing-msg')?.remove();
+  function hideTyping(convId) {
+    // Only remove if we're on the right conv, or always clean up
+    if (convId === undefined || convId === currentConvId) {
+      document.getElementById('typing-msg')?.remove();
+    }
   }
 
-  // ── Input ─────────────────────────────────────────────────
+  // ── Send button state ─────────────────────────────────────
+  function updateSendBtn() {
+    // Disable send only if THIS conversation has an active request
+    const busy = !!(currentConvId && activeRequests[currentConvId]);
+    document.getElementById('send-btn').disabled = busy;
+  }
+
+  // ── Input handlers ────────────────────────────────────────
   function handleKey(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   }
@@ -488,82 +586,134 @@
 
   // ── Send ──────────────────────────────────────────────────
   async function sendMessage() {
-    if (isProcessing) return;
-    const input = document.getElementById('chat-input');
-    const text  = input.value.trim();
+    const input  = document.getElementById('chat-input');
+    const text   = input.value.trim();
     if (!text) return;
-
-    input.value = '';
-    input.style.height = 'auto';
 
     const conv = getConv();
     if (!conv) return;
+
+    // Block if this specific conversation already has a request in flight
+    if (activeRequests[conv.id]) return;
+
+    // Snapshot the conv ID for this entire request lifecycle
+    const convId = conv.id;
+
+    input.value = '';
+    input.style.height = 'auto';
 
     // Add user message
     const userMsg = { role: 'user', content: text };
     conv.messages.push(userMsg);
 
-    // Set title on first message
+    // Update title on first message
     if (conv.messages.length === 1) {
-      conv.title = text.slice(0, 40) + (text.length > 40 ? '…' : '');
-      document.getElementById('chat-title').textContent = conv.title;
-      renderHistory();
+      conv.title = text.slice(0, 42) + (text.length > 42 ? '…' : '');
+      if (convId === currentConvId) {
+        document.getElementById('chat-title').textContent = conv.title;
+      }
     }
 
-    appendMessage(userMsg);
+    appendMessage(userMsg, convId);
+    renderHistory();
 
-    // Lock + show thinking
-    isProcessing = true;
-    document.getElementById('send-btn').disabled = true;
-    showQueueBanner('Jhakri is thinking...');
-    showTyping();
+    // Register request
+    const controller = new AbortController();
+    activeRequests[convId] = controller;
+    updateSendBtn();
+
+    if (convId === currentConvId) {
+      showQueueBanner('Jhakri is thinking...');
+      showTyping(convId);
+    }
 
     try {
       const res = await fetch(`${API_BASE}/api/chat`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ model: MODEL, messages: conv.messages }),
+        signal:  controller.signal,
+        body: JSON.stringify({
+          model: MODEL,
+          messages: [
+            { role: 'system', content: SYSTEM_PROMPT },
+            ...conv.messages.map(m => ({ role: m.role === 'error' ? 'assistant' : m.role, content: m.content }))
+          ],
+        }),
       });
 
-      hideTyping();
+      hideTyping(convId);
 
       if (res.status === 429) {
-        const d = await res.json();
-        showQueueBanner(`Queue position: ${d.detail?.queue_position || '?'} — please wait...`);
-        throw new Error('queue full');
+        const d = await res.json().catch(() => ({}));
+        const pos = d.detail?.queue_position || '?';
+        if (convId === currentConvId) showQueueBanner(`Queue position: ${pos} — please wait...`);
+        throw new Error(`Server is busy (position ${pos} in queue)`);
       }
-      if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+      if (!res.ok) throw new Error(`Server returned ${res.status} — please try again`);
 
       const data  = await res.json();
-      const reply = data.message?.content || '(empty response)';
+      const reply = data.message?.content;
+
+      if (!reply) throw new Error('Empty response from server — please try again');
+
       const aiMsg = { role: 'assistant', content: reply };
       conv.messages.push(aiMsg);
-      appendMessage(aiMsg);
+      appendMessage(aiMsg, convId);
 
     } catch (err) {
-      hideTyping();
-      const errMsg = { role: 'assistant', content: err.message === 'queue full' ? "I'm busy right now, please try again in a moment." : 'Something went wrong. Please try again.' };
+      hideTyping(convId);
+
+      // Don't show error if request was intentionally aborted (user cleared chat)
+      if (err.name === 'AbortError') return;
+
+      const errMsg = { role: 'error', content: err.message || 'Something went wrong. Please try again.' };
       conv.messages.push(errMsg);
-      appendMessage(errMsg);
+      appendMessage(errMsg, convId);
+
     } finally {
-      isProcessing = false;
-      document.getElementById('send-btn').disabled = false;
-      hideQueueBanner();
+      delete activeRequests[convId];
+      renderHistory();
+      if (convId === currentConvId) {
+        hideQueueBanner();
+        updateSendBtn();
+      }
     }
   }
 
   // ── Helpers ───────────────────────────────────────────────
-  function showQueueBanner(t) { document.getElementById('queue-text').textContent = t; document.getElementById('queue-banner').classList.add('visible'); }
-  function hideQueueBanner()  { document.getElementById('queue-banner').classList.remove('visible'); }
-  function scrollToBottom()   { const a = document.getElementById('messages-area'); a.scrollTop = a.scrollHeight; }
-  function escHtml(s)         { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
+  function showQueueBanner(t) {
+    document.getElementById('queue-text').textContent = t;
+    document.getElementById('queue-banner').classList.add('visible');
+  }
+  function hideQueueBanner() {
+    document.getElementById('queue-banner').classList.remove('visible');
+  }
+  function scrollToBottom() {
+    const a = document.getElementById('messages-area');
+    requestAnimationFrame(() => { a.scrollTop = a.scrollHeight; });
+  }
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
   function formatMessage(text) {
-    text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, l, c) => `<pre><code>${escHtml(c.trim())}</code></pre>`);
-    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+    if (!text) return '';
+    // Code blocks first
+    text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, l, c) =>
+      `<pre><code>${escHtml(c.trim())}</code></pre>`);
+    // Inline code
+    text = text.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+    // Bold
     text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    text = text.split('\n\n').map(p => `<p>${p.replace(/\n/g,'<br/>')}</p>`).join('');
-    return text;
+    // Italic
+    text = text.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    // Paragraphs
+    text = text.split('\n\n')
+      .map(p => p.trim())
+      .filter(p => p.length > 0)
+      .map(p => `<p>${p.replace(/\n/g,'<br/>')}</p>`)
+      .join('');
+    return text || escHtml(text);
   }
 
   // ── Hero Demo ─────────────────────────────────────────────
@@ -571,7 +721,7 @@
     { role: 'user',      text: 'What makes Jhakri different from ChatGPT?' },
     { role: 'assistant', text: 'Your data never leaves our servers. No logs, no training, no Big Tech.' },
     { role: 'user',      text: 'So my conversations are private?' },
-    { role: 'assistant', text: 'Completely. Each session is isolated and discarded when you close the tab.' },
+    { role: 'assistant', text: 'Completely. Each session is isolated and gone when you close the tab.' },
   ];
 
   function runHeroDemo() {
@@ -579,7 +729,10 @@
     if (!c) return;
     let i = 0;
     function next() {
-      if (i >= demoMsgs.length) { setTimeout(() => { c.innerHTML = ''; i = 0; next(); }, 3000); return; }
+      if (i >= demoMsgs.length) {
+        setTimeout(() => { c.innerHTML = ''; i = 0; next(); }, 3000);
+        return;
+      }
       const m = demoMsgs[i++];
       const d = document.createElement('div');
       d.className = `hv-msg ${m.role === 'user' ? 'user-msg' : ''}`;
@@ -588,7 +741,7 @@
         : `<div class="hv-avatar ai">J</div><div class="hv-bubble">${m.text}</div>`;
       c.appendChild(d);
       setTimeout(() => d.classList.add('show'), 10);
-      setTimeout(next, 2000);
+      setTimeout(next, 2200);
     }
     next();
   }
