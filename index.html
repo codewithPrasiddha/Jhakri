@@ -1,1078 +1,921 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Jhakri — Your Private AI</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Jhakri — Resume Tailor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --cream: #FAF8F4; --white: #FFFFFF; --ink: #1A1814;
-      --ink-soft: #4A4640; --ink-mute: #9A948E; --accent: #C8873A;
-      --accent-light: #F5E6D3; --accent-dark: #A06828; --border: #E8E4DE;
-      --shadow: 0 1px 3px rgba(26,24,20,0.06), 0 4px 16px rgba(26,24,20,0.06);
-      --shadow-lg: 0 8px 40px rgba(26,24,20,0.12); --radius: 12px;
-      --font-display: 'Playfair Display', Georgia, serif;
-      --font-body: 'DM Sans', system-ui, sans-serif;
-      --font-mono: 'DM Mono', monospace;
-      --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-      --sidebar-w: 260px;
+      --cream:       #FAF8F4;
+      --cream-deep:  #F3F0EA;
+      --white:       #FFFFFF;
+      --ink:         #1A1814;
+      --ink-soft:    #4A4640;
+      --ink-mute:    #9A948E;
+      --accent:      #C8873A;
+      --accent-lt:   #F5E6D3;
+      --accent-dk:   #A06828;
+      --gold:        #D4A853;
+      --border:      #E8E4DE;
+      --border-soft: #F0ECE6;
+      --success:     #2D7A4F;
+      --success-lt:  #E8F5EE;
+      --r:           14px;
+      --shadow:      0 2px 8px rgba(26,24,20,0.06), 0 8px 32px rgba(26,24,20,0.08);
+      --shadow-sm:   0 1px 3px rgba(26,24,20,0.08);
+      --shadow-lg:   0 12px 48px rgba(26,24,20,0.14);
+      --t:           0.24s cubic-bezier(0.4,0,0.2,1);
+      --font-d:      'Playfair Display', Georgia, serif;
+      --font-b:      'DM Sans', system-ui, sans-serif;
+      --font-m:      'DM Mono', monospace;
     }
-    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-    body { font-family: var(--font-body); background: var(--cream); color: var(--ink); line-height: 1.6; font-size: 15px; overflow-x: hidden; }
-    img, svg { max-width: 100%; }
 
-    /* ── Page System ── */
-    .page { min-height: 100vh; display: none; opacity: 0; transition: opacity 0.35s ease; }
-    .page.active { display: flex; flex-direction: column; }
-    .page.visible { opacity: 1; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-b);
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
 
-    /* ══════════════════════════════════
-       LANDING PAGE
-    ══════════════════════════════════ */
-    .land-nav {
+    /* ── Noise texture overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.5;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 56px;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 48px; height: 64px;
-      background: rgba(250,248,244,0.92); backdrop-filter: blur(12px);
+      padding: 0 32px;
+      background: rgba(250,248,244,0.9);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-logo { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; text-decoration: none; display: flex; align-items: center; gap: 8px; }
-    .nav-logo-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; display: inline-block; }
-    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
-    .nav-links a { font-size: 14px; color: var(--ink-soft); text-decoration: none; transition: color var(--transition); }
-    .nav-links a:hover { color: var(--ink); }
+    .logo {
+      font-family: var(--font-d);
+      font-size: 20px; font-weight: 700;
+      color: var(--ink); display: flex; align-items: center; gap: 6px;
+      text-decoration: none;
+    }
+    .logo-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
+    .logo-tag {
+      font-family: var(--font-b);
+      font-size: 11px; font-weight: 500;
+      color: var(--ink-mute);
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 3px 9px; border: 1px solid var(--border);
+      border-radius: 100px; margin-left: 4px;
+    }
+    .topbar-right { font-size: 12px; color: var(--ink-mute); display: flex; align-items: center; gap: 6px; }
+    .status-dot { width: 6px; height: 6px; background: #22C55E; border-radius: 50%; animation: pulse 2s infinite; }
 
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 22px; border-radius: 8px; font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all var(--transition); text-decoration: none; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
-    .btn-primary { background: var(--ink); color: var(--white); }
-    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
-    .btn-accent { background: var(--accent); color: var(--white); }
-    .btn-accent:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,135,58,0.35); }
-    .btn-lg { padding: 14px 32px; font-size: 15px; border-radius: 10px; }
-    .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
-    .btn-outline:hover { border-color: var(--ink); background: var(--ink); color: var(--white); }
+    /* ── Main wrapper ── */
+    .wrapper {
+      flex: 1;
+      padding: 80px 24px 48px;
+      display: flex; flex-direction: column;
+      align-items: center;
+      position: relative; z-index: 1;
+    }
 
-    /* Hero */
-    .hero { padding: 140px 48px 80px; max-width: 1100px; margin: 0 auto; width: 100%; }
-    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--accent-light); color: var(--accent-dark); padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.6s 0.1s forwards; }
-    .hero-badge-dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
-    .hero-title { font-family: var(--font-display); font-size: clamp(40px,7vw,88px); font-weight: 700; line-height: 1.05; letter-spacing: -2px; max-width: 700px; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.6s 0.2s forwards; }
-    .hero-title em { font-style: italic; color: var(--accent); }
-    .hero-sub { font-size: clamp(15px, 2vw, 18px); font-weight: 300; color: var(--ink-soft); max-width: 480px; line-height: 1.7; margin-bottom: 40px; opacity: 0; animation: fadeUp 0.6s 0.3s forwards; }
-    .hero-cta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s 0.4s forwards; }
-    .hero-note { font-size: 12px; color: var(--ink-mute); display: flex; align-items: center; gap: 6px; }
+    /* ── Step progress ── */
+    .progress-bar {
+      display: flex; align-items: center; gap: 0;
+      margin-bottom: 48px;
+      max-width: 440px; width: 100%;
+    }
+    .step-node {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      flex-shrink: 0;
+    }
+    .step-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 500; font-family: var(--font-m);
+      transition: all var(--t);
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--ink-mute);
+      position: relative; z-index: 1;
+    }
+    .step-circle.active {
+      background: var(--ink); color: var(--white);
+      border-color: var(--ink);
+      box-shadow: 0 0 0 4px rgba(26,24,20,0.1);
+    }
+    .step-circle.done {
+      background: var(--accent); color: var(--white);
+      border-color: var(--accent);
+    }
+    .step-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      color: var(--ink-mute); white-space: nowrap;
+      transition: color var(--t);
+    }
+    .step-label.active { color: var(--ink); }
+    .step-label.done   { color: var(--accent-dk); }
+    .step-connector {
+      flex: 1; height: 1.5px;
+      background: var(--border);
+      margin: 0 8px; margin-bottom: 22px;
+      transition: background var(--t);
+    }
+    .step-connector.done { background: var(--accent); }
 
-    /* Hero Visual */
-    .hero-visual { position: absolute; right: 0; top: 64px; width: 42%; height: calc(100vh - 64px); pointer-events: none; overflow: hidden; opacity: 0; animation: fadeIn 1s 0.5s forwards; }
-    .hero-visual-inner { position: absolute; inset: 40px; background: var(--white); border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column; }
-    .hv-bar { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
-    .hv-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .hv-dot:nth-child(1) { background: #FF5F57; } .hv-dot:nth-child(2) { background: #FEBC2E; } .hv-dot:nth-child(3) { background: #28C840; }
-    .hv-title { font-size: 11px; color: var(--ink-mute); margin-left: auto; font-family: var(--font-mono); }
-    .hv-messages { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
-    .hv-msg { display: flex; gap: 8px; align-items: flex-start; opacity: 0; transform: translateY(8px); }
-    .hv-msg.show { animation: msgIn 0.4s forwards; }
-    .hv-avatar { width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
-    .hv-avatar.user { background: var(--accent-light); color: var(--accent-dark); }
-    .hv-avatar.ai { background: var(--ink); color: var(--white); font-family: var(--font-display); font-style: italic; }
-    .hv-bubble { background: var(--cream); border-radius: 8px; padding: 8px 12px; font-size: 11px; line-height: 1.5; color: var(--ink-soft); max-width: 85%; }
-    .hv-bubble.user-bubble { background: var(--ink); color: rgba(255,255,255,0.9); }
-    .hv-msg.user-msg { flex-direction: row-reverse; }
-    .hv-input-area { padding: 12px 14px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center; }
-    .hv-input { flex: 1; background: var(--cream); border-radius: 7px; height: 32px; border: 1px solid var(--border); }
-    .hv-send { width: 32px; height: 32px; background: var(--ink); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    /* ── Cards ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 40px;
+      max-width: 580px; width: 100%;
+      animation: slideUp 0.35s cubic-bezier(0.4,0,0.2,1) both;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-    /* Sections */
-    .section { padding: 80px 48px; max-width: 1100px; margin: 0 auto; width: 100%; }
-    .section-label { font-size: 11px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
-    .section-title { font-family: var(--font-display); font-size: clamp(28px,4vw,48px); font-weight: 600; line-height: 1.15; letter-spacing: -1px; max-width: 560px; margin-bottom: 48px; }
-    .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--border); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
-    .feature-card { background: var(--white); padding: 32px 28px; transition: background var(--transition); }
-    .feature-card:hover { background: var(--cream); }
-    .feature-icon { width: 40px; height: 40px; background: var(--accent-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--accent-dark); }
-    .feature-title { font-family: var(--font-display); font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-    .feature-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; font-weight: 300; }
-    .privacy-strip { margin: 0 48px; background: var(--ink); border-radius: 16px; padding: 56px 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
-    .privacy-title { font-family: var(--font-display); font-size: clamp(24px,3vw,40px); font-weight: 600; color: var(--white); line-height: 1.2; letter-spacing: -0.5px; }
-    .privacy-title em { color: var(--accent); font-style: italic; }
-    .privacy-points { display: flex; flex-direction: column; gap: 18px; }
-    .privacy-point { display: flex; align-items: flex-start; gap: 12px; }
-    .privacy-point-icon { width: 18px; height: 18px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
-    .privacy-point-text { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; font-weight: 300; }
-    .privacy-point-text strong { color: var(--white); font-weight: 500; }
-    .cta-section { padding: 80px 48px; max-width: 1100px; margin: 0 auto; text-align: center; }
-    .cta-title { font-family: var(--font-display); font-size: clamp(30px,5vw,60px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 20px; }
-    .cta-sub { font-size: 16px; color: var(--ink-soft); font-weight: 300; margin-bottom: 36px; }
-    footer { border-top: 1px solid var(--border); padding: 28px 48px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .footer-logo { font-family: var(--font-display); font-size: 17px; font-weight: 700; }
-    .footer-text { font-size: 13px; color: var(--ink-mute); }
-    .divider { width: 100%; height: 1px; background: var(--border); }
+    .card-eyebrow {
+      font-size: 10px; font-weight: 500; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-family: var(--font-d);
+      font-size: 28px; font-weight: 700;
+      line-height: 1.15; letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .card-title em { font-style: italic; color: var(--accent); }
+    .card-desc {
+      font-size: 14px; color: var(--ink-soft);
+      font-weight: 300; line-height: 1.7;
+      margin-bottom: 28px;
+    }
 
-    /* ══════════════════════════════════
-       CHAT PAGE
-    ══════════════════════════════════ */
-    #chat-page { height: 100vh; height: 100dvh; overflow: hidden; }
-    .chat-layout { display: grid; grid-template-columns: var(--sidebar-w) 1fr; height: 100vh; height: 100dvh; }
+    /* ── File drop zone ── */
+    .dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 14px;
+      padding: 36px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--t);
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    .dropzone:hover, .dropzone.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-lt);
+    }
+    .dropzone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .dropzone-icon {
+      width: 48px; height: 48px;
+      background: var(--accent-lt);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px;
+      color: var(--accent-dk);
+      transition: transform var(--t);
+    }
+    .dropzone:hover .dropzone-icon { transform: translateY(-2px); }
+    .dropzone-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .dropzone-hint  { font-size: 12px; color: var(--ink-mute); font-weight: 300; }
 
-    /* Overlay */
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 49; backdrop-filter: blur(2px); }
-    .sidebar-overlay.visible { display: block; }
+    /* File selected state */
+    .file-selected {
+      display: none;
+      align-items: center; gap: 12px;
+      background: var(--success-lt);
+      border: 1.5px solid rgba(45,122,79,0.25);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 12px;
+    }
+    .file-selected.visible { display: flex; }
+    .file-icon {
+      width: 36px; height: 36px; background: var(--success);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .file-name { flex: 1; font-size: 13px; font-weight: 500; word-break: break-all; }
+    .file-size { font-size: 11px; color: var(--ink-mute); margin-top: 1px; }
+    .file-remove {
+      width: 24px; height: 24px; border: none; background: transparent;
+      cursor: pointer; color: var(--ink-mute); border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--t); flex-shrink: 0;
+    }
+    .file-remove:hover { background: rgba(192,57,43,0.1); color: #C0392B; }
 
-    /* Sidebar */
-    .sidebar { background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
-    .sidebar-header { padding: 16px 16px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; gap: 8px; }
-    .sidebar-logo { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 6px; cursor: pointer; flex: 1; min-width: 0; }
-    .new-chat-btn { width: 30px; height: 30px; background: var(--ink); border: none; border-radius: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background var(--transition); flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
-    .new-chat-btn:hover { background: var(--accent); }
-    .sidebar-search { padding: 10px 12px; flex-shrink: 0; }
-    .sidebar-search input { width: 100%; background: var(--cream); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; font-family: var(--font-body); font-size: 13px; color: var(--ink); outline: none; transition: border-color var(--transition); }
-    .sidebar-search input:focus { border-color: var(--accent); }
-    .sidebar-search input::placeholder { color: var(--ink-mute); }
-    .sidebar-label { padding: 6px 14px 4px; font-size: 10px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-mute); flex-shrink: 0; }
-    .chat-history { flex: 1; overflow-y: auto; padding: 4px 6px 12px; -webkit-overflow-scrolling: touch; }
-    .chat-history::-webkit-scrollbar { width: 3px; }
-    .chat-history::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-    .history-item { padding: 9px 10px; border-radius: 7px; cursor: pointer; transition: background var(--transition); display: flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 13px; -webkit-tap-highlight-color: transparent; }
-    .history-item:hover { background: var(--cream); color: var(--ink); }
-    .history-item.active { background: var(--accent-light); color: var(--accent-dark); }
-    .history-item-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .history-item-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; flex-shrink: 0; animation: pulse 1s infinite; }
-    .sidebar-footer { padding: 10px 8px; border-top: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; }
-    .model-badge { display: flex; align-items: center; gap: 8px; padding: 9px 10px; background: var(--cream); border-radius: 8px; font-size: 12px; color: var(--ink-soft); }
-    .model-dot { width: 7px; height: 7px; background: #22C55E; border-radius: 50%; animation: pulse 2s infinite; flex-shrink: 0; }
-    .model-name { font-family: var(--font-mono); font-size: 11px; }
-    .user-info { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 8px; background: var(--cream); font-size: 12px; color: var(--ink-soft); cursor: pointer; transition: background var(--transition); -webkit-tap-highlight-color: transparent; }
-    .user-info:hover { background: var(--border); }
-    .user-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: white; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
-    .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .user-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    /* ── Job section ── */
+    .job-tabs {
+      display: flex; gap: 4px;
+      background: var(--cream-deep);
+      border-radius: 10px; padding: 4px;
+      margin-bottom: 20px;
+    }
+    .job-tab {
+      flex: 1; padding: 8px 12px;
+      border-radius: 7px; border: none; cursor: pointer;
+      font-family: var(--font-b); font-size: 13px; font-weight: 500;
+      color: var(--ink-mute); background: transparent;
+      transition: all var(--t); -webkit-tap-highlight-color: transparent;
+    }
+    .job-tab.active { background: var(--white); color: var(--ink); box-shadow: var(--shadow-sm); }
 
-    /* Chat Main */
-    .chat-main { display: flex; flex-direction: column; background: var(--cream); height: 100vh; height: 100dvh; overflow: hidden; }
-    .chat-topbar { padding: 0 16px; height: 52px; background: var(--white); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .chat-topbar-title { font-size: 14px; font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .topbar-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-    .icon-btn { width: 32px; height: 32px; background: transparent; border: 1px solid var(--border); border-radius: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); transition: all var(--transition); flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
-    .icon-btn:hover { background: var(--cream); color: var(--ink); border-color: var(--ink); }
-    .hamburger { display: none; }
-
-    /* Queue Banner */
-    .queue-banner { display: none; align-items: center; gap: 10px; padding: 8px 16px; background: var(--accent-light); border-bottom: 1px solid rgba(200,135,58,0.2); font-size: 13px; color: var(--accent-dark); flex-shrink: 0; }
-    .queue-banner.visible { display: flex; }
-    .queue-spinner { width: 14px; height: 14px; border: 2px solid rgba(200,135,58,0.3); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
-
-    /* Messages */
-    .messages-area { flex: 1; overflow-y: auto; padding: 24px 0; scroll-behavior: smooth; min-height: 0; -webkit-overflow-scrolling: touch; }
-    .messages-area::-webkit-scrollbar { width: 4px; }
-    .messages-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-    .messages-inner { max-width: 720px; margin: 0 auto; padding: 0 16px; display: flex; flex-direction: column; gap: 20px; }
-
-    /* Empty State */
-    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 55vh; padding: 32px 16px; text-align: center; }
-    .empty-logo { font-family: var(--font-display); font-size: 36px; font-weight: 700; margin-bottom: 6px; }
-    .empty-logo span { color: var(--accent); }
-    .empty-sub { font-size: 14px; color: var(--ink-mute); font-weight: 300; margin-bottom: 32px; }
-    .suggestions-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; max-width: 520px; width: 100%; }
-    .suggestion-chip { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; text-align: left; cursor: pointer; transition: all var(--transition); font-size: 12px; color: var(--ink-soft); line-height: 1.5; font-family: var(--font-body); -webkit-tap-highlight-color: transparent; }
-    .suggestion-chip:hover, .suggestion-chip:active { border-color: var(--accent); color: var(--ink); background: var(--accent-light); }
-    .chip-icon { font-size: 16px; margin-bottom: 4px; display: block; }
-
-    /* Messages */
-    .message { display: flex; gap: 10px; align-items: flex-start; animation: msgIn 0.25s ease both; position: relative; }
-    .message:hover .copy-btn { opacity: 1; }
-    .msg-avatar { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; margin-top: 2px; }
-    .msg-avatar.user-av { background: var(--ink); color: var(--white); font-family: var(--font-display); font-style: italic; }
-    .msg-avatar.ai-av { background: var(--accent-light); color: var(--accent-dark); font-family: var(--font-display); font-style: italic; }
-    .msg-content { flex: 1; min-width: 0; }
-    .msg-name { font-size: 11px; font-weight: 500; color: var(--ink-mute); margin-bottom: 5px; }
-    .msg-text { font-size: 14px; color: var(--ink); line-height: 1.75; font-weight: 300; }
-    .msg-text p { margin-bottom: 10px; }
-    .msg-text p:last-child { margin-bottom: 0; }
-    .msg-text code { font-family: var(--font-mono); font-size: 12px; background: var(--border); padding: 2px 5px; border-radius: 4px; word-break: break-all; }
-    .msg-text pre { background: var(--ink); color: rgba(255,255,255,0.85); border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-family: var(--font-mono); font-size: 12px; line-height: 1.6; margin: 10px 0; -webkit-overflow-scrolling: touch; }
-    .msg-text pre code { background: none; padding: 0; color: inherit; word-break: normal; }
-    .msg-text.streaming::after { content: '▋'; animation: blink 0.8s infinite; color: var(--accent); font-size: 12px; }
-    .message.user-message { flex-direction: row-reverse; }
-    .user-message .msg-text { background: var(--ink); color: rgba(255,255,255,0.9); padding: 10px 14px; border-radius: 12px 4px 12px 12px; font-weight: 400; }
-    .user-message .msg-name { text-align: right; }
-    .msg-error { color: #C0392B !important; font-style: italic; }
-
-    /* Copy */
-    .copy-btn { position: absolute; top: 0; right: 0; width: 26px; height: 26px; background: var(--white); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: all var(--transition); color: var(--ink-mute); -webkit-tap-highlight-color: transparent; }
-    .copy-btn:hover { color: var(--ink); border-color: var(--ink); }
-    .user-message .copy-btn { left: 0; right: auto; }
-
-    /* Typing */
-    .typing-indicator { display: flex; gap: 5px; align-items: center; padding: 4px 0; }
-    .typing-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: typingBounce 1.2s infinite; }
-    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-    /* Free limit banner */
-    .free-limit-banner { background: var(--accent-light); border: 1px solid rgba(200,135,58,0.3); border-radius: 10px; padding: 14px 16px; margin: 0 16px; max-width: 720px; margin-left: auto; margin-right: auto; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-    .free-limit-text { flex: 1; font-size: 13px; color: var(--accent-dark); }
-    .free-limit-text strong { display: block; margin-bottom: 2px; }
-
-    /* Input */
-    .chat-input-area { padding: 10px 16px 12px; flex-shrink: 0; background: var(--cream); }
-    .input-wrapper { max-width: 720px; margin: 0 auto; background: var(--white); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); transition: border-color var(--transition), box-shadow var(--transition); overflow: hidden; }
-    .input-wrapper:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(200,135,58,0.1), var(--shadow); }
-    .chat-textarea { width: 100%; min-height: 48px; max-height: 150px; padding: 12px 14px 0; font-family: var(--font-body); font-size: 15px; color: var(--ink); background: transparent; border: none; outline: none; resize: none; line-height: 1.6; -webkit-appearance: none; }
-    .chat-textarea::placeholder { color: var(--ink-mute); }
-    .input-footer { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px 10px; }
-    .input-hint { font-size: 11px; color: var(--ink-mute); }
-    .send-btn { width: 34px; height: 34px; border: none; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); flex-shrink: 0; background: var(--ink); -webkit-tap-highlight-color: transparent; }
-    .send-btn:hover:not(:disabled) { background: var(--accent); transform: scale(1.05); }
-    .send-btn:disabled { background: var(--border); cursor: not-allowed; }
-    .send-btn.stop { background: #C0392B; }
-    .send-btn.stop:hover { background: #922B21; transform: scale(1.05); }
-    .input-disclaimer { text-align: center; font-size: 11px; color: var(--ink-mute); margin-top: 6px; max-width: 720px; margin-left: auto; margin-right: auto; }
-
-    /* Auth Modal */
-    .auth-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
-    .auth-modal-overlay.visible { display: flex; }
-    .auth-modal { background: var(--white); border-radius: 20px; padding: 36px 32px; max-width: 400px; width: 100%; box-shadow: var(--shadow-lg); text-align: center; animation: modalIn 0.3s ease; }
-    .auth-modal-logo { font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-    .auth-modal-logo span { color: var(--accent); }
-    .auth-modal-sub { font-size: 13px; color: var(--ink-mute); margin-bottom: 24px; font-weight: 300; }
-    .auth-modal-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; margin-bottom: 8px; }
-    .auth-modal-desc { font-size: 14px; color: var(--ink-soft); margin-bottom: 28px; line-height: 1.6; font-weight: 300; }
-    .auth-modal-clerk { min-height: 80px; display: flex; align-items: center; justify-content: center; }
-    .auth-modal-skip { margin-top: 16px; font-size: 12px; color: var(--ink-mute); }
-    .auth-modal-skip a { color: var(--ink-mute); text-decoration: underline; cursor: pointer; }
-
-    /* Animations */
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .job-panel { display: none; }
+    .job-panel.active { display: block; animation: fadeIn 0.2s ease; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes msgIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    textarea, input[type="url"], input[type="text"] {
+      width: 100%;
+      font-family: var(--font-b); font-size: 14px;
+      color: var(--ink); background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: 10px; outline: none;
+      transition: border-color var(--t), box-shadow var(--t);
+      padding: 12px 14px;
+      resize: none;
+      line-height: 1.65;
+    }
+    textarea::placeholder, input::placeholder { color: var(--ink-mute); }
+    textarea:focus, input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200,135,58,0.12);
+      background: var(--white);
+    }
+    .char-count {
+      text-align: right; font-size: 11px;
+      color: var(--ink-mute); margin-top: 6px;
+      font-family: var(--font-m);
+    }
+    .url-hint {
+      font-size: 12px; color: var(--ink-mute);
+      margin-top: 8px; display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ── Actions ── */
+    .card-footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-top: 28px; gap: 12px;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 11px 24px; border-radius: 10px;
+      font-family: var(--font-b); font-size: 14px; font-weight: 500;
+      cursor: pointer; border: none;
+      transition: all var(--t); text-decoration: none;
+      white-space: nowrap; -webkit-tap-highlight-color: transparent;
+    }
+    .btn-primary { background: var(--ink); color: var(--white); }
+    .btn-primary:hover:not(:disabled) { background: var(--accent); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,135,58,0.3); }
+    .btn-primary:disabled { background: var(--border); color: var(--ink-mute); cursor: not-allowed; transform: none; }
+    .btn-ghost {
+      background: transparent; color: var(--ink-soft);
+      border: 1.5px solid var(--border); padding: 11px 18px;
+    }
+    .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+    .btn-accent { background: var(--accent); color: var(--white); }
+    .btn-accent:hover { background: var(--accent-dk); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,135,58,0.4); }
+    .btn-lg { padding: 14px 32px; font-size: 15px; border-radius: 12px; }
+
+    /* ── Processing ── */
+    .processing-card {
+      text-align: center;
+      padding: 56px 40px;
+    }
+    .spinner-wrap {
+      width: 80px; height: 80px;
+      position: relative; margin: 0 auto 28px;
+    }
+    .spinner-ring {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 3px solid transparent;
+    }
+    .spinner-ring-1 {
+      border-top-color: var(--accent);
+      animation: spin 1s linear infinite;
+    }
+    .spinner-ring-2 {
+      border-right-color: var(--gold);
+      animation: spin 1.5s linear infinite reverse;
+      inset: 8px;
+    }
+    .spinner-center {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d); font-size: 22px;
+      font-style: italic; color: var(--accent);
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes typingBounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-    /* ══════════════════════════════════
-       RESPONSIVE
-    ══════════════════════════════════ */
-    @media (max-width: 1024px) {
-      .hero-visual { display: none; }
-      .features-grid { grid-template-columns: 1fr 1fr; }
-      .privacy-strip { grid-template-columns: 1fr; gap: 32px; }
+    .process-title {
+      font-family: var(--font-d); font-size: 24px;
+      font-weight: 600; margin-bottom: 8px;
+    }
+    .process-desc { font-size: 14px; color: var(--ink-soft); font-weight: 300; margin-bottom: 32px; }
+    .process-steps-list {
+      display: flex; flex-direction: column; gap: 10px;
+      max-width: 320px; margin: 0 auto;
+      text-align: left;
+    }
+    .pstep {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: var(--ink-mute);
+      transition: color var(--t);
+    }
+    .pstep.active { color: var(--ink); }
+    .pstep.done   { color: var(--success); }
+    .pstep-dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 1.5px solid var(--border);
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 10px; transition: all var(--t);
+    }
+    .pstep.active .pstep-dot {
+      border-color: var(--accent);
+      background: var(--accent-lt);
+      animation: pulseBorder 1s infinite;
+    }
+    .pstep.done .pstep-dot { background: var(--success); border-color: var(--success); }
+    @keyframes pulseBorder {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(200,135,58,0.4); }
+      50%       { box-shadow: 0 0 0 4px rgba(200,135,58,0); }
     }
 
-    @media (max-width: 768px) {
-      /* Landing */
-      .land-nav { padding: 0 16px; height: 56px; }
-      .nav-links { display: none; }
-      .hero { padding: 90px 16px 56px; }
-      .section { padding: 52px 16px; }
-      .features-grid { grid-template-columns: 1fr; }
-      .privacy-strip { margin: 0 16px; padding: 32px 24px; }
-      .cta-section { padding: 52px 16px; }
-      footer { padding: 20px 16px; flex-direction: column; text-align: center; }
+    /* ── Result ── */
+    .result-card { text-align: center; }
+    .result-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--accent-lt), rgba(212,168,83,0.2));
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; font-size: 30px;
+      box-shadow: 0 4px 20px rgba(200,135,58,0.2);
+      animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .result-title {
+      font-family: var(--font-d); font-size: 26px;
+      font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px;
+    }
+    .result-desc { font-size: 14px; color: var(--ink-soft); font-weight: 300; margin-bottom: 28px; line-height: 1.7; }
+    .result-files {
+      display: flex; flex-direction: column; gap: 10px;
+      margin-bottom: 28px; text-align: left;
+    }
+    .result-file {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--cream); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 16px;
+    }
+    .rf-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .rf-icon.doc { background: #EBF3FF; }
+    .rf-icon.txt { background: #F0FFF4; }
+    .rf-info { flex: 1; }
+    .rf-name { font-size: 13px; font-weight: 500; }
+    .rf-desc { font-size: 11px; color: var(--ink-mute); }
 
-      /* Chat layout */
-      .chat-layout { grid-template-columns: 1fr; }
-      .sidebar {
-        position: fixed; left: 0; top: 0; bottom: 0;
-        width: min(280px, 85vw); z-index: 50;
-        transform: translateX(-100%);
-        transition: transform var(--transition);
-        box-shadow: none;
-      }
-      .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
-      .hamburger { display: flex; }
-
-      /* Messages */
-      .messages-inner { padding: 0 12px; }
-      .msg-text { font-size: 14px; }
-      .suggestions-grid { grid-template-columns: 1fr; }
-      .empty-state { min-height: 45vh; padding: 24px 12px; }
-
-      /* Input */
-      .chat-input-area { padding: 8px 12px 10px; }
-      .chat-textarea { font-size: 16px; } /* prevents iOS zoom */
-      .input-hint { display: none; }
-
-      /* Auth modal */
-      .auth-modal { padding: 28px 20px; border-radius: 16px; }
+    .divider-or {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 12px; color: var(--ink-mute); margin: 20px 0;
+    }
+    .divider-or::before, .divider-or::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
     }
 
-    @media (max-width: 380px) {
-      .hero-title { letter-spacing: -1px; }
-      .hero-cta { flex-direction: column; align-items: flex-start; }
-      .btn-lg { width: 100%; }
+    /* ── Error ── */
+    .error-box {
+      display: none;
+      background: #FEF2F2; border: 1px solid rgba(192,57,43,0.25);
+      border-radius: 10px; padding: 12px 14px;
+      font-size: 13px; color: #C0392B;
+      margin-top: 16px; align-items: center; gap: 8px;
+    }
+    .error-box.visible { display: flex; }
+
+    /* ── Footer note ── */
+    .foot-note {
+      margin-top: 24px; font-size: 12px;
+      color: var(--ink-mute); text-align: center;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
     }
 
-    /* Safe area for notched phones */
-    @supports (padding-bottom: env(safe-area-inset-bottom)) {
-      .chat-input-area { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+    /* ── Animations / keyframes ── */
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .topbar { padding: 0 16px; }
+      .wrapper { padding: 72px 12px 32px; }
+      .card { padding: 28px 20px; border-radius: 16px; }
+      .processing-card { padding: 40px 20px; }
+      .card-title { font-size: 22px; }
+      .progress-bar { margin-bottom: 32px; }
+      .step-label { font-size: 9px; }
+      .logo-tag { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════
-     LANDING PAGE
-════════════════════════════════════════════ -->
-<div id="landing-page" class="page active">
-  <nav class="land-nav">
-    <a class="nav-logo" href="#">Jhakri <span class="nav-logo-dot"></span></a>
-    <ul class="nav-links">
-      <li><a href="#features">Features</a></li>
-      <li><a href="#privacy">Privacy</a></li>
-    </ul>
-    <button class="btn btn-primary" onclick="showChat()">Start Chatting →</button>
-  </nav>
+<!-- Top bar -->
+<header class="topbar">
+  <a class="logo" href="#">Jhakri <span class="logo-dot"></span> <span class="logo-tag">Resume Tailor</span></a>
+  <div class="topbar-right">
+    <span class="status-dot"></span>
+    <span>Private · No data stored</span>
+  </div>
+</header>
 
-  <div style="position:relative; overflow:hidden;">
-    <section class="hero">
-      <div class="hero-badge"><span class="hero-badge-dot"></span>Private AI — No data collected</div>
-      <h1 class="hero-title">Think freely.<br/>Talk to <em>Jhakri.</em></h1>
-      <p class="hero-sub">A private AI assistant that runs on our own servers. Your conversations stay yours — never stored, never shared, never sold.</p>
-      <div class="hero-cta">
-        <button class="btn btn-accent btn-lg" onclick="showChat()">Start a conversation</button>
-        <span class="hero-note">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          No account required to start
-        </span>
+<div class="wrapper">
+
+  <!-- Step progress -->
+  <div class="progress-bar" id="progress-bar">
+    <div class="step-node">
+      <div class="step-circle active" id="sc-1">1</div>
+      <div class="step-label active" id="sl-1">Resume</div>
+    </div>
+    <div class="step-connector" id="conn-1"></div>
+    <div class="step-node">
+      <div class="step-circle" id="sc-2">2</div>
+      <div class="step-label" id="sl-2">Job Post</div>
+    </div>
+    <div class="step-connector" id="conn-2"></div>
+    <div class="step-node">
+      <div class="step-circle" id="sc-3">3</div>
+      <div class="step-label" id="sl-3">Download</div>
+    </div>
+  </div>
+
+
+  <!-- ══ STEP 1: Upload Resume ══ -->
+  <div class="card" id="step-1">
+    <div class="card-eyebrow">Step 1 of 3</div>
+    <h1 class="card-title">Upload your <em>résumé.</em></h1>
+    <p class="card-desc">We'll read your existing resume and tailor it specifically for the job you're applying to. Supported: PDF or DOCX.</p>
+
+    <div class="dropzone" id="dropzone"
+         ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+      <input type="file" id="resume-file" accept=".pdf,.doc,.docx"
+             onchange="fileSelected(this)"/>
+      <div class="dropzone-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="12" y1="18" x2="12" y2="12"/>
+          <line x1="9" y1="15" x2="12" y2="12"/><line x1="15" y1="15" x2="12" y2="12"/>
+        </svg>
       </div>
-    </section>
-    <div class="hero-visual">
-      <div class="hero-visual-inner">
-        <div class="hv-bar">
-          <div class="hv-dot"></div><div class="hv-dot"></div><div class="hv-dot"></div>
-          <span class="hv-title">Jhakri — private chat</span>
-        </div>
-        <div class="hv-messages" id="hv-messages"></div>
-        <div class="hv-input-area">
-          <div class="hv-input"></div>
-          <div class="hv-send"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
-        </div>
+      <div class="dropzone-title">Drop your résumé here</div>
+      <div class="dropzone-hint">or click to browse · PDF or DOCX · Max 10 MB</div>
+    </div>
+
+    <div class="file-selected" id="file-selected">
+      <div class="file-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div>
+        <div class="file-name" id="file-name">—</div>
+        <div class="file-size" id="file-size">—</div>
+      </div>
+      <button class="file-remove" onclick="removeFile()" title="Remove">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="error-box" id="err-1">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="err-1-text">Please upload a resume to continue.</span>
+    </div>
+
+    <div class="card-footer">
+      <div style="font-size:12px;color:var(--ink-mute);">Your file stays in your browser.</div>
+      <button class="btn btn-primary" onclick="goStep2()">
+        Continue
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ══ STEP 2: Job Description ══ -->
+  <div class="card" id="step-2" style="display:none;">
+    <div class="card-eyebrow">Step 2 of 3</div>
+    <h1 class="card-title">Paste the <em>job post.</em></h1>
+    <p class="card-desc">Add the full job description. Jhakri will extract key skills and requirements to perfectly align your resume and cover letter.</p>
+
+    <div class="job-tabs">
+      <button class="job-tab active" onclick="switchTab('paste')">Paste text</button>
+      <button class="job-tab"        onclick="switchTab('url')">Job URL</button>
+    </div>
+
+    <div class="job-panel active" id="panel-paste">
+      <textarea id="jd-text" rows="9" placeholder="Paste the full job description here — role summary, responsibilities, requirements, everything you see on the posting…" oninput="updateCharCount(this)"></textarea>
+      <div class="char-count"><span id="char-count">0</span> characters</div>
+    </div>
+
+    <div class="job-panel" id="panel-url">
+      <input type="url" id="jd-url" placeholder="https://careers.company.com/job/12345"/>
+      <p class="url-hint">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Jhakri will attempt to fetch the listing. Private / login-required pages may not load.
+      </p>
+    </div>
+
+    <div class="error-box" id="err-2">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="err-2-text">Please add a job description or URL.</span>
+    </div>
+
+    <div class="card-footer">
+      <button class="btn btn-ghost" onclick="goStep1()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back
+      </button>
+      <button class="btn btn-primary" onclick="goProcess()">
+        Tailor my résumé
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ══ STEP 3: Processing ══ -->
+  <div class="card processing-card" id="step-3" style="display:none;">
+    <div class="spinner-wrap">
+      <div class="spinner-ring spinner-ring-1"></div>
+      <div class="spinner-ring spinner-ring-2"></div>
+      <div class="spinner-center">J</div>
+    </div>
+    <div class="process-title">Tailoring your résumé</div>
+    <p class="process-desc">Jhakri is analysing the role and rewriting your documents. This takes about 15–30 seconds.</p>
+    <div class="process-steps-list">
+      <div class="pstep" id="pstep-1">
+        <div class="pstep-dot"></div>
+        <span>Reading your résumé</span>
+      </div>
+      <div class="pstep" id="pstep-2">
+        <div class="pstep-dot"></div>
+        <span>Analysing job requirements</span>
+      </div>
+      <div class="pstep" id="pstep-3">
+        <div class="pstep-dot"></div>
+        <span>Rewriting résumé for this role</span>
+      </div>
+      <div class="pstep" id="pstep-4">
+        <div class="pstep-dot"></div>
+        <span>Writing tailored cover letter</span>
+      </div>
+      <div class="pstep" id="pstep-5">
+        <div class="pstep-dot"></div>
+        <span>Packaging your files</span>
       </div>
     </div>
   </div>
 
-  <section class="section" id="features">
-    <p class="section-label">Why Jhakri</p>
-    <h2 class="section-title">Built differently, on purpose.</h2>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <div class="feature-title">Zero data retention</div>
-        <p class="feature-desc">Your messages are never written to disk. Each session is isolated and discarded when you close the tab.</p>
+
+  <!-- ══ STEP 4: Result ══ -->
+  <div class="card result-card" id="step-4" style="display:none;">
+    <div class="result-icon">✦</div>
+    <h2 class="result-title">Your documents are ready.</h2>
+    <p class="result-desc">Jhakri has tailored your résumé and written a custom cover letter for this role. Download the zip below.</p>
+
+    <div class="result-files">
+      <div class="result-file">
+        <div class="rf-icon doc">📄</div>
+        <div class="rf-info">
+          <div class="rf-name">Resume_Tailored.docx</div>
+          <div class="rf-desc">Optimised for this specific job posting</div>
+        </div>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-        <div class="feature-title">Runs on our servers</div>
-        <p class="feature-desc">No third-party AI APIs. Your conversations never leave our infrastructure and are never sent to OpenAI or Google.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-        <div class="feature-title">Always honest</div>
-        <p class="feature-desc">No corporate agenda. Jhakri gives you direct, unfiltered answers without tiptoeing around difficult questions.</p>
+      <div class="result-file">
+        <div class="rf-icon txt">✍️</div>
+        <div class="rf-info">
+          <div class="rf-name">Cover_Letter.txt</div>
+          <div class="rf-desc">Personalised cover letter · ready to send</div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <div class="divider" style="max-width:1100px; margin: 0 auto;"></div>
+    <button class="btn btn-accent btn-lg" style="width:100%;" onclick="downloadZip()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download ZIP
+    </button>
 
-  <section style="padding: 64px 0;" id="privacy">
-    <div class="privacy-strip">
-      <div><h2 class="privacy-title">Your thoughts are<br/><em>none of our business.</em></h2></div>
-      <div class="privacy-points">
-        <div class="privacy-point"><div class="privacy-point-icon"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><p class="privacy-point-text"><strong>No conversation logs.</strong> Nothing is stored after your session ends.</p></div>
-        <div class="privacy-point"><div class="privacy-point-icon"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><p class="privacy-point-text"><strong>No account needed.</strong> Start chatting without creating a profile.</p></div>
-        <div class="privacy-point"><div class="privacy-point-icon"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><p class="privacy-point-text"><strong>No tracking.</strong> No analytics, no fingerprinting, no ads. Ever.</p></div>
-        <div class="privacy-point"><div class="privacy-point-icon"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><p class="privacy-point-text"><strong>Self-hosted model.</strong> The AI runs on our own hardware, not rented from Big Tech.</p></div>
-      </div>
-    </div>
-  </section>
+    <div class="divider-or">or</div>
 
-  <section class="cta-section">
-    <h2 class="cta-title">Ready to think freely?</h2>
-    <p class="cta-sub">No sign-up. No data collection. Just a conversation.</p>
-    <button class="btn btn-accent btn-lg" onclick="showChat()">Open Jhakri →</button>
-  </section>
-
-  <footer>
-    <div class="footer-logo">Jhakri</div>
-    <p class="footer-text">© 2026 Jhakri. Private by design.</p>
-  </footer>
-</div>
-
-
-<!-- ════════════════════════════════════════════
-     CHAT PAGE
-════════════════════════════════════════════ -->
-<div id="chat-page" class="page">
-  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
-
-  <div class="chat-layout">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-logo" onclick="showLanding()">Jhakri <span class="nav-logo-dot" style="width:6px;height:6px;"></span></div>
-        <button class="new-chat-btn" onclick="newChat()" title="New chat">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        </button>
-      </div>
-      <div class="sidebar-search">
-        <input type="text" placeholder="Search conversations..." oninput="filterHistory(this.value)" />
-      </div>
-      <p class="sidebar-label">Recent</p>
-      <div class="chat-history" id="chat-history"></div>
-      <div class="sidebar-footer">
-        <div class="model-badge">
-          <div class="model-dot"></div>
-          <span>Local model</span>
-          <span class="model-name">llama3.1:8b</span>
-        </div>
-        <!-- User info — shown when signed in -->
-        <div class="user-info" id="user-info-bar" style="display:none;" onclick="handleSignOut()">
-          <div class="user-avatar" id="user-avatar-bar">?</div>
-          <span class="user-name" id="user-name-bar">User</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;opacity:0.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Main -->
-    <main class="chat-main">
-      <div class="chat-topbar">
-        <button class="icon-btn hamburger" onclick="openSidebar()" title="Menu">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <span class="chat-topbar-title" id="chat-title">New conversation</span>
-        <div class="topbar-actions">
-          <button class="icon-btn" onclick="newChat()" title="New chat">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </button>
-          <button class="icon-btn" onclick="clearCurrentChat()" title="Clear">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-          </button>
-          <!-- User avatar in topbar (mobile) -->
-          <div class="user-avatar" id="user-avatar-top" style="display:none;cursor:pointer;width:30px;height:30px;font-size:11px;" onclick="handleSignOut()" title="Sign out">?</div>
-        </div>
-      </div>
-
-      <div class="queue-banner" id="queue-banner">
-        <div class="queue-spinner"></div>
-        <span id="queue-text">Jhakri is thinking...</span>
-      </div>
-
-      <div class="messages-area" id="messages-area">
-        <div class="messages-inner" id="messages-inner"></div>
-      </div>
-
-      <!-- Free limit banner (shown before auth wall) -->
-      <div id="free-limit-banner" style="display:none; padding: 8px 16px; flex-shrink:0;">
-        <div class="free-limit-banner">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent-dark);flex-shrink:0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <div class="free-limit-text">
-            <strong>You've used your 3 free messages</strong>
-            Sign in to continue chatting — it's free.
-          </div>
-          <button class="btn btn-accent" style="padding:7px 14px;font-size:13px;flex-shrink:0;" onclick="showAuthModal()">Sign in</button>
-        </div>
-      </div>
-
-      <div class="chat-input-area">
-        <div class="input-wrapper">
-          <textarea class="chat-textarea" id="chat-input" placeholder="Message Jhakri..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-          <div class="input-footer">
-            <span class="input-hint">Enter to send · Shift+Enter for new line</span>
-            <button class="send-btn" id="send-btn" onclick="handleSendStop()" title="Send">
-              <svg id="send-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            </button>
-          </div>
-        </div>
-        <p class="input-disclaimer">Jhakri runs locally · No messages are stored or logged</p>
-      </div>
-    </main>
+    <button class="btn btn-ghost" style="width:100%;" onclick="startOver()">
+      Tailor another résumé →
+    </button>
   </div>
-</div>
 
+  <!-- Privacy note -->
+  <p class="foot-note">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Your files are processed privately and never stored on any server.
+  </p>
 
-<!-- ════════════════════════════════════════════
-     AUTH MODAL
-════════════════════════════════════════════ -->
-<div class="auth-modal-overlay" id="auth-modal">
-  <div class="auth-modal">
-    <div class="auth-modal-logo">Jhakri<span>.</span></div>
-    <p class="auth-modal-sub">Private AI — No data collected</p>
-    <h2 class="auth-modal-title">Continue chatting</h2>
-    <p class="auth-modal-desc">You've used your 3 free messages. Sign in to unlock unlimited private conversations — free forever.</p>
-    <div class="auth-modal-clerk" id="clerk-signin-container">
-      <!-- Clerk mounts here -->
-      <div style="font-size:13px;color:var(--ink-mute);">Loading...</div>
-    </div>
-    <p class="auth-modal-skip">
-      <a onclick="dismissAuthModal()">Maybe later</a>
-    </p>
-  </div>
-</div>
+</div><!-- /wrapper -->
 
-
-<!-- Clerk CDN -->
-<script
-  async
-  crossorigin="anonymous"
-  data-clerk-publishable-key="pk_test_Y2FzdWFsLXRpZ2VyLTIuY2xlcmsuYWNjb3VudHMuZGV2JA"
-  src="https://casual-tiger-2.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
-  type="text/javascript">
-</script>
 
 <script>
-  // ── Config ────────────────────────────────────────────────
-  const API_BASE    = 'https://api.prasiddha.info.np';
-  const MODEL       = 'llama3.1:8b';
-  const STORAGE_KEY = 'jhakri_conversations';
-  const FREE_LIMIT  = 3;
+  // ─────────────────────────────────────────────────────────────────────────
+  //  CONFIG
+  //  ↓ Replace this URL with your fine-tuned model's endpoint when ready ↓
+  // ─────────────────────────────────────────────────────────────────────────
+  const API_ENDPOINT = 'https://api.prasiddha.info.np/api/tailor'; // ← your endpoint
 
-  // ── State ─────────────────────────────────────────────────
-  let conversations   = loadFromStorage();
-  let currentConvId   = null;
-  let activeRequests  = {};
-  let clerkReady      = false;
-  let isSignedIn      = false;
-  let freeUsed        = parseInt(localStorage.getItem('jhakri_free_used') || '0');
+  // ─────────────────────────────────────────────────────────────────────────
+  //  STATE
+  // ─────────────────────────────────────────────────────────────────────────
+  let resumeFile    = null;
+  let jobDesc       = '';
+  let jobUrl        = '';
+  let activeTab     = 'paste';
+  let resultData    = null; // { resume: '...', coverLetter: '...' }
+  let currentStep   = 1;
 
-  // ── Clerk Init ────────────────────────────────────────────
-  window.addEventListener('load', async () => {
-    document.getElementById('landing-page').classList.add('visible');
-    runHeroDemo();
+  // ─────────────────────────────────────────────────────────────────────────
+  //  STEP NAVIGATION
+  // ─────────────────────────────────────────────────────────────────────────
+  function setStepProgress(step) {
+    currentStep = step;
+    for (let i = 1; i <= 3; i++) {
+      const sc = document.getElementById(`sc-${i}`);
+      const sl = document.getElementById(`sl-${i}`);
+      sc.className = 'step-circle' + (i < step ? ' done' : i === step ? ' active' : '');
+      sl.className = 'step-label'  + (i < step ? ' done' : i === step ? ' active' : '');
+      if (i < step) sc.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+      else sc.textContent = String(i);
+    }
+    for (let i = 1; i <= 2; i++) {
+      document.getElementById(`conn-${i}`).className = 'step-connector' + (i < step ? ' done' : '');
+    }
+    // progress bar hidden on result
+    document.getElementById('progress-bar').style.opacity = (step > 3) ? '0' : '1';
+  }
 
-    // Wait for Clerk to be available
-    await waitForClerk();
-  });
+  function showCard(id) {
+    ['step-1','step-2','step-3','step-4'].forEach(s => {
+      const el = document.getElementById(s);
+      el.style.display = 'none';
+    });
+    const target = document.getElementById(id);
+    target.style.display = 'flex';
+    target.style.flexDirection = 'column';
+    // restart animation
+    target.style.animation = 'none';
+    requestAnimationFrame(() => { target.style.animation = ''; });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-  async function waitForClerk() {
-    if (window.Clerk) {
-      try {
-        await window.Clerk.load();
-        clerkReady  = true;
-        isSignedIn  = !!window.Clerk.user;
-        updateAuthUI();
-        // Listen for auth changes
-        window.Clerk.addListener(({ user }) => {
-          isSignedIn = !!user;
-          updateAuthUI();
-          if (isSignedIn) {
-            hideAuthModal();
-            freeUsed = 0;
-            localStorage.setItem('jhakri_free_used', '0');
-            hideFreeLimit();
-          }
-        });
-      } catch (e) {
-        console.warn('Clerk failed to load:', e);
+  function goStep1() { setStepProgress(1); showCard('step-1'); hideErr('err-1'); }
+  function goStep2() {
+    if (!resumeFile) { showErr('err-1', 'Please upload your résumé to continue.'); return; }
+    hideErr('err-1');
+    setStepProgress(2);
+    showCard('step-2');
+  }
+
+  function goProcess() {
+    const text = document.getElementById('jd-text').value.trim();
+    const url  = document.getElementById('jd-url').value.trim();
+    if (activeTab === 'paste' && text.length < 40) {
+      showErr('err-2', 'Please paste the full job description (at least 40 characters).');
+      return;
+    }
+    if (activeTab === 'url' && !isValidUrl(url)) {
+      showErr('err-2', 'Please enter a valid job posting URL (starting with https://).');
+      return;
+    }
+    hideErr('err-2');
+    jobDesc = text; jobUrl = url;
+    setStepProgress(3);
+    showCard('step-3');
+    runProcessing();
+  }
+
+  function startOver() {
+    resumeFile = null; jobDesc = ''; jobUrl = ''; resultData = null;
+    document.getElementById('resume-file').value = '';
+    document.getElementById('jd-text').value = '';
+    document.getElementById('jd-url').value = '';
+    document.getElementById('char-count').textContent = '0';
+    document.getElementById('file-selected').classList.remove('visible');
+    document.getElementById('dropzone').style.display = '';
+    goStep1();
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  //  FILE HANDLING
+  // ─────────────────────────────────────────────────────────────────────────
+  function fileSelected(input) {
+    const file = input.files[0];
+    if (!file) return;
+    setFile(file);
+  }
+
+  function setFile(file) {
+    const allowed = ['application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowed.includes(file.type) && !file.name.match(/\.(pdf|docx?)$/i)) {
+      showErr('err-1', 'Only PDF or DOCX files are supported.');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      showErr('err-1', 'File is too large. Please keep it under 10 MB.');
+      return;
+    }
+    hideErr('err-1');
+    resumeFile = file;
+    document.getElementById('file-name').textContent = file.name;
+    document.getElementById('file-size').textContent = formatBytes(file.size);
+    document.getElementById('file-selected').classList.add('visible');
+    document.getElementById('dropzone').style.opacity = '0.5';
+    document.getElementById('dropzone').style.pointerEvents = 'none';
+  }
+
+  function removeFile() {
+    resumeFile = null;
+    document.getElementById('resume-file').value = '';
+    document.getElementById('file-selected').classList.remove('visible');
+    document.getElementById('dropzone').style.opacity = '';
+    document.getElementById('dropzone').style.pointerEvents = '';
+  }
+
+  function dragOver(e)  { e.preventDefault(); document.getElementById('dropzone').classList.add('drag-over'); }
+  function dragLeave()  { document.getElementById('dropzone').classList.remove('drag-over'); }
+  function dropFile(e)  {
+    e.preventDefault();
+    document.getElementById('dropzone').classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) setFile(file);
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  //  JOB TABS
+  // ─────────────────────────────────────────────────────────────────────────
+  function switchTab(tab) {
+    activeTab = tab;
+    document.querySelectorAll('.job-tab').forEach((t, i) => {
+      t.classList.toggle('active', (i === 0 && tab === 'paste') || (i === 1 && tab === 'url'));
+    });
+    document.getElementById('panel-paste').classList.toggle('active', tab === 'paste');
+    document.getElementById('panel-url').classList.toggle('active', tab === 'url');
+  }
+
+  function updateCharCount(el) {
+    document.getElementById('char-count').textContent = el.value.length.toLocaleString();
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  //  PROCESSING — wire your API here
+  // ─────────────────────────────────────────────────────────────────────────
+  async function runProcessing() {
+    const steps = ['pstep-1','pstep-2','pstep-3','pstep-4','pstep-5'];
+
+    // Animate steps sequentially while waiting for API
+    let stepIdx = 0;
+    function advanceStep() {
+      if (stepIdx > 0) document.getElementById(steps[stepIdx - 1]).classList.replace('active','done');
+      if (stepIdx < steps.length) {
+        const el = document.getElementById(steps[stepIdx]);
+        el.classList.add('active');
+        el.querySelector('.pstep-dot').innerHTML = '';
+        stepIdx++;
       }
-    } else {
-      // Retry
-      setTimeout(waitForClerk, 500);
     }
+
+    advanceStep(); // step 1 immediately
+
+    // ── API CALL ────────────────────────────────────────────────────────────
+    // When your model is ready, replace the block below with a real fetch().
+    // Expected response JSON: { resume: "<text or base64 docx>", cover_letter: "<text>" }
+    //
+    // Example:
+    //   const formData = new FormData();
+    //   formData.append('resume', resumeFile);
+    //   formData.append('job_description', jobDesc || jobUrl);
+    //   const res  = await fetch(API_ENDPOINT, { method: 'POST', body: formData });
+    //   const data = await res.json();
+    //   resultData = { resume: data.resume, coverLetter: data.cover_letter };
+    // ───────────────────────────────────────────────────────────────────────
+
+    // — DEMO / PLACEHOLDER (remove when wiring real API) —
+    const stepDelay = ms => new Promise(r => setTimeout(r, ms));
+    await stepDelay(1400); advanceStep();
+    await stepDelay(1600); advanceStep();
+    await stepDelay(1800); advanceStep();
+    await stepDelay(1600); advanceStep();
+    await stepDelay(1200); advanceStep(); // finalize last step
+
+    // Placeholder result text (replace with real API data)
+    resultData = {
+      resume: `TAILORED RÉSUMÉ — Placeholder\n\n[Your AI-generated resume will appear here]\n\nThis file is generated by your fine-tuned model at:\n${API_ENDPOINT}\n\nJob description provided:\n${(jobDesc || jobUrl).slice(0, 200)}…`,
+      coverLetter: `COVER LETTER — Placeholder\n\n[Your AI-generated cover letter will appear here]\n\nThis file is generated by your fine-tuned model at:\n${API_ENDPOINT}\n\nOriginal file: ${resumeFile?.name}`
+    };
+    // — END PLACEHOLDER —
+
+    await stepDelay(400);
+    setStepProgress(3);
+    showCard('step-4');
   }
 
-  function updateAuthUI() {
-    const user = window.Clerk?.user;
-    if (user) {
-      const name    = user.firstName || user.emailAddresses?.[0]?.emailAddress || 'User';
-      const imgUrl  = user.imageUrl;
-      const initial = name[0].toUpperCase();
-
-      // Sidebar user bar
-      const bar = document.getElementById('user-info-bar');
-      const barAv = document.getElementById('user-avatar-bar');
-      const barName = document.getElementById('user-name-bar');
-      if (bar) { bar.style.display = 'flex'; }
-      if (barAv) { barAv.innerHTML = imgUrl ? `<img src="${imgUrl}" alt="">` : initial; }
-      if (barName) { barName.textContent = name; }
-
-      // Topbar avatar (mobile)
-      const topAv = document.getElementById('user-avatar-top');
-      if (topAv) {
-        topAv.style.display = 'flex';
-        topAv.innerHTML = imgUrl ? `<img src="${imgUrl}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : initial;
-      }
-    } else {
-      document.getElementById('user-info-bar').style.display = 'none';
-      document.getElementById('user-avatar-top').style.display = 'none';
-    }
-  }
-
-  async function handleSignOut() {
-    if (!window.Clerk) return;
-    if (confirm('Sign out of Jhakri?')) {
-      await window.Clerk.signOut();
-    }
-  }
-
-  // ── Auth Modal ────────────────────────────────────────────
-  function showAuthModal() {
-    document.getElementById('auth-modal').classList.add('visible');
-    // Mount Clerk sign-in component
-    if (clerkReady && window.Clerk && !isSignedIn) {
-      const container = document.getElementById('clerk-signin-container');
-      container.innerHTML = '';
-      try {
-        window.Clerk.mountSignIn(container, {
-          appearance: {
-            elements: {
-              card: 'box-shadow: none; background: transparent;',
-              rootBox: 'width: 100%;',
-            }
-          }
-        });
-      } catch (e) {
-        container.innerHTML = `<p style="font-size:13px;color:var(--ink-mute);">Sign in unavailable — please try again later.</p>`;
-      }
-    }
-  }
-
-  function hideAuthModal() {
-    document.getElementById('auth-modal').classList.remove('visible');
-  }
-
-  function dismissAuthModal() {
-    hideAuthModal();
-  }
-
-  // ── Free limit ────────────────────────────────────────────
-  function checkFreeLimit() {
-    if (isSignedIn) return true; // signed in = unlimited
-    if (freeUsed >= FREE_LIMIT) {
-      showFreeLimit();
-      showAuthModal();
-      return false;
-    }
-    return true;
-  }
-
-  function incrementFreeUsed() {
-    if (!isSignedIn) {
-      freeUsed++;
-      localStorage.setItem('jhakri_free_used', String(freeUsed));
-      // Show banner when 1 message left
-      if (freeUsed === FREE_LIMIT - 1) {
-        showQueueBanner(`1 free message remaining — sign in for unlimited access`);
-        setTimeout(hideQueueBanner, 4000);
-      }
-    }
-  }
-
-  function showFreeLimit() {
-    document.getElementById('free-limit-banner').style.display = 'block';
-    document.getElementById('chat-input').disabled = true;
-    document.getElementById('send-btn').disabled = true;
-  }
-
-  function hideFreeLimit() {
-    document.getElementById('free-limit-banner').style.display = 'none';
-    document.getElementById('chat-input').disabled = false;
-    document.getElementById('send-btn').disabled = false;
-  }
-
-  // ── localStorage ─────────────────────────────────────────
-  function loadFromStorage() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
-  }
-
-  function saveToStorage() {
-    try {
-      const toSave = conversations.slice(0, 50).map(c => ({ ...c, messages: c.messages.slice(-50) }));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-    } catch {}
-  }
-
-  // ── Page Navigation ───────────────────────────────────────
-  function showChat() {
-    const landing = document.getElementById('landing-page');
-    const chat    = document.getElementById('chat-page');
-    landing.classList.remove('visible');
-    setTimeout(() => {
-      landing.classList.remove('active');
-      chat.classList.add('active');
-      setTimeout(() => chat.classList.add('visible'), 10);
-    }, 300);
-    if (conversations.length > 0 && !currentConvId) {
-      switchToConv(conversations[0].id);
-    } else if (!currentConvId) {
-      newChat();
-    }
-  }
-
-  function showLanding() {
-    const chat    = document.getElementById('chat-page');
-    const landing = document.getElementById('landing-page');
-    chat.classList.remove('visible');
-    setTimeout(() => {
-      chat.classList.remove('active');
-      landing.classList.add('active');
-      setTimeout(() => landing.classList.add('visible'), 10);
-    }, 300);
-    closeSidebar();
-  }
-
-  // ── Sidebar ───────────────────────────────────────────────
-  function openSidebar() {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('sidebar-overlay').classList.add('visible');
-  }
-  function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('sidebar-overlay').classList.remove('visible');
-  }
-
-  // ── Conversations ─────────────────────────────────────────
-  function newChat() {
-    const id = 'conv_' + Date.now();
-    conversations.unshift({ id, title: 'New conversation', messages: [] });
-    saveToStorage();
-    switchToConv(id);
-    setTimeout(() => document.getElementById('chat-input').focus(), 100);
-    closeSidebar();
-  }
-
-  function switchToConv(id) {
-    currentConvId = id;
-    const conv = getConv(id);
-    if (!conv) return;
-    document.getElementById('chat-title').textContent = conv.title;
-    renderHistory();
-    if (conv.messages.length === 0) showEmptyState();
-    else rebuildMessages(conv.messages);
-    if (activeRequests[id]) { showQueueBanner('Jhakri is thinking...'); setSendStop(true); }
-    else { hideQueueBanner(); setSendStop(false); }
-    // Restore free limit state
-    if (!isSignedIn && freeUsed >= FREE_LIMIT) showFreeLimit();
-    else hideFreeLimit();
-  }
-
-  function loadConv(id) { switchToConv(id); closeSidebar(); }
-
-  function clearCurrentChat() {
-    const conv = getConv();
-    if (!conv) return;
-    if (activeRequests[conv.id]) { activeRequests[conv.id].abort(); delete activeRequests[conv.id]; }
-    conv.messages = [];
-    saveToStorage();
-    showEmptyState();
-    hideQueueBanner();
-    setSendStop(false);
-    renderHistory();
-  }
-
-  function getConv(id) { return conversations.find(c => c.id === (id || currentConvId)); }
-
-  // ── History ───────────────────────────────────────────────
-  function renderHistory(filter) {
-    const el   = document.getElementById('chat-history');
-    const list = filter ? conversations.filter(c => c.title.toLowerCase().includes(filter.toLowerCase())) : conversations;
-    if (!list.length) { el.innerHTML = '<p style="font-size:12px;color:var(--ink-mute);padding:10px 12px;">No conversations yet</p>'; return; }
-    el.innerHTML = list.map(c => `
-      <div class="history-item ${c.id === currentConvId ? 'active' : ''}" onclick="loadConv('${c.id}')">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;opacity:0.6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span class="history-item-title">${escHtml(c.title)}</span>
-        ${activeRequests[c.id] ? '<span class="history-item-dot"></span>' : ''}
-      </div>`).join('');
-  }
-  function filterHistory(val) { renderHistory(val); }
-
-  // ── Empty State ───────────────────────────────────────────
-  function showEmptyState() {
-    document.getElementById('messages-inner').innerHTML = `
-      <div class="empty-state">
-        <div class="empty-logo">Jhakri<span>.</span></div>
-        <p class="empty-sub">Private AI. What's on your mind?</p>
-        <div class="suggestions-grid">
-          <button class="suggestion-chip" onclick="useSuggestion('Help me write a professional email to my team')"><span class="chip-icon">✍️</span>Help me write a professional email</button>
-          <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing in simple terms')"><span class="chip-icon">💡</span>Explain quantum computing simply</button>
-          <button class="suggestion-chip" onclick="useSuggestion('Summarize the pros and cons of remote work')"><span class="chip-icon">🔍</span>Pros and cons of remote work</button>
-          <button class="suggestion-chip" onclick="useSuggestion('Help me debug my Python code')"><span class="chip-icon">🛠️</span>Help me debug my Python code</button>
-        </div>
-      </div>`;
-  }
-  function useSuggestion(text) { document.getElementById('chat-input').value = text; sendMessage(); }
-
-  // ── Messages ──────────────────────────────────────────────
-  function rebuildMessages(messages) {
-    document.getElementById('messages-inner').innerHTML = messages.map(buildMsgHTML).join('');
-    scrollToBottom();
-  }
-
-  function appendMessage(msg, convId) {
-    if (convId !== currentConvId) return;
-    const inner = document.getElementById('messages-inner');
-    inner.querySelector('.empty-state')?.remove();
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = buildMsgHTML(msg);
-    inner.appendChild(wrapper.firstElementChild);
-    scrollToBottom();
-  }
-
-  function buildMsgHTML(msg) {
-    const isUser  = msg.role === 'user';
-    const isError = msg.role === 'error';
-    const textCls = isError ? 'msg-text msg-error' : 'msg-text';
-    const raw     = msg.content || '';
-    const copyBtn = (!isUser && raw) ? `<button class="copy-btn" onclick="copyMsg(this)" title="Copy" data-text="${escHtml(raw)}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>` : '';
-    return `<div class="message ${isUser ? 'user-message' : ''}">
-      <div class="msg-avatar ${isUser ? 'user-av' : 'ai-av'}">${isUser ? 'Y' : 'J'}</div>
-      <div class="msg-content">
-        <div class="msg-name">${isUser ? 'You' : 'Jhakri'}</div>
-        <div class="${textCls}">${formatMessage(raw)}</div>
-      </div>${copyBtn}
-    </div>`;
-  }
-
-  // ── Streaming ─────────────────────────────────────────────
-  function createStreamingEl(convId) {
-    if (convId !== currentConvId) return null;
-    const inner = document.getElementById('messages-inner');
-    inner.querySelector('.empty-state')?.remove();
-    document.getElementById('typing-msg')?.remove();
-    const div = document.createElement('div');
-    div.id = 'streaming-msg';
-    div.className = 'message';
-    div.innerHTML = `<div class="msg-avatar ai-av">J</div><div class="msg-content"><div class="msg-name">Jhakri</div><div class="msg-text streaming" id="streaming-text"></div></div>`;
-    inner.appendChild(div);
-    scrollToBottom();
-    return document.getElementById('streaming-text');
-  }
-
-  function updateStreamingEl(el, text, convId) {
-    if (!el || convId !== currentConvId) return;
-    el.innerHTML = formatMessage(text);
-    scrollToBottom();
-  }
-
-  function finalizeStreamingEl(convId, rawText) {
-    const el = document.getElementById('streaming-msg');
-    if (!el || convId !== currentConvId) return;
-    document.getElementById('streaming-text')?.classList.remove('streaming');
-    const copyBtn = document.createElement('button');
-    copyBtn.className = 'copy-btn';
-    copyBtn.title = 'Copy';
-    copyBtn.dataset.text = rawText;
-    copyBtn.onclick = function() { copyMsg(this); };
-    copyBtn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
-    el.appendChild(copyBtn);
-    el.id = '';
-  }
-
-  // ── Typing ────────────────────────────────────────────────
-  function showTyping(convId) {
-    if (convId !== currentConvId) return;
-    const inner = document.getElementById('messages-inner');
-    inner.querySelector('.empty-state')?.remove();
-    if (document.getElementById('typing-msg')) return;
-    const div = document.createElement('div');
-    div.id = 'typing-msg';
-    div.className = 'message';
-    div.innerHTML = `<div class="msg-avatar ai-av">J</div><div class="msg-content"><div class="msg-name">Jhakri</div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
-    inner.appendChild(div);
-    scrollToBottom();
-  }
-  function hideTyping() { document.getElementById('typing-msg')?.remove(); }
-
-  // ── Send/Stop ─────────────────────────────────────────────
-  function setSendStop(isStop) {
-    const btn  = document.getElementById('send-btn');
-    const icon = document.getElementById('send-icon');
-    if (isStop) {
-      btn.classList.add('stop'); btn.disabled = false;
-      icon.innerHTML = '<rect x="4" y="4" width="16" height="16" rx="2" fill="white"/>';
-      btn.title = 'Stop';
-    } else {
-      btn.classList.remove('stop');
-      icon.innerHTML = '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>';
-      btn.title = 'Send'; btn.disabled = false;
-    }
-  }
-
-  function handleSendStop() {
-    const conv = getConv();
-    if (conv && activeRequests[conv.id]) activeRequests[conv.id].abort();
-    else sendMessage();
-  }
-
-  // ── Copy ──────────────────────────────────────────────────
-  async function copyMsg(btn) {
-    try {
-      await navigator.clipboard.writeText(btn.dataset.text || '');
-      const orig = btn.innerHTML;
-      btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`;
-      setTimeout(() => { btn.innerHTML = orig; }, 1500);
-    } catch {}
-  }
-
-  // ── Input ─────────────────────────────────────────────────
-  function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendStop(); } }
-  function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 150) + 'px'; }
-
-  // ── Send ──────────────────────────────────────────────────
-  async function sendMessage() {
-    // Check free limit
-    if (!checkFreeLimit()) return;
-
-    const input = document.getElementById('chat-input');
-    const text  = input.value.trim();
-    if (!text) return;
-
-    const conv = getConv();
-    if (!conv || activeRequests[conv.id]) return;
-
-    const convId = conv.id;
-    input.value = '';
-    input.style.height = 'auto';
-
-    // Add user message
-    const userMsg = { role: 'user', content: text };
-    conv.messages.push(userMsg);
-    if (conv.messages.length === 1) {
-      conv.title = text.slice(0, 42) + (text.length > 42 ? '…' : '');
-      if (convId === currentConvId) document.getElementById('chat-title').textContent = conv.title;
-    }
-    saveToStorage();
-    appendMessage(userMsg, convId);
-    renderHistory();
-
-    // Lock
-    const controller = new AbortController();
-    activeRequests[convId] = controller;
-    setSendStop(true);
-    showQueueBanner('Jhakri is thinking...');
-    showTyping(convId);
-
-    let fullText = '';
-    let streamEl = null;
+  // ─────────────────────────────────────────────────────────────────────────
+  //  ZIP DOWNLOAD
+  // ─────────────────────────────────────────────────────────────────────────
+  async function downloadZip() {
+    if (!resultData) return;
+    const btn = event.currentTarget;
+    btn.textContent = 'Preparing…'; btn.disabled = true;
 
     try {
-      const res = await fetch(`${API_BASE}/api/chat`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        signal:  controller.signal,
-        body: JSON.stringify({ model: MODEL, messages: conv.messages }),
-      });
+      const zip = new JSZip();
+      // When you have real DOCX bytes from the API, add them as Uint8Array instead
+      zip.file('Resume_Tailored.txt', resultData.resume);
+      zip.file('Cover_Letter.txt',    resultData.coverLetter);
+      zip.file('README.txt',
+        'Files generated by Jhakri Resume Tailor\nhttps://jhakri.ai\n\nReview and personalise before sending.');
 
-      hideTyping();
+      const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url;
+      a.download = `Jhakri_Resume_${Date.now()}.zip`;
+      a.click();
+      URL.revokeObjectURL(url);
 
-      if (res.status === 429) {
-        const d = await res.json().catch(() => ({}));
-        if (convId === currentConvId) showQueueBanner(`Queue position: ${d.detail?.queue_position || '?'} — please wait...`);
-        throw new Error('Server is busy — please try again in a moment');
-      }
-      if (!res.ok) throw new Error(`Server error ${res.status} — please try again`);
-
-      // Stream
-      const reader  = res.body.getReader();
-      const decoder = new TextDecoder();
-      streamEl = createStreamingEl(convId);
-      let buffer = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const data = line.slice(6).trim();
-          if (data === '[DONE]') break;
-          try {
-            const chunk = JSON.parse(data);
-            if (chunk.content) { fullText += chunk.content; updateStreamingEl(streamEl, fullText, convId); }
-          } catch {}
-        }
-      }
-
-      if (!fullText) throw new Error('Empty response — please try again');
-
-      const aiMsg = { role: 'assistant', content: fullText };
-      conv.messages.push(aiMsg);
-      saveToStorage();
-      finalizeStreamingEl(convId, fullText);
-
-      // Count free message used
-      incrementFreeUsed();
-
+      btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Downloaded!`;
+      setTimeout(() => {
+        btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download ZIP`;
+        btn.disabled = false;
+      }, 2500);
     } catch (err) {
-      hideTyping();
-      document.getElementById('streaming-msg')?.remove();
-      if (err.name === 'AbortError') {
-        if (fullText) {
-          const partial = { role: 'assistant', content: fullText + ' _(stopped)_' };
-          conv.messages.push(partial);
-          saveToStorage();
-          appendMessage(partial, convId);
-        }
-      } else {
-        const errMsg = { role: 'error', content: err.message };
-        conv.messages.push(errMsg);
-        saveToStorage();
-        appendMessage(errMsg, convId);
-      }
-    } finally {
-      delete activeRequests[convId];
-      renderHistory();
-      if (convId === currentConvId) { hideQueueBanner(); setSendStop(false); }
-      // Check limit again after response
-      if (!isSignedIn && freeUsed >= FREE_LIMIT) showFreeLimit();
+      btn.textContent = 'Download failed — try again';
+      btn.disabled = false;
     }
   }
 
-  // ── Helpers ───────────────────────────────────────────────
-  function showQueueBanner(t) { document.getElementById('queue-text').textContent = t; document.getElementById('queue-banner').classList.add('visible'); }
-  function hideQueueBanner()  { document.getElementById('queue-banner').classList.remove('visible'); }
-  function scrollToBottom()   { requestAnimationFrame(() => { const a = document.getElementById('messages-area'); a.scrollTop = a.scrollHeight; }); }
-  function escHtml(s)         { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  // ─────────────────────────────────────────────────────────────────────────
+  //  HELPERS
+  // ─────────────────────────────────────────────────────────────────────────
+  function showErr(id, msg) {
+    const el = document.getElementById(id);
+    el.classList.add('visible');
+    if (msg) el.querySelector('span').textContent = msg;
+  }
+  function hideErr(id) { document.getElementById(id).classList.remove('visible'); }
 
-  function formatMessage(text) {
-    if (!text) return '';
-    text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, l, c) => `<pre><code>${escHtml(c.trim())}</code></pre>`);
-    text = text.replace(/`([^`\n]+)`/g, '<code>$1</code>');
-    text = text.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
-    text = text.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
-    const parts = text.split(/(<pre>[\s\S]*?<\/pre>)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith('<pre>')) return part;
-      return part.split('\n\n').map(p => p.trim()).filter(Boolean).map(p => `<p>${p.replace(/\n/g,'<br/>')}</p>`).join('');
-    }).join('');
+  function formatBytes(bytes) {
+    if (bytes < 1024)       return bytes + ' B';
+    if (bytes < 1024*1024)  return (bytes/1024).toFixed(1) + ' KB';
+    return (bytes/1024/1024).toFixed(1) + ' MB';
+  }
+  function isValidUrl(s) {
+    try { const u = new URL(s); return u.protocol === 'https:' || u.protocol === 'http:'; }
+    catch { return false; }
   }
 
-  // ── Hero Demo ─────────────────────────────────────────────
-  const demoMsgs = [
-    { role: 'user',      text: 'What makes Jhakri different from ChatGPT?' },
-    { role: 'assistant', text: 'Your data never leaves our servers. No logs, no training, no Big Tech.' },
-    { role: 'user',      text: 'So my conversations are private?' },
-    { role: 'assistant', text: 'Completely. Each session is isolated and gone when you close the tab.' },
-  ];
-  function runHeroDemo() {
-    const c = document.getElementById('hv-messages');
-    if (!c) return;
-    let i = 0;
-    function next() {
-      if (i >= demoMsgs.length) { setTimeout(() => { c.innerHTML = ''; i = 0; next(); }, 3000); return; }
-      const m = demoMsgs[i++];
-      const d = document.createElement('div');
-      d.className = `hv-msg ${m.role === 'user' ? 'user-msg' : ''}`;
-      d.innerHTML = m.role === 'user'
-        ? `<div class="hv-avatar user">Y</div><div class="hv-bubble user-bubble">${m.text}</div>`
-        : `<div class="hv-avatar ai">J</div><div class="hv-bubble">${m.text}</div>`;
-      c.appendChild(d);
-      setTimeout(() => d.classList.add('show'), 10);
-      setTimeout(next, 2200);
-    }
-    next();
-  }
+  // Boot
+  setStepProgress(1);
 </script>
 </body>
 </html>
