@@ -164,10 +164,13 @@
     .btn-g:hover { border-color:var(--ink); color:var(--ink); }
     .btn-a { background:var(--accent); color:var(--white); }
     .btn-a:hover { background:var(--accent-dk); transform:translateY(-1px); box-shadow:0 4px 14px rgba(200,135,58,.4); }
+    .btn-danger { background:var(--danger); color:var(--white); }
+    .btn-danger:hover { background:#a93226; transform:translateY(-1px); }
     .btn-sm { padding:7px 14px; font-size:12px; border-radius:7px; }
     .btn-lg { padding:12px 28px; font-size:14px; border-radius:10px; }
     .btn-full { width:100%; }
 
+    /* processing */
     .proc-card { text-align:center; padding:46px 32px; }
     .spin-wrap { width:68px; height:68px; position:relative; margin:0 auto 22px; }
     .spin-ring { position:absolute; inset:0; border-radius:50%; border:2.5px solid transparent; }
@@ -182,7 +185,14 @@
     .pstep.active .psdot { border-color:var(--accent); background:var(--accent-lt); animation:pring 1s infinite; }
     .pstep.done  .psdot  { background:var(--success); border-color:var(--success); }
     @keyframes pring { 0%,100%{box-shadow:0 0 0 0 rgba(200,135,58,.4)} 50%{box-shadow:0 0 0 4px rgba(200,135,58,0)} }
+    /* elapsed timer */
+    .elapsed { font-family:var(--font-m); font-size:11px; color:var(--ink-mute); margin-top:18px; }
+    /* error state on processing screen */
+    .proc-error { display:none; flex-direction:column; align-items:center; gap:12px; margin-top:20px; }
+    .proc-error.vis { display:flex; }
+    .proc-error-msg { font-size:13px; color:var(--danger); text-align:center; max-width:300px; line-height:1.6; }
 
+    /* result */
     .res-card { text-align:center; }
     .res-icon { width:64px; height:64px; background:linear-gradient(135deg,var(--accent-lt),rgba(212,168,83,.18)); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:26px; box-shadow:0 4px 16px rgba(200,135,58,.2); animation:popIn .45s cubic-bezier(.175,.885,.32,1.275) both; }
     @keyframes popIn { from{opacity:0;transform:scale(.7)} to{opacity:1;transform:scale(1)} }
@@ -193,6 +203,23 @@
     .rf-name { font-size:12px; font-weight:500; }
     .rf-desc { font-size:10px; color:var(--ink-mute); }
 
+    /* preview panel */
+    .preview-panel { margin-top:14px; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .preview-toggle { width:100%; display:flex; align-items:center; justify-content:space-between; padding:11px 14px; background:var(--cream-deep); border:none; cursor:pointer; font-family:var(--font-b); font-size:12px; font-weight:500; color:var(--ink-soft); transition:background var(--t); }
+    .preview-toggle:hover { background:var(--accent-lt); color:var(--ink); }
+    .preview-toggle svg { transition:transform var(--t); flex-shrink:0; }
+    .preview-toggle.open svg { transform:rotate(180deg); }
+    .preview-tabs { display:flex; border-bottom:1px solid var(--border); background:var(--white); }
+    .preview-tab { flex:1; padding:8px 12px; border:none; background:transparent; cursor:pointer; font-family:var(--font-b); font-size:11px; font-weight:500; color:var(--ink-mute); border-bottom:2px solid transparent; transition:all var(--t); }
+    .preview-tab.active { color:var(--accent-dk); border-bottom-color:var(--accent); }
+    .preview-body { display:none; }
+    .preview-body.open { display:block; }
+    .preview-content { background:var(--white); }
+    .preview-text { padding:14px 16px; font-size:11px; font-family:var(--font-m); line-height:1.8; color:var(--ink-soft); white-space:pre-wrap; max-height:320px; overflow-y:auto; }
+    .preview-text::-webkit-scrollbar { width:3px; }
+    .preview-text::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+    /* log section */
     .log-box { margin-top:18px; background:var(--cream-deep); border-radius:11px; padding:14px; border:1px solid var(--border); }
     .log-title { font-size:12px; font-weight:500; margin-bottom:11px; display:flex; align-items:center; gap:6px; }
     .log-form  { display:flex; flex-direction:column; gap:9px; }
@@ -203,7 +230,6 @@
       background-repeat:no-repeat; background-position:right 10px center; padding-right:26px; }
     select:focus { border-color:var(--accent); }
     input.sm { font-size:13px; padding:8px 10px; border-radius:8px; }
-
     .signin-prompt { display:flex; align-items:center; gap:10px; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:12px 14px; }
     .sip-icon { font-size:20px; flex-shrink:0; }
     .sip-text { flex:1; }
@@ -254,7 +280,7 @@
   <aside class="sidebar" id="sidebar">
     <div class="sb-head">
       <div class="sb-logo">Jhakri <span class="logo-dot"></span><span class="sb-tag">Tailor</span></div>
-      <button class="new-btn" onclick="newApp()" title="New application">
+      <button class="new-btn" onclick="newApp()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       </button>
     </div>
@@ -266,7 +292,7 @@
       <div class="profile-authed" id="pa">
         <div class="pa-av" id="pa-av">—</div>
         <div class="pa-info"><div class="pa-name" id="pa-name">—</div><div class="pa-sub" id="pa-ct">0 applications</div></div>
-        <button class="pa-out" onclick="clerkSignOut()" title="Sign out">
+        <button class="pa-out" onclick="clerkSignOut()">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         </button>
       </div>
@@ -296,7 +322,6 @@
 
     <div class="scroll">
       <div class="wizard" id="wizard">
-
         <div class="progress-bar" id="pbar">
           <div class="step-node"><div class="sc active" id="sc1">1</div><div class="sl active" id="sl1">Résumé</div></div>
           <div class="conn" id="c1"></div>
@@ -321,11 +346,8 @@
             <div><div class="fp-name" id="fpn">—</div><div class="fp-size" id="fps">—</div></div>
             <button class="fp-rm" onclick="removeFile()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
-          <div class="err" id="e1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="e1m">Please upload your résumé.</span></div>
-          <div class="cfoot">
-            <span></span>
-            <button class="btn btn-p" onclick="goS2()">Continue <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-          </div>
+          <div class="err" id="e1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg><span id="e1m">Please upload your résumé.</span></div>
+          <div class="cfoot"><span></span><button class="btn btn-p" onclick="goS2()">Continue <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
         </div>
 
         <!-- STEP 2 -->
@@ -345,7 +367,7 @@
             <input type="url" id="jdu" placeholder="https://careers.company.com/job/12345"/>
             <p class="url-hint"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Login-required pages may not load.</p>
           </div>
-          <div class="err" id="e2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="e2m">Add a job description or URL.</span></div>
+          <div class="err" id="e2"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg><span id="e2m">Add a job description or URL.</span></div>
           <div class="cfoot">
             <button class="btn btn-g" onclick="goS1()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back</button>
             <button class="btn btn-p" onclick="goProcess()">Tailor my résumé <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></button>
@@ -354,15 +376,28 @@
 
         <!-- STEP 3: Processing -->
         <div class="card proc-card" id="s3" style="display:none;">
-          <div class="spin-wrap"><div class="spin-ring sr1"></div><div class="spin-ring sr2"></div><div class="spin-c">J</div></div>
-          <h2 style="font-family:var(--font-d);font-size:20px;font-weight:700;margin-bottom:5px;">Working on it…</h2>
-          <p style="font-size:13px;color:var(--ink-soft);font-weight:300;margin-bottom:26px;">This usually takes 20–40 seconds.</p>
-          <div class="psteps">
-            <div class="pstep" id="ps1"><div class="psdot"></div><span>Reading your résumé</span></div>
-            <div class="pstep" id="ps2"><div class="psdot"></div><span>Analysing job requirements</span></div>
-            <div class="pstep" id="ps3"><div class="psdot"></div><span>Rewriting résumé</span></div>
-            <div class="pstep" id="ps4"><div class="psdot"></div><span>Writing cover letter</span></div>
-            <div class="pstep" id="ps5"><div class="psdot"></div><span>Generating PDFs</span></div>
+          <div id="proc-spinner">
+            <div class="spin-wrap"><div class="spin-ring sr1"></div><div class="spin-ring sr2"></div><div class="spin-c">J</div></div>
+            <h2 style="font-family:var(--font-d);font-size:20px;font-weight:700;margin-bottom:5px;">Working on it…</h2>
+            <p style="font-size:13px;color:var(--ink-soft);font-weight:300;margin-bottom:26px;">This usually takes 20–40 seconds.</p>
+            <div class="psteps">
+              <div class="pstep" id="ps1"><div class="psdot"></div><span>Reading your résumé</span></div>
+              <div class="pstep" id="ps2"><div class="psdot"></div><span>Analysing job requirements</span></div>
+              <div class="pstep" id="ps3"><div class="psdot"></div><span>Rewriting résumé</span></div>
+              <div class="pstep" id="ps4"><div class="psdot"></div><span>Writing cover letter</span></div>
+              <div class="pstep" id="ps5"><div class="psdot"></div><span>Generating PDFs</span></div>
+            </div>
+            <div class="elapsed" id="elapsed">0s</div>
+          </div>
+          <!-- Error state -->
+          <div class="proc-error" id="proc-error">
+            <div style="font-size:36px;">⚠️</div>
+            <div class="proc-error-msg" id="proc-error-msg">Something went wrong. Please try again.</div>
+            <button class="btn btn-danger" onclick="retryProc()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+              Try again
+            </button>
+            <button class="btn btn-g btn-sm" onclick="goS2()">Edit job description</button>
           </div>
         </div>
 
@@ -370,12 +405,31 @@
         <div class="card res-card" id="s4" style="display:none;">
           <div class="res-icon">✦</div>
           <h2 style="font-family:var(--font-d);font-size:22px;font-weight:700;margin-bottom:5px;">Done.</h2>
-          <p style="font-size:13px;color:var(--ink-soft);font-weight:300;line-height:1.7;">Your tailored résumé and cover letter are ready to download.</p>
+          <p style="font-size:13px;color:var(--ink-soft);font-weight:300;line-height:1.7;">Your tailored résumé and cover letter are ready.</p>
           <div class="res-files">
             <div class="res-file"><div class="rf-ic">📕</div><div class="rf-inf"><div class="rf-name">Resume_Tailored.pdf</div><div class="rf-desc">Tailored for this role</div></div></div>
             <div class="res-file"><div class="rf-ic">📋</div><div class="rf-inf"><div class="rf-name">Cover_Letter.pdf</div><div class="rf-desc">Ready to attach and send</div></div></div>
           </div>
-          <button class="btn btn-a btn-lg btn-full" id="dl-btn" onclick="downloadZip()">
+
+          <!-- Preview panel -->
+          <div class="preview-panel">
+            <button class="preview-toggle" id="preview-toggle" onclick="togglePreview()">
+              <span>Preview documents</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="preview-body" id="preview-body">
+              <div class="preview-tabs">
+                <button class="preview-tab active" id="ptab-resume" onclick="switchPreviewTab('resume')">Résumé</button>
+                <button class="preview-tab" id="ptab-cover" onclick="switchPreviewTab('cover')">Cover Letter</button>
+              </div>
+              <div class="preview-content">
+                <div class="preview-text" id="preview-resume-text">—</div>
+                <div class="preview-text" id="preview-cover-text" style="display:none;">—</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-a btn-lg btn-full" id="dl-btn" onclick="downloadZip()" style="margin-top:14px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Download ZIP
           </button>
@@ -453,10 +507,11 @@ const API_BASE = 'https://api.prasiddha.info.np';
 let S = {
   resumeFile:null, jobDesc:'', jobUrl:'', tab:'paste',
   result:null, pendingSave:false, apps:[], activeId:null,
+  elapsedTimer:null,
 };
-
 let clerk = null;
 
+// ── CLERK ─────────────────────────────────────────────────────────────────
 async function initClerk() {
   clerk = window.Clerk;
   await clerk.load({ publishableKey: CLERK_PK });
@@ -470,11 +525,7 @@ async function initClerk() {
   updAuthUI(clerk.user);
   if (clerk.user) loadApps();
 }
-
-async function clerkToken() {
-  if (!clerk?.session) return null;
-  return clerk.session.getToken();
-}
+async function clerkToken() { if (!clerk?.session) return null; return clerk.session.getToken(); }
 function clerkSignIn() { clerk?.openSignIn(); }
 function clerkSignInWithPending() { S.pendingSave = true; clerk?.openSignIn(); }
 function clerkSignOut() { if (!confirm('Sign out?')) return; clerk?.signOut(); }
@@ -491,9 +542,9 @@ function updAuthUI(user) {
     const name     = user.firstName || user.username || user.emailAddresses?.[0]?.emailAddress?.split('@')[0] || 'You';
     const initials = name.slice(0,2).toUpperCase();
     const imgUrl   = user.imageUrl;
-    g('pa-av').innerHTML     = imgUrl ? `<img src="${imgUrl}" alt="${initials}"/>` : initials;
-    g('pa-name').textContent = name;
-    g('tb-av').innerHTML     = imgUrl ? `<img src="${imgUrl}" alt="${initials}"/>` : initials;
+    g('pa-av').innerHTML      = imgUrl ? `<img src="${imgUrl}" alt="${initials}"/>` : initials;
+    g('pa-name').textContent  = name;
+    g('tb-av').innerHTML      = imgUrl ? `<img src="${imgUrl}" alt="${initials}"/>` : initials;
     g('tb-uname').textContent = name;
   }
 }
@@ -503,6 +554,7 @@ async function authHdr() {
   return tok ? { 'Authorization': `Bearer ${tok}` } : {};
 }
 
+// ── API ───────────────────────────────────────────────────────────────────
 async function apiTailor() {
   const fd = new FormData();
   fd.append('resume', S.resumeFile);
@@ -512,7 +564,6 @@ async function apiTailor() {
   const d = await r.json();
   return { resume: d.resume, coverLetter: d.cover_letter, files: d.files || {} };
 }
-
 async function loadApps() {
   const hdr = await authHdr();
   if (!hdr.Authorization) return;
@@ -523,37 +574,33 @@ async function loadApps() {
     renderSidebar();
   } catch{}
 }
-
 async function apiSaveApp(app) {
   const hdr = await authHdr();
   const fd  = new FormData();
   fd.append('company',        app.company);
-  fd.append('role',           app.role || '');
+  fd.append('role',           app.role||'');
   fd.append('status',         app.status);
   fd.append('date',           app.date);
-  fd.append('resume_text',    app.resume      || '');
-  fd.append('cover_text',     app.coverLetter || '');
-  fd.append('resume_pdf_b64', app.files?.resume_pdf || '');
-  fd.append('cover_pdf_b64',  app.files?.cover_pdf  || '');
+  fd.append('resume_text',    app.resume||'');
+  fd.append('cover_text',     app.coverLetter||'');
+  fd.append('resume_pdf_b64', app.files?.resume_pdf||'');
+  fd.append('cover_pdf_b64',  app.files?.cover_pdf||'');
   const r = await fetch(`${API_BASE}/api/applications`, { method:'POST', headers:hdr, body:fd });
   if (!r.ok) throw new Error(`Save failed (${r.status})`);
   return (await r.json()).id;
 }
-
 async function apiGetApp(id) {
   const hdr = await authHdr();
   const r   = await fetch(`${API_BASE}/api/applications/${id}`, { headers:hdr });
   if (!r.ok) throw new Error('Not found');
   return r.json();
 }
-
 async function apiPatch(id, status) {
   const hdr = await authHdr();
   await fetch(`${API_BASE}/api/applications/${id}`, {
     method:'PATCH', headers:{...hdr,'Content-Type':'application/json'}, body:JSON.stringify({status}),
   });
 }
-
 async function apiDelete(id) {
   const hdr = await authHdr();
   await fetch(`${API_BASE}/api/applications/${id}`, { method:'DELETE', headers:hdr });
@@ -580,7 +627,7 @@ async function autoSaveAfterSignIn() {
   } catch { if (banner) banner.classList.remove('vis'); }
 }
 
-// ── SIDEBAR ──────────────────────────────────────────────────────────────
+// ── SIDEBAR ───────────────────────────────────────────────────────────────
 function renderSidebar() {
   const list  = g('app-list');
   const empty = g('list-empty');
@@ -636,7 +683,6 @@ async function openDet(id) {
   S.activeId = id;
   try {
     const full = await apiGetApp(id);
-    // API returns resume_text / cover_text — map to local field names
     app.resume      = full.resume_text     || app.resume      || '';
     app.coverLetter = full.cover_text      || app.coverLetter || '';
     app.files = {
@@ -656,27 +702,42 @@ async function openDet(id) {
   g('re-dl-btn').style.display = hasFiles ? '' : 'none';
   renderSidebar(); openM('m-det'); closeSidebar();
 }
-
 async function updStatus() {
   const st=g('dss').value, app=S.apps.find(a=>a.id===S.activeId);
   if (!app) return;
   app.status=st; g('dsb').textContent=st; g('dsb').className=`sbadge s-${st}`;
   try { await apiPatch(S.activeId, st); } catch{}
 }
-
 async function reDownload() {
   const app=S.apps.find(a=>a.id===S.activeId); if (!app) return;
   const btn=g('re-dl-btn'); btn.textContent='Preparing…'; btn.disabled=true;
   try { await buildZip(app.resume||'', app.coverLetter||'', app.files||{}, app.company); }
   finally { btn.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Re-download ZIP`; btn.disabled=false; }
 }
-
 async function delApp() {
   const app=S.apps.find(a=>a.id===S.activeId);
   if (!app||!confirm(`Delete ${app.company}?`)) return;
   try { await apiDelete(S.activeId); } catch{}
   S.apps=S.apps.filter(a=>a.id!==S.activeId); S.activeId=null;
   renderSidebar(); closeM('m-det');
+}
+
+// ── PREVIEW PANEL ─────────────────────────────────────────────────────────
+function togglePreview() {
+  const body   = g('preview-body');
+  const toggle = g('preview-toggle');
+  const open   = body.classList.toggle('open');
+  toggle.classList.toggle('open', open);
+}
+function switchPreviewTab(tab) {
+  g('ptab-resume').classList.toggle('active', tab==='resume');
+  g('ptab-cover').classList.toggle('active',  tab==='cover');
+  g('preview-resume-text').style.display = tab==='resume' ? '' : 'none';
+  g('preview-cover-text').style.display  = tab==='cover'  ? '' : 'none';
+}
+function setPreview(resume, cover) {
+  g('preview-resume-text').textContent = resume || '(empty)';
+  g('preview-cover-text').textContent  = cover  || '(empty)';
 }
 
 // ── WIZARD ────────────────────────────────────────────────────────────────
@@ -690,7 +751,6 @@ function setProg(step) {
   for(let i=1;i<=2;i++) g(`c${i}`).className='conn'+(i<step?' done':'');
 }
 const chk=()=>`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
-
 function showStep(id) {
   ['s1','s2','s3','s4'].forEach(s=>{g(s).style.display='none';});
   const el=g(id); el.style.display='flex'; el.style.flexDirection='column';
@@ -710,6 +770,7 @@ function goProcess(){
 }
 function newApp(){
   S.resumeFile=null;S.jobDesc='';S.jobUrl='';S.result=null;S.activeId=null;S.pendingSave=false;
+  stopTimer();
   g('rf').value='';g('jdt').value='';g('jdu').value='';g('cc').textContent='0';
   g('fpill').classList.remove('vis');
   g('dz').style.opacity='';g('dz').style.pointerEvents='';
@@ -718,10 +779,56 @@ function newApp(){
   if(g('lf'))        g('lf').style.display=authed?'':'none';
   g('log-ok').style.display='none';g('log-box').style.display='';
   g('lco').value='';g('lro').value='';
+  // Reset preview
+  const pb=g('preview-body'); if(pb) pb.classList.remove('open');
+  const pt=g('preview-toggle'); if(pt) pt.classList.remove('open');
   goS1();closeSidebar();
 }
 
+// ── PROCESSING ────────────────────────────────────────────────────────────
+let _elapsedSec = 0;
+function startTimer() {
+  _elapsedSec = 0;
+  const el = g('elapsed');
+  if (el) el.textContent = '0s';
+  S.elapsedTimer = setInterval(()=>{
+    _elapsedSec++;
+    if (el) el.textContent = `${_elapsedSec}s`;
+  }, 1000);
+}
+function stopTimer() {
+  if (S.elapsedTimer) { clearInterval(S.elapsedTimer); S.elapsedTimer = null; }
+}
+
+function showProcError(msg) {
+  stopTimer();
+  const spinner = g('proc-spinner');
+  const errDiv  = g('proc-error');
+  const errMsg  = g('proc-error-msg');
+  if (spinner) spinner.style.display = 'none';
+  if (errDiv)  errDiv.classList.add('vis');
+  if (errMsg)  errMsg.textContent = msg || 'Something went wrong. Please try again.';
+}
+
+function resetProcScreen() {
+  const spinner = g('proc-spinner');
+  const errDiv  = g('proc-error');
+  if (spinner) spinner.style.display = '';
+  if (errDiv)  errDiv.classList.remove('vis');
+  // Reset step dots
+  ['ps1','ps2','ps3','ps4','ps5'].forEach(id=>{
+    const el=g(id); if(el){ el.classList.remove('active','done'); el.querySelector('.psdot').innerHTML=''; }
+  });
+}
+
+function retryProc() {
+  resetProcScreen();
+  runProc();
+}
+
 async function runProc(){
+  resetProcScreen();
+  startTimer();
   const pss=['ps1','ps2','ps3','ps4','ps5'];
   let idx=0,res=null,err=null;
   function adv(){
@@ -733,13 +840,20 @@ async function runProc(){
   const delays=[1200,1400,1600,1300,800];
   for(let i=0;i<delays.length-1;i++){await sleep(delays[i]);adv();}
   await apiP;await sleep(300);adv();
-  if(err){goS2();showE('e2',err.message||'Something went wrong. Please try again.');return;}
+  stopTimer();
+  if(err){
+    showProcError(err.message||'Something went wrong. Please try again.');
+    return;
+  }
   S.result=res;
   await sleep(250);setProg(3);showStep('s4');
+  // Populate preview
+  setPreview(res.resume, res.coverLetter);
   const co=extractCo(S.jobDesc||S.jobUrl);
   if(co)g('lco').value=co;
 }
 
+// ── FILE HANDLING ─────────────────────────────────────────────────────────
 function fileSelected(inp){if(inp.files[0])setFile(inp.files[0]);}
 function dzOver(e){e.preventDefault();g('dz').classList.add('over');}
 function dzLeave(){g('dz').classList.remove('over');}
@@ -766,6 +880,7 @@ function switchTab(t){
 }
 function updCC(el){g('cc').textContent=el.value.length.toLocaleString();}
 
+// ── DOWNLOAD ──────────────────────────────────────────────────────────────
 function b64toBlob(b64,mime){
   const bytes=atob(b64),arr=new Uint8Array(bytes.length);
   for(let i=0;i<bytes.length;i++)arr[i]=bytes.charCodeAt(i);
@@ -792,10 +907,13 @@ async function buildZip(resume,coverLetter,files,co){
   URL.revokeObjectURL(url);
 }
 
+// ── MODALS / SIDEBAR ──────────────────────────────────────────────────────
 function openM(id){g(id).classList.add('vis');}
 function closeM(id){g(id).classList.remove('vis');}
 function openSidebar(){g('sidebar').classList.add('open');g('sb-overlay').classList.add('vis');}
 function closeSidebar(){g('sidebar').classList.remove('open');g('sb-overlay').classList.remove('vis');}
+
+// ── UTIL ──────────────────────────────────────────────────────────────────
 function g(id){return document.getElementById(id);}
 function showE(id,msg){const el=g(id);if(!el)return;el.classList.add('vis');const s=el.querySelector('span');if(s&&msg)s.textContent=msg;}
 function hideE(id){g(id)?.classList.remove('vis');}
