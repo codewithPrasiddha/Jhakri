@@ -579,7 +579,7 @@ async function loadApps() {
     const r = await fetch(`${API_BASE}/api/applications`, { headers: hdr });
     if (!r.ok) return;
     S.apps = await r.json();
-    g('pa-ct').textContent = `${S.apps.length} application${S.apps.length===1?'':'s'}`;
+    const pct = g('pa-ct'); if(pct) pct.textContent = `${S.apps.length} application${S.apps.length===1?'':'s'}`;
     renderSidebar();
   } catch{}
 }
@@ -666,7 +666,7 @@ function renderSidebar() {
   const list  = g('app-list');
   const empty = g('list-empty');
   g('pa-ct').textContent = `${S.apps.length} application${S.apps.length===1?'':'s'}`;
-  if (!S.apps.length) { empty.style.display=''; list.querySelectorAll('.app-item').forEach(e=>e.remove()); return; }
+  if (!S.apps.length) { if(empty) empty.style.display=''; list.querySelectorAll('.app-item').forEach(e=>e.remove()); return; }
   empty.style.display = 'none';
   list.innerHTML = '';
   [...S.apps].sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(app=>{
