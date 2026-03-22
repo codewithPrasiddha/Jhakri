@@ -42,13 +42,12 @@
     .sb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:49; backdrop-filter:blur(2px); }
     .sb-overlay.vis { display:block; }
 
-    /* SIDEBAR */
     .sidebar { width:var(--sidebar-w); flex-shrink:0; background:var(--white); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; transition:transform var(--t); }
     .sb-head { padding:14px 12px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; flex-shrink:0; }
     .sb-logo { font-family:var(--font-d); font-size:17px; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:5px; flex:1; min-width:0; }
     .logo-dot { width:6px; height:6px; background:var(--accent); border-radius:50%; flex-shrink:0; }
     .sb-tag { font-family:var(--font-b); font-size:9px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-mute); border:1px solid var(--border); border-radius:100px; padding:2px 7px; }
-    .new-btn { width:28px; height:28px; background:var(--ink); border:none; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background var(--t); flex-shrink:0; -webkit-tap-highlight-color:transparent; }
+    .new-btn { width:28px; height:28px; background:var(--ink); border:none; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background var(--t); flex-shrink:0; }
     .new-btn:hover { background:var(--accent); }
     .sb-profile { padding:8px 10px; border-bottom:1px solid var(--border); flex-shrink:0; }
     .profile-guest { display:flex; align-items:center; gap:8px; background:var(--cream-deep); border-radius:8px; padding:8px 10px; cursor:pointer; transition:background var(--t); }
@@ -88,7 +87,6 @@
     .list-empty { padding:24px 10px; text-align:center; font-size:11px; color:var(--ink-mute); line-height:1.8; }
     .list-empty-icon { font-size:26px; margin-bottom:8px; display:block; }
 
-    /* MAIN */
     .main { flex:1; display:flex; flex-direction:column; background:var(--cream); overflow:hidden; min-width:0; }
     .topbar { height:var(--topbar-h); background:rgba(250,248,244,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 18px; gap:10px; flex-shrink:0; }
     .hamburger { display:none; width:30px; height:30px; background:transparent; border:1px solid var(--border); border-radius:7px; cursor:pointer; align-items:center; justify-content:center; color:var(--ink-soft); transition:all var(--t); flex-shrink:0; }
@@ -103,12 +101,10 @@
     .tb-av { width:24px; height:24px; border-radius:6px; background:var(--ink); display:flex; align-items:center; justify-content:center; color:var(--white); font-size:9px; font-weight:600; font-family:var(--font-m); overflow:hidden; flex-shrink:0; }
     .tb-av img { width:100%; height:100%; object-fit:cover; }
     .tb-uname { font-size:12px; font-weight:500; max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
     .scroll { flex:1; overflow-y:auto; padding:28px 18px 48px; }
     .scroll::-webkit-scrollbar { width:4px; }
     .scroll::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 
-    /* WIZARD */
     .wizard { max-width:548px; margin:0 auto; }
     .progress-bar { display:flex; align-items:center; margin-bottom:32px; }
     .step-node { display:flex; flex-direction:column; align-items:center; gap:5px; flex-shrink:0; }
@@ -119,7 +115,6 @@
     .sl.active { color:var(--ink); } .sl.done { color:var(--accent-dk); }
     .conn { flex:1; height:1.5px; background:var(--border); margin:0 6px; margin-bottom:20px; transition:background var(--t); }
     .conn.done { background:var(--accent); }
-
     .card { background:var(--white); border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow); padding:32px; animation:slideUp .3s cubic-bezier(.4,0,.2,1) both; }
     @keyframes slideUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
     .eyebrow { font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:5px; }
@@ -148,7 +143,7 @@
     .j-panel { display:none; } .j-panel.active { display:block; animation:fi .18s ease; }
     @keyframes fi { from{opacity:0} to{opacity:1} }
 
-    textarea, input[type="url"], input[type="text"], input[type="password"] {
+    textarea, input[type="url"], input[type="text"] {
       width:100%; font-family:var(--font-b); font-size:14px; color:var(--ink); background:var(--cream);
       border:1.5px solid var(--border); border-radius:9px; outline:none;
       transition:border-color var(--t),box-shadow var(--t); padding:10px 12px; resize:none; line-height:1.65;
@@ -157,7 +152,6 @@
     textarea:focus, input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(200,135,58,.1); background:var(--white); }
     .char-ct { text-align:right; font-size:10px; color:var(--ink-mute); margin-top:4px; font-family:var(--font-m); }
     .url-hint { font-size:11px; color:var(--ink-mute); margin-top:6px; display:flex; align-items:center; gap:5px; }
-
     .err { display:none; background:var(--danger-lt); border:1px solid rgba(192,57,43,.2); border-radius:8px; padding:9px 12px; font-size:12px; color:var(--danger); margin-top:10px; align-items:center; gap:6px; }
     .err.vis { display:flex; }
     .cfoot { display:flex; align-items:center; justify-content:space-between; margin-top:22px; gap:10px; }
@@ -174,7 +168,6 @@
     .btn-lg { padding:12px 28px; font-size:14px; border-radius:10px; }
     .btn-full { width:100%; }
 
-    /* processing */
     .proc-card { text-align:center; padding:46px 32px; }
     .spin-wrap { width:68px; height:68px; position:relative; margin:0 auto 22px; }
     .spin-ring { position:absolute; inset:0; border-radius:50%; border:2.5px solid transparent; }
@@ -190,19 +183,16 @@
     .pstep.done  .psdot  { background:var(--success); border-color:var(--success); }
     @keyframes pring { 0%,100%{box-shadow:0 0 0 0 rgba(200,135,58,.4)} 50%{box-shadow:0 0 0 4px rgba(200,135,58,0)} }
 
-    /* result */
     .res-card { text-align:center; }
     .res-icon { width:64px; height:64px; background:linear-gradient(135deg,var(--accent-lt),rgba(212,168,83,.18)); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:26px; box-shadow:0 4px 16px rgba(200,135,58,.2); animation:popIn .45s cubic-bezier(.175,.885,.32,1.275) both; }
     @keyframes popIn { from{opacity:0;transform:scale(.7)} to{opacity:1;transform:scale(1)} }
     .res-files { display:flex; flex-direction:column; gap:7px; margin:18px 0; text-align:left; }
     .res-file  { display:flex; align-items:center; gap:9px; background:var(--cream); border:1px solid var(--border); border-radius:9px; padding:9px 13px; }
-    .rf-ic { width:30px; height:30px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
-    .rf-pdf { background:#FFF1F1; }
+    .rf-ic { width:30px; height:30px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; background:#FFF1F1; }
     .rf-inf { flex:1; }
     .rf-name { font-size:12px; font-weight:500; }
     .rf-desc { font-size:10px; color:var(--ink-mute); }
 
-    /* log section */
     .log-box { margin-top:18px; background:var(--cream-deep); border-radius:11px; padding:14px; border:1px solid var(--border); }
     .log-title { font-size:12px; font-weight:500; margin-bottom:11px; display:flex; align-items:center; gap:6px; }
     .log-form  { display:flex; flex-direction:column; gap:9px; }
@@ -214,22 +204,18 @@
     select:focus { border-color:var(--accent); }
     input.sm { font-size:13px; padding:8px 10px; border-radius:8px; }
 
-    /* sign-in prompt in log box */
     .signin-prompt { display:flex; align-items:center; gap:10px; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:12px 14px; }
     .sip-icon { font-size:20px; flex-shrink:0; }
     .sip-text { flex:1; }
     .sip-title { font-size:12px; font-weight:500; margin-bottom:2px; }
     .sip-sub   { font-size:11px; color:var(--ink-mute); font-weight:300; }
-
-    /* pending save banner */
     .pending-banner { display:none; background:var(--accent-lt); border:1.5px solid rgba(200,135,58,.3); border-radius:10px; padding:11px 14px; font-size:12px; color:var(--accent-dk); align-items:center; gap:8px; margin-bottom:10px; }
     .pending-banner.vis { display:flex; }
 
     .or-div { display:flex; align-items:center; gap:10px; font-size:11px; color:var(--ink-mute); margin:14px 0; }
     .or-div::before,.or-div::after { content:''; flex:1; height:1px; background:var(--border); }
-    .foot-note { text-align:center; font-size:11px; color:var(--ink-mute); margin-top:18px; display:flex; align-items:center; justify-content:center; gap:5px; }
+    .foot-note { text-align:center; font-size:11px; color:var(--ink-mute); margin-top:18px; }
 
-    /* detail modal */
     .m-ov { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:200; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(5px); }
     .m-ov.vis { display:flex; }
     .modal { background:var(--white); border-radius:18px; padding:32px; max-width:460px; width:100%; box-shadow:var(--shadow-lg); animation:mIn .26s cubic-bezier(.4,0,.2,1); position:relative; max-height:90vh; overflow-y:auto; }
@@ -242,8 +228,6 @@
     .det-sec     { margin-bottom:14px; }
     .det-sec-t   { font-size:9px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-mute); margin-bottom:5px; }
     .det-prev    { background:var(--cream); border:1px solid var(--border); border-radius:8px; padding:10px; font-size:11px; line-height:1.7; color:var(--ink-soft); max-height:110px; overflow-y:auto; white-space:pre-wrap; font-family:var(--font-m); }
-
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
     @media (max-width:860px) {
       .sidebar { position:fixed; left:0; top:0; bottom:0; z-index:50; transform:translateX(-100%); }
@@ -267,7 +251,6 @@
 <div class="app-shell">
   <div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
 
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sb-head">
       <div class="sb-logo">Jhakri <span class="logo-dot"></span><span class="sb-tag">Tailor</span></div>
@@ -290,11 +273,10 @@
     </div>
     <div class="sb-label">Applications</div>
     <div class="app-list" id="app-list">
-      <div class="list-empty" id="list-empty"><span class="list-empty-icon">📋</span>No applications yet.<br/>Complete the wizard and<br/>log your first one.</div>
+      <div class="list-empty" id="list-empty"><span class="list-empty-icon">📋</span>No applications yet.<br/>Complete the wizard to<br/>log your first one.</div>
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
       <button class="hamburger" onclick="openSidebar()">
@@ -314,7 +296,7 @@
 
     <div class="scroll">
       <div class="wizard" id="wizard">
-        <!-- Progress -->
+
         <div class="progress-bar" id="pbar">
           <div class="step-node"><div class="sc active" id="sc1">1</div><div class="sl active" id="sl1">Résumé</div></div>
           <div class="conn" id="c1"></div>
@@ -327,7 +309,7 @@
         <div class="card" id="s1">
           <div class="eyebrow">Step 1 of 3</div>
           <h1 class="card-title">Upload your <em>résumé.</em></h1>
-          <p class="card-desc">Drop your current resume and Jhakri will tailor it for the specific role. PDF or DOCX, max 10 MB.</p>
+          <p class="card-desc">Upload your current resume — PDF or DOCX, max 10 MB.</p>
           <div class="dz" id="dz" ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)">
             <input type="file" id="rf" accept=".pdf,.doc,.docx" onchange="fileSelected(this)"/>
             <div class="dz-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="12" y2="12"/><line x1="15" y1="15" x2="12" y2="12"/></svg></div>
@@ -340,14 +322,17 @@
             <button class="fp-rm" onclick="removeFile()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
           <div class="err" id="e1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="e1m">Please upload your résumé.</span></div>
-          <div class="cfoot"><span style="font-size:11px;color:var(--ink-mute);">Stays in your browser only.</span><button class="btn btn-p" onclick="goS2()">Continue <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
+          <div class="cfoot">
+            <span></span>
+            <button class="btn btn-p" onclick="goS2()">Continue <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+          </div>
         </div>
 
         <!-- STEP 2 -->
         <div class="card" id="s2" style="display:none;">
           <div class="eyebrow">Step 2 of 3</div>
           <h1 class="card-title">Paste the <em>job post.</em></h1>
-          <p class="card-desc">Add the full job description — role summary, responsibilities, requirements.</p>
+          <p class="card-desc">Paste the full job description or drop in a URL.</p>
           <div class="j-tabs">
             <button class="j-tab active" onclick="switchTab('paste')">Paste text</button>
             <button class="j-tab"        onclick="switchTab('url')">Job URL</button>
@@ -370,13 +355,13 @@
         <!-- STEP 3: Processing -->
         <div class="card proc-card" id="s3" style="display:none;">
           <div class="spin-wrap"><div class="spin-ring sr1"></div><div class="spin-ring sr2"></div><div class="spin-c">J</div></div>
-          <h2 style="font-family:var(--font-d);font-size:20px;font-weight:700;margin-bottom:5px;">Tailoring your résumé</h2>
-          <p style="font-size:13px;color:var(--ink-soft);font-weight:300;margin-bottom:26px;">Analysing the role and rewriting your documents.</p>
+          <h2 style="font-family:var(--font-d);font-size:20px;font-weight:700;margin-bottom:5px;">Working on it…</h2>
+          <p style="font-size:13px;color:var(--ink-soft);font-weight:300;margin-bottom:26px;">This usually takes 20–40 seconds.</p>
           <div class="psteps">
             <div class="pstep" id="ps1"><div class="psdot"></div><span>Reading your résumé</span></div>
             <div class="pstep" id="ps2"><div class="psdot"></div><span>Analysing job requirements</span></div>
-            <div class="pstep" id="ps3"><div class="psdot"></div><span>Rewriting résumé for this role</span></div>
-            <div class="pstep" id="ps4"><div class="psdot"></div><span>Writing tailored cover letter</span></div>
+            <div class="pstep" id="ps3"><div class="psdot"></div><span>Rewriting résumé</span></div>
+            <div class="pstep" id="ps4"><div class="psdot"></div><span>Writing cover letter</span></div>
             <div class="pstep" id="ps5"><div class="psdot"></div><span>Generating PDFs</span></div>
           </div>
         </div>
@@ -384,22 +369,19 @@
         <!-- STEP 4: Result -->
         <div class="card res-card" id="s4" style="display:none;">
           <div class="res-icon">✦</div>
-          <h2 style="font-family:var(--font-d);font-size:22px;font-weight:700;margin-bottom:5px;">Your documents are ready.</h2>
-          <p style="font-size:13px;color:var(--ink-soft);font-weight:300;line-height:1.7;">Tailored résumé and cover letter — download and send.</p>
+          <h2 style="font-family:var(--font-d);font-size:22px;font-weight:700;margin-bottom:5px;">Done.</h2>
+          <p style="font-size:13px;color:var(--ink-soft);font-weight:300;line-height:1.7;">Your tailored résumé and cover letter are ready to download.</p>
           <div class="res-files">
-            <div class="res-file"><div class="rf-ic rf-pdf">📕</div><div class="rf-inf"><div class="rf-name">Resume_Tailored.pdf</div><div class="rf-desc">Optimised for this role</div></div></div>
-            <div class="res-file"><div class="rf-ic rf-pdf">📋</div><div class="rf-inf"><div class="rf-name">Cover_Letter.pdf</div><div class="rf-desc">Ready to attach and send</div></div></div>
+            <div class="res-file"><div class="rf-ic">📕</div><div class="rf-inf"><div class="rf-name">Resume_Tailored.pdf</div><div class="rf-desc">Tailored for this role</div></div></div>
+            <div class="res-file"><div class="rf-ic">📋</div><div class="rf-inf"><div class="rf-name">Cover_Letter.pdf</div><div class="rf-desc">Ready to attach and send</div></div></div>
           </div>
           <button class="btn btn-a btn-lg btn-full" id="dl-btn" onclick="downloadZip()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Download ZIP
           </button>
 
-          <!-- Log this application -->
           <div class="log-box" id="log-box">
             <div class="log-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Log this application</div>
-
-            <!-- Guest: sign-in prompt -->
             <div class="signin-prompt" id="log-guest">
               <div class="sip-icon">🔐</div>
               <div class="sip-text">
@@ -408,13 +390,10 @@
               </div>
               <button class="btn btn-p btn-sm" onclick="clerkSignInWithPending()">Sign in</button>
             </div>
-
-            <!-- Authed: log form -->
             <div class="log-form" id="lf" style="display:none;">
-              <!-- Pending auto-save banner -->
               <div class="pending-banner" id="pending-banner">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span>Saving your tailored documents…</span>
+                <span>Saving…</span>
               </div>
               <div class="log-row">
                 <div><label class="fl">Company name *</label><input type="text" class="sm" id="lco" placeholder="Acme Corp"/></div>
@@ -429,26 +408,24 @@
                 <button class="btn btn-g btn-sm" onclick="skipLog()">Skip</button>
               </div>
             </div>
-
-            <div id="log-ok" style="display:none;text-align:center;padding:6px 0;font-size:13px;color:var(--success);font-weight:500;">✓ Saved to your application history</div>
+            <div id="log-ok" style="display:none;text-align:center;padding:6px 0;font-size:13px;color:var(--success);font-weight:500;">✓ Saved</div>
           </div>
 
           <div class="or-div">or</div>
-          <button class="btn btn-g btn-full" onclick="newApp()">Tailor another résumé →</button>
+          <button class="btn btn-g btn-full" onclick="newApp()">Start over →</button>
         </div>
 
-      </div><!-- /wizard -->
-      <div class="foot-note"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Files processed privately · never stored on any server</div>
+      </div>
+      <div class="foot-note">Jhakri — resume tailor</div>
     </div>
   </main>
 </div>
 
-<!-- Application detail modal -->
 <div class="m-ov" id="m-det">
   <div class="modal">
     <button class="m-close" onclick="closeM('m-det')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="det-company" id="dc">Company</div>
-    <div class="det-role"    id="dr">Role</div>
+    <div class="det-role" id="dr">Role</div>
     <div class="det-meta">
       <span class="sbadge" id="dsb">applied</span>
       <span style="font-size:10px;color:var(--ink-mute);font-family:var(--font-m);" id="dd">—</span>
@@ -470,44 +447,26 @@
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════════════
-//  CONFIG — replace YOUR_CLERK_PUBLISHABLE_KEY with your pk_live_... key
-// ═══════════════════════════════════════════════════════════════════════════
 const CLERK_PK = 'pk_test_Y2FzdWFsLXRpZ2VyLTIuY2xlcmsuYWNjb3VudHMuZGV2JA';
 const API_BASE = 'https://api.prasiddha.info.np';
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════════════════════════════
 let S = {
-  resumeFile: null, jobDesc: '', jobUrl: '', tab: 'paste',
-  result: null,       // { resume, coverLetter, files:{resume_pdf, cover_pdf} }
-  pendingSave: false, // true when user hit sign-in from result screen
-  apps: [],
-  activeId: null,
+  resumeFile:null, jobDesc:'', jobUrl:'', tab:'paste',
+  result:null, pendingSave:false, apps:[], activeId:null,
 };
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  CLERK
-// ═══════════════════════════════════════════════════════════════════════════
 let clerk = null;
 
 async function initClerk() {
   clerk = window.Clerk;
   await clerk.load({ publishableKey: CLERK_PK });
-
   clerk.addListener(async ({ user }) => {
     updAuthUI(user);
     if (user) {
       await loadApps();
-      // Auto-save if user signed in from the result screen
-      if (S.pendingSave && S.result) {
-        S.pendingSave = false;
-        await autoSaveAfterSignIn();
-      }
+      if (S.pendingSave && S.result) { S.pendingSave = false; await autoSaveAfterSignIn(); }
     }
   });
-
   updAuthUI(clerk.user);
   if (clerk.user) loadApps();
 }
@@ -516,19 +475,9 @@ async function clerkToken() {
   if (!clerk?.session) return null;
   return clerk.session.getToken();
 }
-
 function clerkSignIn() { clerk?.openSignIn(); }
-
-// Called from the "Sign in" button in the log box — sets pending flag first
-function clerkSignInWithPending() {
-  S.pendingSave = true;
-  clerk?.openSignIn();
-}
-
-function clerkSignOut() {
-  if (!confirm('Sign out?')) return;
-  clerk?.signOut();
-}
+function clerkSignInWithPending() { S.pendingSave = true; clerk?.openSignIn(); }
+function clerkSignOut() { if (!confirm('Sign out?')) return; clerk?.signOut(); }
 
 function updAuthUI(user) {
   const authed = !!user;
@@ -536,32 +485,24 @@ function updAuthUI(user) {
   g('pa').classList.toggle('vis', authed);
   g('tb-auth').style.display = authed ? 'none' : '';
   g('tb-user').classList.toggle('vis', authed);
-  // Log box state
   if (g('log-guest')) g('log-guest').style.display = authed ? 'none' : '';
   if (g('lf'))        g('lf').style.display        = authed ? ''     : 'none';
-
   if (user) {
-    const name    = user.firstName || user.username || user.emailAddresses?.[0]?.emailAddress?.split('@')[0] || 'You';
+    const name     = user.firstName || user.username || user.emailAddresses?.[0]?.emailAddress?.split('@')[0] || 'You';
     const initials = name.slice(0,2).toUpperCase();
     const imgUrl   = user.imageUrl;
-    g('pa-av').innerHTML  = imgUrl ? `<img src="${imgUrl}" alt="${initials}"/>` : initials;
+    g('pa-av').innerHTML     = imgUrl ? `<img src="${imgUrl}" alt="${initials}"/>` : initials;
     g('pa-name').textContent = name;
-    g('tb-av').innerHTML  = imgUrl ? `<img src="${imgUrl}" alt="${initials}"/>` : initials;
+    g('tb-av').innerHTML     = imgUrl ? `<img src="${imgUrl}" alt="${initials}"/>` : initials;
     g('tb-uname').textContent = name;
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  AUTH HEADER
-// ═══════════════════════════════════════════════════════════════════════════
 async function authHdr() {
   const tok = await clerkToken();
   return tok ? { 'Authorization': `Bearer ${tok}` } : {};
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  API
-// ═══════════════════════════════════════════════════════════════════════════
 async function apiTailor() {
   const fd = new FormData();
   fd.append('resume', S.resumeFile);
@@ -576,10 +517,9 @@ async function loadApps() {
   const hdr = await authHdr();
   if (!hdr.Authorization) return;
   try {
-    const r = await fetch(`${API_BASE}/api/applications`, { headers: hdr });
+    const r = await fetch(`${API_BASE}/api/applications`, { headers:hdr });
     if (!r.ok) return;
     S.apps = await r.json();
-    const pct = g('pa-ct'); if(pct) pct.textContent = `${S.apps.length} application${S.apps.length===1?'':'s'}`;
     renderSidebar();
   } catch{}
 }
@@ -619,55 +559,39 @@ async function apiDelete(id) {
   await fetch(`${API_BASE}/api/applications/${id}`, { method:'DELETE', headers:hdr });
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  AUTO-SAVE AFTER SIGN-IN
-//  Called when user was on the result screen as a guest, hit Sign in, then
-//  completed Clerk auth. Saves automatically with whatever is in the form.
-// ═══════════════════════════════════════════════════════════════════════════
 async function autoSaveAfterSignIn() {
-  // Show the form first so it's visible
   if (g('lf')) g('lf').style.display = '';
   if (g('log-guest')) g('log-guest').style.display = 'none';
-
   const co = g('lco')?.value.trim();
-  if (!co || !S.result) return; // no company name pre-filled, let user fill manually
-
-  // Show saving indicator
+  if (!co || !S.result) return;
   const banner = g('pending-banner');
   if (banner) banner.classList.add('vis');
-
   const app = {
-    company:     co,
-    role:        g('lro')?.value.trim() || '',
-    status:      g('lst')?.value || 'applied',
-    date:        new Date().toISOString(),
-    resume:      S.result.resume      || '',
-    coverLetter: S.result.coverLetter || '',
-    files:       S.result.files       || {},
+    company:co, role:g('lro')?.value.trim()||'', status:g('lst')?.value||'applied',
+    date:new Date().toISOString(),
+    resume:S.result.resume||'', coverLetter:S.result.coverLetter||'', files:S.result.files||{},
   };
-
   try {
     app.id = await apiSaveApp(app);
-    S.apps.unshift(app);
-    renderSidebar();
+    S.apps.unshift(app); renderSidebar();
     if (banner) banner.classList.remove('vis');
-    if (g('lf'))    g('lf').style.display    = 'none';
+    if (g('lf'))     g('lf').style.display     = 'none';
     if (g('log-ok')) g('log-ok').style.display = '';
-  } catch(e) {
-    if (banner) banner.classList.remove('vis');
-    // Just leave form open so user can retry manually
-  }
+  } catch { if (banner) banner.classList.remove('vis'); }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  SIDEBAR
-// ═══════════════════════════════════════════════════════════════════════════
+// ── SIDEBAR ──────────────────────────────────────────────────────────────
 function renderSidebar() {
   const list  = g('app-list');
   const empty = g('list-empty');
-  g('pa-ct').textContent = `${S.apps.length} application${S.apps.length===1?'':'s'}`;
-  if (!S.apps.length) { if(empty) empty.style.display=''; list.querySelectorAll('.app-item').forEach(e=>e.remove()); return; }
-  empty.style.display = 'none';
+  const pct   = g('pa-ct');
+  if (pct) pct.textContent = `${S.apps.length} application${S.apps.length===1?'':'s'}`;
+  if (!S.apps.length) {
+    if (empty) empty.style.display = '';
+    list.querySelectorAll('.app-item').forEach(e=>e.remove());
+    return;
+  }
+  if (empty) empty.style.display = 'none';
   list.innerHTML = '';
   [...S.apps].sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(app=>{
     const el = document.createElement('div');
@@ -688,51 +612,37 @@ function renderSidebar() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  LOG APPLICATION (manual save)
-// ═══════════════════════════════════════════════════════════════════════════
+// ── LOG ───────────────────────────────────────────────────────────────────
 async function logApp() {
-  const co = g('lco').value.trim();
-  const ro = g('lro').value.trim();
-  const st = g('lst').value;
+  const co=g('lco').value.trim(), ro=g('lro').value.trim(), st=g('lst').value;
   hideE('le');
   if (!co) { showE('le','Enter a company name.'); return; }
   const app = {
-    company:     co, role:ro, status:st,
-    date:        new Date().toISOString(),
-    resume:      S.result?.resume      || '',
-    coverLetter: S.result?.coverLetter || '',
-    files:       S.result?.files       || {},
+    company:co, role:ro, status:st, date:new Date().toISOString(),
+    resume:S.result?.resume||'', coverLetter:S.result?.coverLetter||'', files:S.result?.files||{},
   };
   try {
     app.id = await apiSaveApp(app);
-    S.apps.unshift(app);
-    renderSidebar();
-    g('lf').style.display    = 'none';
-    g('log-ok').style.display = '';
-  } catch(e) {
-    showE('le', e.message || 'Could not save — check your connection.');
-  }
+    S.apps.unshift(app); renderSidebar();
+    g('lf').style.display='none'; g('log-ok').style.display='';
+  } catch(e) { showE('le', e.message||'Could not save.'); }
 }
 function skipLog() { g('log-box').style.display='none'; }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  DETAIL MODAL
-// ═══════════════════════════════════════════════════════════════════════════
+// ── DETAIL MODAL ──────────────────────────────────────────────────────────
 async function openDet(id) {
   let app = S.apps.find(a=>a.id===id);
   if (!app) return;
   S.activeId = id;
   try {
     const full = await apiGetApp(id);
-    Object.assign(app, {
-      resume:      full.resume_text    || app.resume      || '',
-      coverLetter: full.cover_text     || app.coverLetter || '',
-      files: {
-        resume_pdf: full.resume_pdf_b64 || '',
-        cover_pdf:  full.cover_pdf_b64  || '',
-      },
-    });
+    // API returns resume_text / cover_text — map to local field names
+    app.resume      = full.resume_text     || app.resume      || '';
+    app.coverLetter = full.cover_text      || app.coverLetter || '';
+    app.files = {
+      resume_pdf: full.resume_pdf_b64 || '',
+      cover_pdf:  full.cover_pdf_b64  || '',
+    };
   } catch{}
   g('dc').textContent  = app.company;
   g('dr').textContent  = app.role || 'No title';
@@ -748,34 +658,28 @@ async function openDet(id) {
 }
 
 async function updStatus() {
-  const st  = g('dss').value;
-  const app = S.apps.find(a=>a.id===S.activeId);
+  const st=g('dss').value, app=S.apps.find(a=>a.id===S.activeId);
   if (!app) return;
-  app.status = st;
-  g('dsb').textContent = st;
-  g('dsb').className   = `sbadge s-${st}`;
+  app.status=st; g('dsb').textContent=st; g('dsb').className=`sbadge s-${st}`;
   try { await apiPatch(S.activeId, st); } catch{}
 }
 
 async function reDownload() {
-  const app = S.apps.find(a=>a.id===S.activeId);
-  if (!app) return;
+  const app=S.apps.find(a=>a.id===S.activeId); if (!app) return;
   const btn=g('re-dl-btn'); btn.textContent='Preparing…'; btn.disabled=true;
   try { await buildZip(app.resume||'', app.coverLetter||'', app.files||{}, app.company); }
   finally { btn.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Re-download ZIP`; btn.disabled=false; }
 }
 
 async function delApp() {
-  const app = S.apps.find(a=>a.id===S.activeId);
-  if (!app||!confirm(`Delete application for ${app.company}?`)) return;
+  const app=S.apps.find(a=>a.id===S.activeId);
+  if (!app||!confirm(`Delete ${app.company}?`)) return;
   try { await apiDelete(S.activeId); } catch{}
   S.apps=S.apps.filter(a=>a.id!==S.activeId); S.activeId=null;
   renderSidebar(); closeM('m-det');
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  WIZARD
-// ═══════════════════════════════════════════════════════════════════════════
+// ── WIZARD ────────────────────────────────────────────────────────────────
 function setProg(step) {
   for(let i=1;i<=3;i++){
     const sc=g(`sc${i}`),sl=g(`sl${i}`);
@@ -793,7 +697,6 @@ function showStep(id) {
   el.style.animation='none'; requestAnimationFrame(()=>{el.style.animation='';});
   document.querySelector('.scroll')?.scrollTo({top:0});
 }
-
 function goS1(){setProg(1);showStep('s1');}
 function goS2(){
   if(!S.resumeFile){showE('e1','Please upload your résumé to continue.');return;}
@@ -818,9 +721,6 @@ function newApp(){
   goS1();closeSidebar();
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  PROCESSING
-// ═══════════════════════════════════════════════════════════════════════════
 async function runProc(){
   const pss=['ps1','ps2','ps3','ps4','ps5'];
   let idx=0,res=null,err=null;
@@ -840,9 +740,6 @@ async function runProc(){
   if(co)g('lco').value=co;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  FILE HANDLING
-// ═══════════════════════════════════════════════════════════════════════════
 function fileSelected(inp){if(inp.files[0])setFile(inp.files[0]);}
 function dzOver(e){e.preventDefault();g('dz').classList.add('over');}
 function dzLeave(){g('dz').classList.remove('over');}
@@ -869,55 +766,38 @@ function switchTab(t){
 }
 function updCC(el){g('cc').textContent=el.value.length.toLocaleString();}
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  DOWNLOAD — PDFs only
-// ═══════════════════════════════════════════════════════════════════════════
 function b64toBlob(b64,mime){
   const bytes=atob(b64),arr=new Uint8Array(bytes.length);
   for(let i=0;i<bytes.length;i++)arr[i]=bytes.charCodeAt(i);
   return new Blob([arr],{type:mime});
 }
-
 async function downloadZip(){
   if(!S.result)return;
   const btn=g('dl-btn');btn.textContent='Preparing…';btn.disabled=true;
   try{
     await buildZip(S.result.resume,S.result.coverLetter,S.result.files||{},g('lco').value||'Application');
     btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Downloaded!`;
-    setTimeout(()=>{
-      btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download ZIP`;
-      btn.disabled=false;
-    },2500);
+    setTimeout(()=>{btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download ZIP`;btn.disabled=false;},2500);
   }catch{btn.textContent='Failed — try again';btn.disabled=false;}
 }
-
 async function buildZip(resume,coverLetter,files,co){
-  const PDF='application/pdf';
-  const zip=new JSZip();
-  if(files.resume_pdf) zip.file('Resume_Tailored.pdf', b64toBlob(files.resume_pdf,PDF));
-  else                 zip.file('Resume_Tailored.txt', resume);
-  if(files.cover_pdf)  zip.file('Cover_Letter.pdf',    b64toBlob(files.cover_pdf,PDF));
-  else                 zip.file('Cover_Letter.txt',     coverLetter);
-  zip.file('README.txt',`Jhakri Resume Tailor\nCompany: ${co}\nDate: ${new Date().toLocaleDateString()}\n\nReview before sending.`);
+  const PDF='application/pdf', zip=new JSZip();
+  if(files.resume_pdf) zip.file('Resume_Tailored.pdf',b64toBlob(files.resume_pdf,PDF));
+  else                 zip.file('Resume_Tailored.txt',resume);
+  if(files.cover_pdf)  zip.file('Cover_Letter.pdf',b64toBlob(files.cover_pdf,PDF));
+  else                 zip.file('Cover_Letter.txt',coverLetter);
   const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download=`Jhakri_${co.replace(/\s+/g,'_')}_${Date.now()}.zip`;a.click();
   URL.revokeObjectURL(url);
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  MODALS / SIDEBAR
-// ═══════════════════════════════════════════════════════════════════════════
 function openM(id){g(id).classList.add('vis');}
 function closeM(id){g(id).classList.remove('vis');}
 function openSidebar(){g('sidebar').classList.add('open');g('sb-overlay').classList.add('vis');}
 function closeSidebar(){g('sidebar').classList.remove('open');g('sb-overlay').classList.remove('vis');}
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  UTIL
-// ═══════════════════════════════════════════════════════════════════════════
 function g(id){return document.getElementById(id);}
-function showE(id,msg){const el=g(id);el.classList.add('vis');const s=el.querySelector('span');if(s&&msg)s.textContent=msg;}
+function showE(id,msg){const el=g(id);if(!el)return;el.classList.add('vis');const s=el.querySelector('span');if(s&&msg)s.textContent=msg;}
 function hideE(id){g(id)?.classList.remove('vis');}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
@@ -932,8 +812,10 @@ function fmtD(iso,long=false){
 }
 function coEm(n){
   const s=(n||'').toLowerCase();
-  if(s.includes('tech')||s.includes('software'))return'💻';if(s.includes('finance')||s.includes('bank'))return'💰';
-  if(s.includes('health')||s.includes('medical'))return'🏥';if(s.includes('design')||s.includes('creative'))return'🎨';
+  if(s.includes('tech')||s.includes('software'))return'💻';
+  if(s.includes('finance')||s.includes('bank'))return'💰';
+  if(s.includes('health')||s.includes('medical'))return'🏥';
+  if(s.includes('design')||s.includes('creative'))return'🎨';
   if(s.includes('edu')||s.includes('school'))return'🎓';
   const em=['🏢','🏗','🚀','⚡','🌿','🔷','🌐','🛡','📡','🔶'];
   return em[((n||'A').charCodeAt(0)-65)%em.length]||'🏢';
@@ -943,9 +825,6 @@ function extractCo(jd){
   return m?m[1].trim().replace(/[.,]$/,''):'';
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', async ()=>{
   setProg(1);showStep('s1');
   document.querySelectorAll('.m-ov').forEach(ov=>{
