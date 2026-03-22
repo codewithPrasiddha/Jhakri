@@ -34,8 +34,6 @@
 
     /* ── LAYOUT ── */
     .app-shell { display:flex; height:100vh; height:100dvh; overflow:hidden; position:relative; z-index:1; }
-
-    /* ── SIDEBAR OVERLAY (mobile) ── */
     .sb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:49; backdrop-filter:blur(2px); }
     .sb-overlay.vis { display:block; }
 
@@ -47,8 +45,6 @@
     .sb-tag { font-family:var(--font-b); font-size:9px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-mute); border:1px solid var(--border); border-radius:100px; padding:2px 7px; }
     .new-btn { width:28px; height:28px; background:var(--ink); border:none; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background var(--t); flex-shrink:0; -webkit-tap-highlight-color:transparent; }
     .new-btn:hover { background:var(--accent); }
-
-    /* profile strip */
     .sb-profile { padding:8px 10px; border-bottom:1px solid var(--border); flex-shrink:0; }
     .profile-guest { display:flex; align-items:center; gap:8px; background:var(--cream-deep); border-radius:8px; padding:8px 10px; cursor:pointer; transition:background var(--t); -webkit-tap-highlight-color:transparent; }
     .profile-guest:hover { background:var(--accent-lt); }
@@ -64,8 +60,6 @@
     .pa-sub  { font-size:10px; color:var(--ink-mute); }
     .pa-out  { width:20px; height:20px; border:none; background:transparent; cursor:pointer; color:var(--ink-mute); display:flex; align-items:center; justify-content:center; border-radius:4px; transition:all var(--t); flex-shrink:0; }
     .pa-out:hover { background:var(--danger-lt); color:var(--danger); }
-
-    /* history */
     .sb-label { padding:10px 12px 4px; font-size:9px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--ink-mute); flex-shrink:0; }
     .app-list { flex:1; overflow-y:auto; padding:3px 6px 10px; -webkit-overflow-scrolling:touch; }
     .app-list::-webkit-scrollbar { width:3px; }
@@ -100,16 +94,12 @@
     .st-dot { width:6px; height:6px; background:#22C55E; border-radius:50%; animation:pulse 2s infinite; }
     .tb-auth { display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:7px; border:1px solid var(--border); background:var(--white); font-family:var(--font-b); font-size:12px; font-weight:500; cursor:pointer; color:var(--ink-soft); transition:all var(--t); -webkit-tap-highlight-color:transparent; }
     .tb-auth:hover { border-color:var(--ink); color:var(--ink); }
-
-    /* scroll area */
     .scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:28px 18px 48px; }
     .scroll::-webkit-scrollbar { width:4px; }
     .scroll::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 
     /* ── WIZARD ── */
     .wizard { max-width:548px; margin:0 auto; }
-
-    /* progress */
     .progress-bar { display:flex; align-items:center; margin-bottom:32px; }
     .step-node { display:flex; flex-direction:column; align-items:center; gap:5px; flex-shrink:0; }
     .sc { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; font-family:var(--font-m); transition:all var(--t); border:1.5px solid var(--border); background:var(--white); color:var(--ink-mute); }
@@ -119,8 +109,6 @@
     .sl.active { color:var(--ink); } .sl.done { color:var(--accent-dk); }
     .conn { flex:1; height:1.5px; background:var(--border); margin:0 6px; margin-bottom:20px; transition:background var(--t); }
     .conn.done { background:var(--accent); }
-
-    /* card */
     .card { background:var(--white); border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow); padding:32px; animation:slideUp .3s cubic-bezier(.4,0,.2,1) both; }
     @keyframes slideUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
     .eyebrow { font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:5px; }
@@ -161,11 +149,8 @@
     .char-ct { text-align:right; font-size:10px; color:var(--ink-mute); margin-top:4px; font-family:var(--font-m); }
     .url-hint { font-size:11px; color:var(--ink-mute); margin-top:6px; display:flex; align-items:center; gap:5px; }
 
-    /* error */
     .err { display:none; background:var(--danger-lt); border:1px solid rgba(192,57,43,.2); border-radius:8px; padding:9px 12px; font-size:12px; color:var(--danger); margin-top:10px; align-items:center; gap:6px; }
     .err.vis { display:flex; }
-
-    /* card footer */
     .cfoot { display:flex; align-items:center; justify-content:space-between; margin-top:22px; gap:10px; }
 
     /* buttons */
@@ -204,7 +189,7 @@
     .res-files { display:flex; flex-direction:column; gap:7px; margin:18px 0; text-align:left; }
     .res-file  { display:flex; align-items:center; gap:9px; background:var(--cream); border:1px solid var(--border); border-radius:9px; padding:9px 13px; }
     .rf-ic { width:30px; height:30px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
-    .rf-doc { background:#EBF3FF; } .rf-txt { background:#F0FFF4; }
+    .rf-doc { background:#EBF3FF; } .rf-pdf { background:#FFF1F1; } .rf-txt { background:#F0FFF4; }
     .rf-inf { flex:1; }
     .rf-name { font-size:12px; font-weight:500; }
     .rf-desc { font-size:10px; color:var(--ink-mute); }
@@ -218,8 +203,6 @@
     select { width:100%; font-family:var(--font-b); font-size:13px; color:var(--ink); background:var(--white); border:1.5px solid var(--border); border-radius:8px; outline:none; padding:8px 10px; cursor:pointer; transition:border-color var(--t); appearance:none; background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239A948E' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:26px; }
     select:focus { border-color:var(--accent); }
     input.sm { font-size:13px; padding:8px 10px; border-radius:8px; }
-
-    /* dividers */
     .or-div { display:flex; align-items:center; gap:10px; font-size:11px; color:var(--ink-mute); margin:14px 0; }
     .or-div::before,.or-div::after { content:''; flex:1; height:1px; background:var(--border); }
     .foot-note { text-align:center; font-size:11px; color:var(--ink-mute); margin-top:18px; display:flex; align-items:center; justify-content:center; gap:5px; }
@@ -237,8 +220,6 @@
     .m-title { font-family:var(--font-d); font-size:18px; font-weight:600; margin-bottom:5px; }
     .m-desc  { font-size:13px; color:var(--ink-soft); font-weight:300; line-height:1.7; margin-bottom:20px; }
     .f-group { display:flex; flex-direction:column; gap:3px; margin-bottom:13px; }
-
-    /* code reveal */
     .code-box { background:var(--ink); border-radius:11px; padding:18px; margin:16px 0; text-align:center; }
     .c-label  { font-size:9px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:6px; }
     .c-user   { font-family:var(--font-m); font-size:16px; color:var(--white); letter-spacing:.3px; }
@@ -246,8 +227,6 @@
     .c-copy   { display:flex; align-items:center; gap:5px; margin:11px auto 0; width:fit-content; padding:6px 14px; border-radius:6px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); cursor:pointer; color:rgba(255,255,255,.65); font-family:var(--font-b); font-size:11px; font-weight:500; transition:all var(--t); -webkit-tap-highlight-color:transparent; }
     .c-copy:hover { background:rgba(255,255,255,.13); color:var(--white); }
     .save-warn { background:var(--warn-lt); border:1px solid rgba(217,119,6,.2); border-radius:8px; padding:10px 12px; font-size:11px; color:var(--warn); display:flex; gap:6px; align-items:flex-start; line-height:1.5; margin-bottom:16px; }
-
-    /* detail modal */
     .det-company { font-family:var(--font-d); font-size:20px; font-weight:700; margin-bottom:1px; }
     .det-role    { font-size:13px; color:var(--ink-soft); margin-bottom:12px; }
     .det-meta    { display:flex; align-items:center; gap:7px; margin-bottom:18px; flex-wrap:wrap; }
@@ -257,7 +236,6 @@
     .det-prev::-webkit-scrollbar { width:3px; }
     .det-prev::-webkit-scrollbar-thumb { background:var(--border); }
 
-    /* ── KEYFRAMES ── */
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
     /* ── RESPONSIVE ── */
@@ -283,7 +261,6 @@
 <body>
 <div class="app-shell">
 
-  <!-- Mobile sidebar overlay -->
   <div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
 
   <!-- ══════════ SIDEBAR ══════════ -->
@@ -294,8 +271,6 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       </button>
     </div>
-
-    <!-- Profile -->
     <div class="sb-profile">
       <div class="profile-guest" id="pg" onclick="openAuthModal()">
         <div class="pg-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
@@ -307,7 +282,6 @@
         <button class="pa-out" onclick="signOut()" title="Sign out"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
       </div>
     </div>
-
     <div class="sb-label">Applications</div>
     <div class="app-list" id="app-list">
       <div class="list-empty" id="list-empty"><span class="list-empty-icon">📋</span>No applications yet.<br/>Complete the wizard and<br/>log your first one.</div>
@@ -404,12 +378,14 @@
           <h2 style="font-family:var(--font-d);font-size:22px;font-weight:700;margin-bottom:5px;">Your documents are ready.</h2>
           <p style="font-size:13px;color:var(--ink-soft);font-weight:300;line-height:1.7;">Jhakri has tailored your résumé and written a custom cover letter for this role.</p>
           <div class="res-files">
-            <div class="res-file"><div class="rf-ic rf-doc">📄</div><div class="rf-inf"><div class="rf-name">Resume_Tailored.docx</div><div class="rf-desc">Optimised for this specific role</div></div></div>
-            <div class="res-file"><div class="rf-ic rf-txt">✍️</div><div class="rf-inf"><div class="rf-name">Cover_Letter.txt</div><div class="rf-desc">Personalised cover letter · ready to send</div></div></div>
+            <div class="res-file"><div class="rf-ic rf-doc">📄</div><div class="rf-inf"><div class="rf-name">Resume_Tailored.docx</div><div class="rf-desc">Optimised Word document</div></div></div>
+            <div class="res-file"><div class="rf-ic rf-pdf">📕</div><div class="rf-inf"><div class="rf-name">Resume_Tailored.pdf</div><div class="rf-desc">PDF — ready to upload</div></div></div>
+            <div class="res-file"><div class="rf-ic rf-doc">✍️</div><div class="rf-inf"><div class="rf-name">Cover_Letter.docx</div><div class="rf-desc">Personalised cover letter</div></div></div>
+            <div class="res-file"><div class="rf-ic rf-pdf">📋</div><div class="rf-inf"><div class="rf-name">Cover_Letter.pdf</div><div class="rf-desc">PDF — ready to send</div></div></div>
           </div>
           <button class="btn btn-a btn-lg btn-full" id="dl-btn" onclick="downloadZip()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Download ZIP
+            Download ZIP (4 files)
           </button>
 
           <!-- Log this application -->
@@ -428,7 +404,7 @@
                 <button class="btn btn-p btn-sm" onclick="logApp()">Save to history</button>
                 <button class="btn btn-g btn-sm" onclick="skipLog()">Skip</button>
               </div>
-              <p id="guest-note" style="font-size:11px;color:var(--ink-mute);margin-top:5px;">💡 <a href="#" onclick="openAuthModal();return false;" style="color:var(--accent-dk);text-decoration:underline;">Get a profile code</a> to keep history between sessions.</p>
+              <p id="guest-note" style="font-size:11px;color:var(--ink-mute);margin-top:5px;">💡 <a href="#" onclick="openAuthModal();return false;" style="color:var(--accent-dk);text-decoration:underline;">Sign in</a> to save history between sessions.</p>
             </div>
             <div id="log-ok" style="display:none;text-align:center;padding:6px 0;font-size:13px;color:var(--success);font-weight:500;">✓ Saved to your application history</div>
           </div>
@@ -441,7 +417,7 @@
       <div class="foot-note"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Files processed privately · never stored on any server</div>
     </div>
   </main>
-</div><!-- /app-shell -->
+</div>
 
 
 <!-- ════ MODAL: Auth choice ════ -->
@@ -456,7 +432,7 @@
       <button class="btn btn-p btn-full" onclick="openCreate()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Get my profile code — it's free</button>
       <button class="btn btn-g btn-full" onclick="openSignIn()">I already have a code</button>
     </div>
-    <p style="text-align:center;font-size:11px;color:var(--ink-mute);margin-top:14px;">We store your application log on our servers, encrypted. We don't know who you are.</p>
+    <p style="text-align:center;font-size:11px;color:var(--ink-mute);margin-top:14px;">Your application log is stored encrypted. We don't know who you are.</p>
   </div>
 </div>
 
@@ -514,7 +490,7 @@
     <div class="det-sec"><div class="det-sec-t">Résumé preview</div><div class="det-prev" id="dre">—</div></div>
     <div class="det-sec"><div class="det-sec-t">Cover letter preview</div><div class="det-prev" id="dcl">—</div></div>
     <div style="display:flex;gap:7px;margin-top:6px;">
-      <button class="btn btn-a" style="flex:1;" onclick="reDownload()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Re-download ZIP</button>
+      <button class="btn btn-a" style="flex:1;" id="re-dl-btn" onclick="reDownload()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Re-download ZIP</button>
       <button class="btn btn-g" style="color:var(--danger);border-color:rgba(192,57,43,.3);" onclick="delApp()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Delete</button>
     </div>
   </div>
@@ -523,17 +499,14 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
-//  CONFIG — swap these URLs for your Azure backend
+//  CONFIG
 // ═══════════════════════════════════════════════════════════════════════════
+const API_BASE = 'https://api.prasiddha.info.np';
 const API = {
-  TAILOR:      'https://api.prasiddha.info.np/api/tailor',
-  // ↓ Wire these up when your Azure VM + storage is ready ↓
-  CREATE:      'https://api.prasiddha.info.np/api/profile/create',  // POST → { username, pin, token }
-  LOGIN:       'https://api.prasiddha.info.np/api/profile/login',   // POST { username, pin } → { token, applications[] }
-  APPS_LIST:   'https://api.prasiddha.info.np/api/applications',    // GET  Authorization:Bearer token → []
-  APPS_SAVE:   'https://api.prasiddha.info.np/api/applications',    // POST Authorization:Bearer token → { id }
-  APPS_PATCH:  'https://api.prasiddha.info.np/api/applications',    // PATCH /:id { status }
-  APPS_DELETE: 'https://api.prasiddha.info.np/api/applications',    // DELETE /:id
+  CREATE:      `${API_BASE}/api/profile/create`,
+  LOGIN:       `${API_BASE}/api/profile/login`,
+  TAILOR:      `${API_BASE}/api/tailor`,
+  APPS:        `${API_BASE}/api/applications`,
 };
 const LS = 'jhakri_tailor_v1';
 
@@ -542,160 +515,226 @@ const LS = 'jhakri_tailor_v1';
 // ═══════════════════════════════════════════════════════════════════════════
 let S = {
   resumeFile: null, jobDesc: '', jobUrl: '', tab: 'paste',
-  result: null,     // { resume, coverLetter }
-  token: null, username: null, pin: null,
-  apps: [],         // [{ id, company, role, status, date, resume, coverLetter }]
+  result: null,     // { resume, coverLetter, files:{resume_docx,resume_pdf,cover_docx,cover_pdf} }
+  token: null, username: null,
+  apps: [],
   activeId: null,
-  pendingUser: null, pendingPin: null,
+  pendingUser: null,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  PERSISTENCE (localStorage now → swap body of each fn for fetch() later)
+//  PERSISTENCE  (token + username cached in localStorage; apps come from API)
 // ═══════════════════════════════════════════════════════════════════════════
 function saveLs() {
-  try { localStorage.setItem(LS, JSON.stringify({ token:S.token, username:S.username, pin:S.pin, apps:S.apps })); } catch{}
+  try { localStorage.setItem(LS, JSON.stringify({ token:S.token, username:S.username, apps:S.apps })); } catch{}
 }
 function loadLs() {
-  try { const d=JSON.parse(localStorage.getItem(LS)||'{}'); S.token=d.token||null; S.username=d.username||null; S.pin=d.pin||null; S.apps=d.apps||[]; } catch{}
+  try {
+    const d = JSON.parse(localStorage.getItem(LS) || '{}');
+    S.token    = d.token    || null;
+    S.username = d.username || null;
+    S.apps     = d.apps     || [];
+  } catch{}
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  ── API STUBS ── (replace bodies with real fetch() calls for Azure) ──
+//  AUTH HEADER
+// ═══════════════════════════════════════════════════════════════════════════
+function authHdr() {
+  return S.token ? { 'Authorization': `Bearer ${S.token}` } : {};
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  API CALLS
 // ═══════════════════════════════════════════════════════════════════════════
 
 /* POST /api/profile/create → { username, pin, token } */
 async function apiCreate() {
-  // AZURE: const r=await fetch(API.CREATE,{method:'POST'}); return r.json();
-  const adjs=['swift','calm','bright','bold','keen','wise','clear','deep','free','pure','gold','iron','sharp'];
-  const nns=['eagle','river','peak','stone','grove','cloud','tide','field','dawn','oak','wave','pine','arc'];
-  const u=`${pick(adjs)}-${pick(nns)}-${r4()}`; const p=r4();
-  const t='demo_'+Math.random().toString(36).slice(2);
-  return {username:u, pin:p, token:t};
+  const r = await fetch(API.CREATE, { method: 'POST' });
+  if (!r.ok) throw new Error(`Create failed (${r.status})`);
+  return r.json();
 }
 
-/* POST /api/profile/login { username, pin } → { token, applications[] } */
+/* POST /api/profile/login → { token, applications[] } */
 async function apiLogin(user, pin) {
-  // AZURE: const r=await fetch(API.LOGIN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:user,pin})}); if(!r.ok)throw new Error('Invalid'); return r.json();
-  const d=JSON.parse(localStorage.getItem(LS)||'{}');
-  if (d.username===user && d.pin===pin) return {token:d.token, applications:d.apps||[]};
-  throw new Error('Incorrect username or PIN.');
+  const r = await fetch(API.LOGIN, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: user, pin }),
+  });
+  if (!r.ok) {
+    const d = await r.json().catch(() => ({}));
+    throw new Error(d.detail || 'Incorrect username or PIN.');
+  }
+  return r.json();
 }
 
-/* POST /api/applications (auth) → { id } */
+/* POST /api/tailor (multipart) → { resume, cover_letter, files:{…} } */
+async function apiTailor() {
+  const fd = new FormData();
+  fd.append('resume', S.resumeFile);
+  fd.append('job_description', S.jobDesc || S.jobUrl);
+  const r = await fetch(API.TAILOR, { method: 'POST', body: fd });
+  if (!r.ok) {
+    const d = await r.json().catch(() => ({}));
+    throw new Error(d.detail || `Tailoring failed (${r.status})`);
+  }
+  const d = await r.json();
+  return { resume: d.resume, coverLetter: d.cover_letter, files: d.files || {} };
+}
+
+/* GET /api/applications → [] */
+async function apiLoadApps() {
+  const r = await fetch(API.APPS, { headers: authHdr() });
+  if (!r.ok) return [];
+  return r.json();
+}
+
+/* POST /api/applications → { id } */
 async function apiSaveApp(app) {
-  // AZURE: const r=await fetch(API.APPS_SAVE,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.token}`},body:JSON.stringify(app)}); const d=await r.json(); return d.id;
-  return 'app_'+Date.now();
+  const fd = new FormData();
+  fd.append('company',         app.company);
+  fd.append('role',            app.role || '');
+  fd.append('status',          app.status);
+  fd.append('date',            app.date);
+  fd.append('resume_text',     app.resume || '');
+  fd.append('cover_text',      app.coverLetter || '');
+  fd.append('resume_docx_b64', app.files?.resume_docx || '');
+  fd.append('resume_pdf_b64',  app.files?.resume_pdf  || '');
+  fd.append('cover_docx_b64',  app.files?.cover_docx  || '');
+  fd.append('cover_pdf_b64',   app.files?.cover_pdf   || '');
+  const r = await fetch(API.APPS, { method: 'POST', headers: authHdr(), body: fd });
+  if (!r.ok) throw new Error(`Save failed (${r.status})`);
+  const d = await r.json();
+  return d.id;
 }
 
-/* PATCH /api/applications/:id { status } */
+/* GET /api/applications/:id → full record */
+async function apiGetApp(id) {
+  const r = await fetch(`${API.APPS}/${id}`, { headers: authHdr() });
+  if (!r.ok) throw new Error('Not found');
+  return r.json();
+}
+
+/* PATCH /api/applications/:id */
 async function apiPatch(id, status) {
-  // AZURE: await fetch(`${API.APPS_PATCH}/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.token}`},body:JSON.stringify({status})});
+  await fetch(`${API.APPS}/${id}`, {
+    method: 'PATCH',
+    headers: { ...authHdr(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status }),
+  });
 }
 
 /* DELETE /api/applications/:id */
 async function apiDelete(id) {
-  // AZURE: await fetch(`${API.APPS_DELETE}/${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${S.token}`}});
-}
-
-/* POST /api/tailor (multipart) → { resume, cover_letter } */
-async function apiTailor() {
-  // AZURE:
-  // const fd=new FormData(); fd.append('resume',S.resumeFile); fd.append('job_description',S.jobDesc||S.jobUrl);
-  // if(S.token) fd.append('user_token',S.token);
-  // const r=await fetch(API.TAILOR,{method:'POST',body:fd}); if(!r.ok) throw new Error(`Error ${r.status}`);
-  // const d=await r.json(); return {resume:d.resume, coverLetter:d.cover_letter};
-
-  // PLACEHOLDER (remove when backend wired):
-  await sleep(100);
-  return {
-    resume:`TAILORED RÉSUMÉ — Placeholder\n\n[Your AI model generates this]\n\nSource file: ${S.resumeFile?.name}\nJob: ${(S.jobDesc||S.jobUrl).slice(0,200)}`,
-    coverLetter:`COVER LETTER — Placeholder\n\n[Your AI model generates this]\n\nRole: ${(S.jobDesc||S.jobUrl).slice(0,200)}`,
-  };
+  await fetch(`${API.APPS}/${id}`, { method: 'DELETE', headers: authHdr() });
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  AUTH
+//  AUTH UI
 // ═══════════════════════════════════════════════════════════════════════════
 function openAuthModal() { if(S.username) return; closeM('m-signin'); closeM('m-create'); openM('m-auth'); }
-
 function openCreate() { closeM('m-auth'); openM('m-create'); genCode(); }
 function openSignIn() { closeM('m-auth'); clearSI(); openM('m-signin'); }
 
 async function genCode() {
-  document.getElementById('rv-user').textContent='generating…';
-  document.getElementById('rv-pin').textContent='—';
-  const d=await apiCreate();
-  S.pendingUser=d.username; S.pendingPin=d.pin; S.token=d.token;
-  document.getElementById('rv-user').textContent=d.username;
-  document.getElementById('rv-pin').textContent=d.pin;
-  // persist pin for demo login check
-  const ls=JSON.parse(localStorage.getItem(LS)||'{}'); ls.pin=d.pin; ls.token=d.token; localStorage.setItem(LS,JSON.stringify(ls));
+  g('rv-user').textContent = 'generating…';
+  g('rv-pin').textContent  = '—';
+  try {
+    const d = await apiCreate();
+    S.pendingUser = d.username;
+    S.token       = d.token;      // store token immediately so confirm works
+    g('rv-user').textContent = d.username;
+    g('rv-pin').textContent  = d.pin;
+  } catch(e) {
+    g('rv-user').textContent = 'error — try again';
+  }
 }
 
 function confirmCreated() {
   if (!S.pendingUser) return;
-  S.username=S.pendingUser; S.pendingUser=null; S.pendingPin=null;
-  closeM('m-create'); saveLs(); updAuthUI();
+  S.username    = S.pendingUser;
+  S.pendingUser = null;
+  closeM('m-create');
+  saveLs();
+  updAuthUI();
 }
 
 async function doSignIn() {
-  const u=g('si-u').value.trim().toLowerCase(); const p=g('si-p').value.trim();
+  const u   = g('si-u').value.trim().toLowerCase();
+  const p   = g('si-p').value.trim();
   hideE('si-err');
-  if(!u||!p){showE('si-err','Enter your username and PIN.');return;}
-  const btn=g('si-btn'); btn.textContent='Signing in…'; btn.disabled=true;
+  if (!u || !p) { showE('si-err', 'Enter your username and PIN.'); return; }
+  const btn = g('si-btn');
+  btn.textContent = 'Signing in…'; btn.disabled = true;
   try {
-    const d=await apiLogin(u,p);
-    S.token=d.token; S.username=u; S.apps=d.applications||[];
-    closeM('m-signin'); saveLs(); updAuthUI(); renderSidebar();
-  } catch(e) { showE('si-err', e.message||'Incorrect username or PIN.'); }
-  finally { btn.textContent='Sign in'; btn.disabled=false; }
+    const d    = await apiLogin(u, p);
+    S.token    = d.token;
+    S.username = u;
+    S.apps     = d.applications || [];
+    closeM('m-signin');
+    saveLs();
+    updAuthUI();
+    renderSidebar();
+  } catch(e) {
+    showE('si-err', e.message || 'Incorrect username or PIN.');
+  } finally {
+    btn.textContent = 'Sign in'; btn.disabled = false;
+  }
 }
 
 function signOut() {
-  if(!confirm('Sign out? History will be cleared from this device.')) return;
-  S.token=null; S.username=null; S.pin=null; S.apps=[];
+  if (!confirm('Sign out? Cached history will be cleared from this device.')) return;
+  S.token = null; S.username = null; S.apps = [];
   localStorage.removeItem(LS);
-  updAuthUI(); renderSidebar();
+  updAuthUI();
+  renderSidebar();
 }
 
 function updAuthUI() {
-  const auth=!!S.username;
-  g('pg').style.display=auth?'none':'flex';
-  g('pa').classList.toggle('vis',auth);
-  g('tb-auth').style.display=auth?'none':'';
-  if(auth){
-    const ini=S.username.split('-').slice(0,2).map(w=>w[0].toUpperCase()).join('');
-    g('pa-av').textContent=ini; g('pa-name').textContent=S.username;
-    g('pa-ct').textContent=`${S.apps.length} application${S.apps.length===1?'':'s'}`;
-    const gn=g('guest-note'); if(gn) gn.style.display='none';
+  const auth = !!S.username;
+  g('pg').style.display = auth ? 'none' : 'flex';
+  g('pa').classList.toggle('vis', auth);
+  g('tb-auth').style.display = auth ? 'none' : '';
+  if (auth) {
+    const ini = S.username.split('-').slice(0,2).map(w=>w[0].toUpperCase()).join('');
+    g('pa-av').textContent  = ini;
+    g('pa-name').textContent = S.username;
+    g('pa-ct').textContent  = `${S.apps.length} application${S.apps.length===1?'':'s'}`;
+    const gn = g('guest-note'); if (gn) gn.style.display = 'none';
   }
 }
 
 async function copyCode() {
-  const u=g('rv-user').textContent; const p=g('rv-pin').textContent;
-  try { await navigator.clipboard.writeText(`Username: ${u}\nPIN: ${p}`); const l=g('copy-lbl'); l.textContent='Copied!'; setTimeout(()=>{l.textContent='Copy both';},2000); } catch{}
+  const u = g('rv-user').textContent;
+  const p = g('rv-pin').textContent;
+  try {
+    await navigator.clipboard.writeText(`Username: ${u}\nPIN: ${p}`);
+    const l = g('copy-lbl'); l.textContent = 'Copied!';
+    setTimeout(() => { l.textContent = 'Copy both'; }, 2000);
+  } catch{}
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  SIDEBAR
 // ═══════════════════════════════════════════════════════════════════════════
 function renderSidebar() {
-  const list=g('app-list'); const empty=g('list-empty');
-  // update count
-  if(S.username) g('pa-ct').textContent=`${S.apps.length} application${S.apps.length===1?'':'s'}`;
-  if(!S.apps.length){empty.style.display=''; list.querySelectorAll('.app-item').forEach(e=>e.remove()); return;}
-  empty.style.display='none';
-  list.innerHTML='';
-  [...S.apps].sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(app=>{
-    const el=document.createElement('div');
-    el.className='app-item'+(S.activeId===app.id?' active':'');
-    el.setAttribute('data-id',app.id);
-    el.onclick=()=>openDet(app.id);
-    el.innerHTML=`
+  const list  = g('app-list');
+  const empty = g('list-empty');
+  if (S.username) g('pa-ct').textContent = `${S.apps.length} application${S.apps.length===1?'':'s'}`;
+  if (!S.apps.length) { empty.style.display = ''; list.querySelectorAll('.app-item').forEach(e=>e.remove()); return; }
+  empty.style.display = 'none';
+  list.innerHTML = '';
+  [...S.apps].sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(app => {
+    const el = document.createElement('div');
+    el.className = 'app-item' + (S.activeId === app.id ? ' active' : '');
+    el.setAttribute('data-id', app.id);
+    el.onclick = () => openDet(app.id);
+    el.innerHTML = `
       <div class="ai-icon">${coEm(app.company)}</div>
       <div class="ai-body">
         <div class="ai-company">${esc(app.company)}</div>
-        <div class="ai-role">${esc(app.role||'No title')}</div>
+        <div class="ai-role">${esc(app.role || 'No title')}</div>
         <div class="ai-meta">
           <span class="sbadge s-${app.status}">${app.status}</span>
           <span class="ai-date">${fmtD(app.date)}</span>
@@ -709,129 +748,236 @@ function renderSidebar() {
 //  LOG APPLICATION
 // ═══════════════════════════════════════════════════════════════════════════
 async function logApp() {
-  const co=g('lco').value.trim(); const ro=g('lro').value.trim(); const st=g('lst').value;
+  const co = g('lco').value.trim();
+  const ro = g('lro').value.trim();
+  const st = g('lst').value;
   hideE('le');
-  if(!co){showE('le','Enter a company name.');return;}
-  const app={id:null,company:co,role:ro,status:st,date:new Date().toISOString(),resume:S.result?.resume||'',coverLetter:S.result?.coverLetter||''};
-  app.id=await apiSaveApp(app);
-  S.apps.unshift(app); saveLs(); renderSidebar();
-  g('lf').style.display='none'; g('log-ok').style.display='';
+  if (!co) { showE('le', 'Enter a company name.'); return; }
+
+  const app = {
+    id:          null,
+    company:     co,
+    role:        ro,
+    status:      st,
+    date:        new Date().toISOString(),
+    resume:      S.result?.resume      || '',
+    coverLetter: S.result?.coverLetter || '',
+    files:       S.result?.files       || {},
+  };
+
+  if (S.token) {
+    try {
+      app.id = await apiSaveApp(app);
+    } catch(e) {
+      showE('le', 'Could not save to server — check your connection.');
+      return;
+    }
+  } else {
+    // Guest: store locally with generated ID
+    app.id = 'local_' + Date.now();
+  }
+
+  S.apps.unshift(app);
+  saveLs();
+  renderSidebar();
+  g('lf').style.display  = 'none';
+  g('log-ok').style.display = '';
 }
-function skipLog() { g('log-box').style.display='none'; }
+
+function skipLog() { g('log-box').style.display = 'none'; }
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  DETAIL MODAL
 // ═══════════════════════════════════════════════════════════════════════════
-function openDet(id) {
-  const app=S.apps.find(a=>a.id===id); if(!app) return;
-  S.activeId=id;
-  g('dc').textContent=app.company; g('dr').textContent=app.role||'No title';
-  g('dd').textContent=fmtD(app.date,true);
-  g('dsb').textContent=app.status; g('dsb').className=`sbadge s-${app.status}`;
-  g('dss').value=app.status;
-  g('dre').textContent=app.resume||'(no preview)';
-  g('dcl').textContent=app.coverLetter||'(no preview)';
-  renderSidebar(); openM('m-det'); closeSidebar();
+async function openDet(id) {
+  let app = S.apps.find(a => a.id === id);
+  if (!app) return;
+  S.activeId = id;
+
+  // If server-backed, fetch full record (includes b64 files) on demand
+  if (S.token && !id.startsWith('local_')) {
+    try {
+      const full = await apiGetApp(id);
+      // Merge full data back into S.apps entry
+      Object.assign(app, {
+        resume:      full.resume_text      || app.resume      || '',
+        coverLetter: full.cover_text       || app.coverLetter || '',
+        files: {
+          resume_docx: full.resume_docx_b64 || '',
+          resume_pdf:  full.resume_pdf_b64  || '',
+          cover_docx:  full.cover_docx_b64  || '',
+          cover_pdf:   full.cover_pdf_b64   || '',
+        },
+      });
+    } catch{}
+  }
+
+  g('dc').textContent = app.company;
+  g('dr').textContent = app.role || 'No title';
+  g('dd').textContent = fmtD(app.date, true);
+  g('dsb').textContent  = app.status;
+  g('dsb').className    = `sbadge s-${app.status}`;
+  g('dss').value        = app.status;
+  g('dre').textContent  = app.resume      || '(no preview)';
+  g('dcl').textContent  = app.coverLetter || '(no preview)';
+
+  // Show re-download only if files are available
+  const hasFiles = app.files && (app.files.resume_docx || app.files.resume_pdf);
+  g('re-dl-btn').style.display = hasFiles ? '' : 'none';
+
+  renderSidebar();
+  openM('m-det');
+  closeSidebar();
 }
+
 async function updStatus() {
-  const st=g('dss').value; const app=S.apps.find(a=>a.id===S.activeId); if(!app) return;
-  app.status=st; g('dsb').textContent=st; g('dsb').className=`sbadge s-${st}`;
-  await apiPatch(app.id,st); saveLs(); renderSidebar();
+  const st  = g('dss').value;
+  const app = S.apps.find(a => a.id === S.activeId);
+  if (!app) return;
+  app.status = st;
+  g('dsb').textContent = st;
+  g('dsb').className   = `sbadge s-${st}`;
+  if (S.token && !S.activeId.startsWith('local_')) {
+    try { await apiPatch(S.activeId, st); } catch{}
+  }
+  saveLs();
+  renderSidebar();
 }
+
 async function reDownload() {
-  const app=S.apps.find(a=>a.id===S.activeId); if(!app) return;
-  await buildZip(app.resume,app.coverLetter,app.company);
+  const app = S.apps.find(a => a.id === S.activeId);
+  if (!app) return;
+  const btn = g('re-dl-btn');
+  btn.textContent = 'Preparing…'; btn.disabled = true;
+  try {
+    await buildZip(app.resume || '', app.coverLetter || '', app.files || {}, app.company);
+  } finally {
+    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Re-download ZIP`;
+    btn.disabled = false;
+  }
 }
+
 async function delApp() {
-  const app=S.apps.find(a=>a.id===S.activeId);
-  if(!app||!confirm(`Delete application for ${app.company}?`)) return;
-  await apiDelete(app.id); S.apps=S.apps.filter(a=>a.id!==S.activeId); S.activeId=null;
-  saveLs(); renderSidebar(); closeM('m-det');
+  const app = S.apps.find(a => a.id === S.activeId);
+  if (!app || !confirm(`Delete application for ${app.company}?`)) return;
+  if (S.token && !S.activeId.startsWith('local_')) {
+    try { await apiDelete(S.activeId); } catch{}
+  }
+  S.apps = S.apps.filter(a => a.id !== S.activeId);
+  S.activeId = null;
+  saveLs();
+  renderSidebar();
+  closeM('m-det');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  WIZARD
 // ═══════════════════════════════════════════════════════════════════════════
 function setProg(step) {
-  for(let i=1;i<=3;i++){
-    const sc=g(`sc${i}`),sl=g(`sl${i}`);
-    if(i<step){sc.className='sc done';sl.className='sl done';sc.innerHTML=chk();}
-    else if(i===step){sc.className='sc active';sl.className='sl active';sc.textContent=i;}
-    else{sc.className='sc';sl.className='sl';sc.textContent=i;}
+  for (let i=1; i<=3; i++) {
+    const sc=g(`sc${i}`), sl=g(`sl${i}`);
+    if (i<step)      { sc.className='sc done';   sl.className='sl done';   sc.innerHTML=chk(); }
+    else if (i===step){ sc.className='sc active'; sl.className='sl active'; sc.textContent=i; }
+    else             { sc.className='sc';         sl.className='sl';        sc.textContent=i; }
   }
-  for(let i=1;i<=2;i++) g(`c${i}`).className='conn'+(i<step?' done':'');
-  g('pbar').style.display=step>3?'none':'';
+  for (let i=1; i<=2; i++) g(`c${i}`).className = 'conn' + (i<step?' done':'');
+  g('pbar').style.display = step>3 ? 'none' : '';
 }
-const chk=()=>`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+const chk = () => `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
 
 function showStep(id) {
-  ['s1','s2','s3','s4'].forEach(s=>{g(s).style.display='none';});
-  const el=g(id); el.style.display='flex'; el.style.flexDirection='column';
-  el.style.animation='none'; requestAnimationFrame(()=>{el.style.animation='';});
-  g('.scroll')||document.querySelector('.scroll')?.scrollTo({top:0});
+  ['s1','s2','s3','s4'].forEach(s => { g(s).style.display='none'; });
+  const el = g(id);
+  el.style.display       = 'flex';
+  el.style.flexDirection = 'column';
+  el.style.animation     = 'none';
+  requestAnimationFrame(() => { el.style.animation = ''; });
+  document.querySelector('.scroll')?.scrollTo({ top:0 });
 }
 
-function goS1(){setProg(1);showStep('s1');}
-function goS2(){
-  if(!S.resumeFile){showE('e1','Please upload your résumé to continue.');return;}
-  hideE('e1');setProg(2);showStep('s2');
+function goS1() { setProg(1); showStep('s1'); }
+function goS2() {
+  if (!S.resumeFile) { showE('e1', 'Please upload your résumé to continue.'); return; }
+  hideE('e1'); setProg(2); showStep('s2');
 }
-function goProcess(){
-  const txt=g('jdt').value.trim(); const url=g('jdu').value.trim();
-  if(S.tab==='paste'&&txt.length<40){showE('e2','Paste the full job description (min 40 chars).');return;}
-  if(S.tab==='url'&&!validUrl(url)){showE('e2','Enter a valid job URL (https://…).');return;}
-  hideE('e2'); S.jobDesc=txt; S.jobUrl=url; setProg(3); showStep('s3'); runProc();
+function goProcess() {
+  const txt = g('jdt').value.trim();
+  const url = g('jdu').value.trim();
+  if (S.tab==='paste' && txt.length<40) { showE('e2','Paste the full job description (min 40 chars).'); return; }
+  if (S.tab==='url'   && !validUrl(url)){ showE('e2','Enter a valid job URL (https://…).'); return; }
+  hideE('e2');
+  S.jobDesc = txt;
+  S.jobUrl  = url;
+  setProg(3);
+  showStep('s3');
+  runProc();
 }
-function newApp(){
-  S.resumeFile=null;S.jobDesc='';S.jobUrl='';S.result=null;S.activeId=null;
-  g('rf').value='';g('jdt').value='';g('jdu').value='';g('cc').textContent='0';
+function newApp() {
+  S.resumeFile=null; S.jobDesc=''; S.jobUrl=''; S.result=null; S.activeId=null;
+  g('rf').value=''; g('jdt').value=''; g('jdu').value=''; g('cc').textContent='0';
   g('fpill').classList.remove('vis');
-  g('dz').style.opacity='';g('dz').style.pointerEvents='';
-  g('lf').style.display='';g('log-ok').style.display='none';
-  g('log-box').style.display='';g('lco').value='';g('lro').value='';
-  goS1();closeSidebar();
+  g('dz').style.opacity=''; g('dz').style.pointerEvents='';
+  g('lf').style.display=''; g('log-ok').style.display='none';
+  g('log-box').style.display=''; g('lco').value=''; g('lro').value='';
+  goS1(); closeSidebar();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  PROCESSING
 // ═══════════════════════════════════════════════════════════════════════════
-async function runProc(){
-  const pss=['ps1','ps2','ps3','ps4','ps5']; let idx=0;
-  let done=false,res=null,err=null;
-  function adv(){
-    if(idx>0){const p=g(pss[idx-1]);p.classList.remove('active');p.classList.add('done');p.querySelector('.psdot').innerHTML=chk();}
-    if(idx<pss.length){g(pss[idx]).classList.add('active');idx++;}
+async function runProc() {
+  const pss = ['ps1','ps2','ps3','ps4','ps5'];
+  let idx = 0;
+  let done=false, res=null, err=null;
+
+  function adv() {
+    if (idx>0) { const p=g(pss[idx-1]); p.classList.remove('active'); p.classList.add('done'); p.querySelector('.psdot').innerHTML=chk(); }
+    if (idx<pss.length) { g(pss[idx]).classList.add('active'); idx++; }
   }
+
   adv();
-  const apiP=apiTailor().then(r=>{res=r;done=true;}).catch(e=>{err=e;done=true;});
-  const delays=[1300,1500,1700,1400,900];
-  for(let i=0;i<delays.length-1;i++){await sleep(delays[i]);adv();}
-  await apiP; await sleep(350); adv();
-  if(err){goS2();showE('e2',err.message||'Something went wrong. Try again.');return;}
-  S.result=res;
-  await sleep(250); setProg(3); showStep('s4');
-  const co=extractCo(S.jobDesc||S.jobUrl);
-  if(co) g('lco').value=co;
+  const apiP = apiTailor().then(r=>{res=r;done=true;}).catch(e=>{err=e;done=true;});
+
+  // Pace the steps — real work happens in apiP
+  const delays = [1200, 1400, 1600, 1300, 800];
+  for (let i=0; i<delays.length-1; i++) { await sleep(delays[i]); if (!done) adv(); }
+  await apiP;
+  await sleep(300);
+  adv();
+
+  if (err) { goS2(); showE('e2', err.message || 'Something went wrong. Please try again.'); return; }
+
+  S.result = res;
+  await sleep(250);
+  setProg(3);
+  showStep('s4');
+
+  // Pre-fill company from job text
+  const co = extractCo(S.jobDesc || S.jobUrl);
+  if (co) g('lco').value = co;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  FILE HANDLING
 // ═══════════════════════════════════════════════════════════════════════════
-function fileSelected(inp){if(inp.files[0])setFile(inp.files[0]);}
-function dzOver(e){e.preventDefault();g('dz').classList.add('over');}
-function dzLeave(){g('dz').classList.remove('over');}
-function dzDrop(e){e.preventDefault();g('dz').classList.remove('over');if(e.dataTransfer.files[0])setFile(e.dataTransfer.files[0]);}
-function setFile(f){
-  const ok=['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-  if(!ok.includes(f.type)&&!f.name.match(/\.(pdf|docx?)$/i)){showE('e1','Only PDF or DOCX files are supported.');return;}
-  if(f.size>10*1024*1024){showE('e1','File too large — max 10 MB.');return;}
-  hideE('e1'); S.resumeFile=f;
-  g('fpn').textContent=f.name; g('fps').textContent=fmtB(f.size);
+function fileSelected(inp) { if(inp.files[0]) setFile(inp.files[0]); }
+function dzOver(e)  { e.preventDefault(); g('dz').classList.add('over'); }
+function dzLeave()  { g('dz').classList.remove('over'); }
+function dzDrop(e)  { e.preventDefault(); g('dz').classList.remove('over'); if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); }
+
+function setFile(f) {
+  const ok = ['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  if (!ok.includes(f.type) && !f.name.match(/\.(pdf|docx?)$/i)) { showE('e1','Only PDF or DOCX files are supported.'); return; }
+  if (f.size > 10*1024*1024) { showE('e1','File too large — max 10 MB.'); return; }
+  hideE('e1');
+  S.resumeFile = f;
+  g('fpn').textContent = f.name;
+  g('fps').textContent = fmtB(f.size);
   g('fpill').classList.add('vis');
   g('dz').style.opacity='0.5'; g('dz').style.pointerEvents='none';
 }
-function removeFile(){
-  S.resumeFile=null; g('rf').value='';
+function removeFile() {
+  S.resumeFile = null; g('rf').value='';
   g('fpill').classList.remove('vis');
   g('dz').style.opacity=''; g('dz').style.pointerEvents='';
 }
@@ -839,70 +985,121 @@ function removeFile(){
 // ═══════════════════════════════════════════════════════════════════════════
 //  JOB TABS
 // ═══════════════════════════════════════════════════════════════════════════
-function switchTab(t){
-  S.tab=t;
+function switchTab(t) {
+  S.tab = t;
   document.querySelectorAll('.j-tab').forEach((el,i)=>el.classList.toggle('active',(i===0&&t==='paste')||(i===1&&t==='url')));
-  g('pp').classList.toggle('active',t==='paste');
-  g('pu').classList.toggle('active',t==='url');
+  g('pp').classList.toggle('active', t==='paste');
+  g('pu').classList.toggle('active', t==='url');
 }
-function updCC(el){g('cc').textContent=el.value.length.toLocaleString();}
+function updCC(el) { g('cc').textContent = el.value.length.toLocaleString(); }
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  DOWNLOAD
 // ═══════════════════════════════════════════════════════════════════════════
-async function downloadZip(){
-  if(!S.result) return;
-  const btn=g('dl-btn'); btn.textContent='Preparing…'; btn.disabled=true;
-  try {
-    await buildZip(S.result.resume,S.result.coverLetter,g('lco').value||'Application');
-    btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Downloaded!`;
-    setTimeout(()=>{btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download ZIP`;btn.disabled=false;},2500);
-  } catch{btn.textContent='Failed — try again';btn.disabled=false;}
+
+/** Decode a base64 string → Blob */
+function b64toBlob(b64, mimeType) {
+  const bytes = atob(b64);
+  const arr   = new Uint8Array(bytes.length);
+  for (let i=0; i<bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+  return new Blob([arr], { type: mimeType });
 }
-async function buildZip(resume,cover,co){
-  const zip=new JSZip();
-  zip.file('Resume_Tailored.txt',resume);
-  zip.file('Cover_Letter.txt',cover);
-  zip.file('README.txt',`Jhakri Resume Tailor\nCompany: ${co}\nDate: ${new Date().toLocaleDateString()}\n\nReview before sending.`);
-  const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download=`Jhakri_${co.replace(/\s+/g,'_')}_${Date.now()}.zip`;a.click();URL.revokeObjectURL(url);
+
+async function downloadZip() {
+  if (!S.result) return;
+  const btn = g('dl-btn');
+  btn.textContent = 'Preparing…'; btn.disabled = true;
+  try {
+    await buildZip(S.result.resume, S.result.coverLetter, S.result.files || {}, g('lco').value || 'Application');
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Downloaded!`;
+    setTimeout(() => {
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download ZIP (4 files)`;
+      btn.disabled = false;
+    }, 2500);
+  } catch(e) {
+    btn.textContent = 'Failed — try again'; btn.disabled = false;
+  }
+}
+
+async function buildZip(resume, coverLetter, files, co) {
+  const zip  = new JSZip();
+  const DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  const PDF  = 'application/pdf';
+
+  // Use real binary files from API when available; fall back to plain text
+  if (files.resume_docx) zip.file('Resume_Tailored.docx', b64toBlob(files.resume_docx, DOCX));
+  else                   zip.file('Resume_Tailored.txt',  resume);
+
+  if (files.resume_pdf)  zip.file('Resume_Tailored.pdf',  b64toBlob(files.resume_pdf, PDF));
+
+  if (files.cover_docx)  zip.file('Cover_Letter.docx',    b64toBlob(files.cover_docx, DOCX));
+  else                   zip.file('Cover_Letter.txt',      coverLetter);
+
+  if (files.cover_pdf)   zip.file('Cover_Letter.pdf',      b64toBlob(files.cover_pdf, PDF));
+
+  zip.file('README.txt', `Jhakri Resume Tailor\nCompany: ${co}\nDate: ${new Date().toLocaleDateString()}\n\nReview all documents before sending.`);
+
+  const blob = await zip.generateAsync({ type:'blob', compression:'DEFLATE' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `Jhakri_${co.replace(/\s+/g,'_')}_${Date.now()}.zip`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  MODAL / SIDEBAR TOGGLE
 // ═══════════════════════════════════════════════════════════════════════════
-function openM(id) { g(id).classList.add('vis'); }
-function closeM(id){ g(id).classList.remove('vis'); }
-function openSidebar() { g('sidebar').classList.add('open'); g('sb-overlay').classList.add('vis'); }
-function closeSidebar(){ g('sidebar').classList.remove('open'); g('sb-overlay').classList.remove('vis'); }
-
-function clearSI(){ g('si-u').value=''; g('si-p').value=''; hideE('si-err'); }
+function openM(id)  { g(id).classList.add('vis'); }
+function closeM(id) { g(id).classList.remove('vis'); }
+function openSidebar()  { g('sidebar').classList.add('open');  g('sb-overlay').classList.add('vis'); }
+function closeSidebar() { g('sidebar').classList.remove('open'); g('sb-overlay').classList.remove('vis'); }
+function clearSI()  { g('si-u').value=''; g('si-p').value=''; hideE('si-err'); }
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  UTIL
 // ═══════════════════════════════════════════════════════════════════════════
-function g(id) { return document.getElementById(id); }
-function showE(id,msg){ const el=g(id);el.classList.add('vis');if(msg){const s=el.querySelector('span');if(s)s.textContent=msg;} }
-function hideE(id)    { g(id)?.classList.remove('vis'); }
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
-function validUrl(s){ try{const u=new URL(s);return u.protocol==='https:'||u.protocol==='http:';}catch{return false;} }
-function fmtB(b){ if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(1)+' MB'; }
-function fmtD(iso,long=false){ const d=new Date(iso); if(long)return d.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'}); const diff=(Date.now()-d)/86400000; if(diff<1)return'Today';if(diff<2)return'Yesterday';if(diff<7)return Math.floor(diff)+'d ago';if(diff<30)return Math.floor(diff/7)+'w ago';return d.toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
-function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
-function r4(){ return String(Math.floor(1000+Math.random()*9000)); }
-function coEm(n){ const s=(n||'').toLowerCase(); if(s.includes('tech')||s.includes('software'))return'💻';if(s.includes('finance')||s.includes('bank'))return'💰';if(s.includes('health')||s.includes('medical'))return'🏥';if(s.includes('design')||s.includes('creative'))return'🎨';if(s.includes('edu')||s.includes('school'))return'🎓'; const em=['🏢','🏗','🚀','⚡','🌿','🔷','🌐','🛡','📡','🔶']; return em[((n||'A').charCodeAt(0)-65)%em.length]||'🏢'; }
-function extractCo(jd){ const m=jd.match(/(?:at|@|join|company[:\s]+)\s+([A-Z][A-Za-z0-9 &.,'-]{1,40})/); return m?m[1].trim().replace(/[.,]$/,''):''; }
+function g(id)          { return document.getElementById(id); }
+function showE(id, msg) { const el=g(id); el.classList.add('vis'); const s=el.querySelector('span'); if(s&&msg) s.textContent=msg; }
+function hideE(id)      { g(id)?.classList.remove('vis'); }
+function esc(s)         { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function sleep(ms)      { return new Promise(r=>setTimeout(r,ms)); }
+function validUrl(s)    { try{const u=new URL(s);return u.protocol==='https:'||u.protocol==='http:';}catch{return false;} }
+function fmtB(b)        { if(b<1024)return b+' B'; if(b<1048576)return(b/1024).toFixed(1)+' KB'; return(b/1048576).toFixed(1)+' MB'; }
+function fmtD(iso, long=false) {
+  const d=new Date(iso);
+  if(long) return d.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  const diff=(Date.now()-d)/86400000;
+  if(diff<1)return'Today'; if(diff<2)return'Yesterday'; if(diff<7)return Math.floor(diff)+'d ago'; if(diff<30)return Math.floor(diff/7)+'w ago';
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+}
+function coEm(n) {
+  const s=(n||'').toLowerCase();
+  if(s.includes('tech')||s.includes('software'))return'💻'; if(s.includes('finance')||s.includes('bank'))return'💰';
+  if(s.includes('health')||s.includes('medical'))return'🏥'; if(s.includes('design')||s.includes('creative'))return'🎨';
+  if(s.includes('edu')||s.includes('school'))return'🎓';
+  const em=['🏢','🏗','🚀','⚡','🌿','🔷','🌐','🛡','📡','🔶'];
+  return em[((n||'A').charCodeAt(0)-65)%em.length]||'🏢';
+}
+function extractCo(jd) {
+  const m=jd.match(/(?:at|@|join|company[:\s]+)\s+([A-Z][A-Za-z0-9 &.,'-]{1,40})/);
+  return m ? m[1].trim().replace(/[.,]$/,'') : '';
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded',()=>{
-  loadLs(); updAuthUI(); renderSidebar(); setProg(1); showStep('s1');
-  // Close modal on overlay click (except non-dismissable create modal)
-  document.querySelectorAll('.m-ov').forEach(ov=>{
-    ov.addEventListener('click',e=>{ if(e.target===ov&&ov.id!=='m-create') closeM(ov.id); });
+window.addEventListener('DOMContentLoaded', () => {
+  loadLs();
+  updAuthUI();
+  renderSidebar();
+  setProg(1);
+  showStep('s1');
+
+  // Close modals on overlay click (create modal is non-dismissable)
+  document.querySelectorAll('.m-ov').forEach(ov => {
+    ov.addEventListener('click', e => { if (e.target===ov && ov.id!=='m-create') closeM(ov.id); });
   });
 });
 </script>
